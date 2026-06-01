@@ -558,11 +558,23 @@ function backToStep1() {
 async function emailLogin() {
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-    return showAlert('loginAlert','Please enter a valid email address.','error');
+    return showAlert('loginAlert','❌ Please enter a valid email address.','error');
   setLoading('loginBtn', true, 'Signing in…');
-  const { data: student, error } = await sb.from('students').select('*').eq('email', email).single();
+
+  // Only allow KWC I BCA-A students
+  const { data: student, error } = await sb
+    .from('kwc_students')
+    .select('*')
+    .eq('email', email)
+    .eq('college_code', 'KWC')
+    .eq('course', 'I BCA - A')
+    .single();
+
   setLoading('loginBtn', false, 'Sign In');
-  if (error || !student) return showAlert('loginAlert','Email not found. Please check and try again.','error');
+
+  if (error || !student)
+    return showAlert('loginAlert','❌ Access denied. Only KWC I BCA-A students can log in here.','error');
+
   loginSuccess(student);
 }
 document.getElementById('emailInput').addEventListener('keydown', e => { if(e.key==='Enter') emailLogin(); });
