@@ -174,10 +174,16 @@
     .criteria-group { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:1rem; margin-bottom:.9rem; }
     .criteria-label { display:flex; justify-content:space-between; align-items:center; margin-bottom:.8rem; font-size:.85rem; font-weight:600; color:var(--text); }
     .score-display  { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; color:var(--accent); }
-    .slider { width:100%; height:5px; border-radius:5px; background:var(--border2); outline:none; -webkit-appearance:none; cursor:pointer; }
-    .slider::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--accent); cursor:pointer; box-shadow:0 0 0 3px rgba(59,130,246,0.2); transition:box-shadow .2s; }
-    .slider::-webkit-slider-thumb:active { box-shadow:0 0 0 6px rgba(59,130,246,0.15); }
-    .slider::-moz-range-thumb { width:18px; height:18px; border-radius:50%; background:var(--accent); cursor:pointer; border:none; }
+    .seg-track { display:flex; border-radius:8px; overflow:hidden; border:1.5px solid var(--border); height:38px; }
+    .seg-btn {
+      flex:1; border:none; border-right:1px solid var(--border);
+      background:var(--surface2); font-size:.78rem; font-weight:700;
+      color:var(--muted2); cursor:pointer; transition:all .15s;
+      font-family:'Instrument Sans',sans-serif;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .seg-btn:last-child { border-right:none; }
+    .seg-btn.seg-active { color:#fff; }
     .modal-btns { display:flex; gap:.7rem; margin-top:1.3rem; }
     .tbl-wrap { border-radius:10px; overflow:hidden; border:1px solid var(--border); overflow-x:auto; -webkit-overflow-scrolling: touch; }
     table { width:100%; border-collapse:collapse; min-width:600px; }
@@ -323,26 +329,31 @@
       </div>
     </div>
     <div class="modal-title">Rate this Project</div>
-    <div class="modal-sub">Move the sliders to score each criterion (0 – 10)</div>
+    <div class="modal-sub">Tap a number to score each criterion (1 – 10)</div>
     <div class="criteria-group">
       <div class="criteria-label"><span>Problem Clarity</span><span class="score-display"><span id="clarity-display">5</span>/10</span></div>
-      <input type="range" class="slider" id="clarity" min="0" max="10" value="5" oninput="updateScore('clarity')">
+      <div class="seg-track" id="clarity-seg"><button type="button" class="seg-btn" data-val="1" onclick="setSeg('clarity',1)">1</button><button type="button" class="seg-btn" data-val="2" onclick="setSeg('clarity',2)">2</button><button type="button" class="seg-btn" data-val="3" onclick="setSeg('clarity',3)">3</button><button type="button" class="seg-btn" data-val="4" onclick="setSeg('clarity',4)">4</button><button type="button" class="seg-btn" data-val="5" onclick="setSeg('clarity',5)">5</button><button type="button" class="seg-btn" data-val="6" onclick="setSeg('clarity',6)">6</button><button type="button" class="seg-btn" data-val="7" onclick="setSeg('clarity',7)">7</button><button type="button" class="seg-btn" data-val="8" onclick="setSeg('clarity',8)">8</button><button type="button" class="seg-btn" data-val="9" onclick="setSeg('clarity',9)">9</button><button type="button" class="seg-btn" data-val="10" onclick="setSeg('clarity',10)">10</button></div>
+      <input type="hidden" id="clarity" value="5">
     </div>
     <div class="criteria-group">
       <div class="criteria-label"><span>Innovation</span><span class="score-display"><span id="innovation-display">5</span>/10</span></div>
-      <input type="range" class="slider" id="innovation" min="0" max="10" value="5" oninput="updateScore('innovation')">
+      <div class="seg-track" id="innovation-seg"><button type="button" class="seg-btn" data-val="1" onclick="setSeg('innovation',1)">1</button><button type="button" class="seg-btn" data-val="2" onclick="setSeg('innovation',2)">2</button><button type="button" class="seg-btn" data-val="3" onclick="setSeg('innovation',3)">3</button><button type="button" class="seg-btn" data-val="4" onclick="setSeg('innovation',4)">4</button><button type="button" class="seg-btn" data-val="5" onclick="setSeg('innovation',5)">5</button><button type="button" class="seg-btn" data-val="6" onclick="setSeg('innovation',6)">6</button><button type="button" class="seg-btn" data-val="7" onclick="setSeg('innovation',7)">7</button><button type="button" class="seg-btn" data-val="8" onclick="setSeg('innovation',8)">8</button><button type="button" class="seg-btn" data-val="9" onclick="setSeg('innovation',9)">9</button><button type="button" class="seg-btn" data-val="10" onclick="setSeg('innovation',10)">10</button></div>
+      <input type="hidden" id="innovation" value="5">
     </div>
     <div class="criteria-group">
       <div class="criteria-label"><span>Execution</span><span class="score-display"><span id="execution-display">5</span>/10</span></div>
-      <input type="range" class="slider" id="execution" min="0" max="10" value="5" oninput="updateScore('execution')">
+      <div class="seg-track" id="execution-seg"><button type="button" class="seg-btn" data-val="1" onclick="setSeg('execution',1)">1</button><button type="button" class="seg-btn" data-val="2" onclick="setSeg('execution',2)">2</button><button type="button" class="seg-btn" data-val="3" onclick="setSeg('execution',3)">3</button><button type="button" class="seg-btn" data-val="4" onclick="setSeg('execution',4)">4</button><button type="button" class="seg-btn" data-val="5" onclick="setSeg('execution',5)">5</button><button type="button" class="seg-btn" data-val="6" onclick="setSeg('execution',6)">6</button><button type="button" class="seg-btn" data-val="7" onclick="setSeg('execution',7)">7</button><button type="button" class="seg-btn" data-val="8" onclick="setSeg('execution',8)">8</button><button type="button" class="seg-btn" data-val="9" onclick="setSeg('execution',9)">9</button><button type="button" class="seg-btn" data-val="10" onclick="setSeg('execution',10)">10</button></div>
+      <input type="hidden" id="execution" value="5">
     </div>
     <div class="criteria-group">
       <div class="criteria-label"><span>Usability</span><span class="score-display"><span id="usability-display">5</span>/10</span></div>
-      <input type="range" class="slider" id="usability" min="0" max="10" value="5" oninput="updateScore('usability')">
+      <div class="seg-track" id="usability-seg"><button type="button" class="seg-btn" data-val="1" onclick="setSeg('usability',1)">1</button><button type="button" class="seg-btn" data-val="2" onclick="setSeg('usability',2)">2</button><button type="button" class="seg-btn" data-val="3" onclick="setSeg('usability',3)">3</button><button type="button" class="seg-btn" data-val="4" onclick="setSeg('usability',4)">4</button><button type="button" class="seg-btn" data-val="5" onclick="setSeg('usability',5)">5</button><button type="button" class="seg-btn" data-val="6" onclick="setSeg('usability',6)">6</button><button type="button" class="seg-btn" data-val="7" onclick="setSeg('usability',7)">7</button><button type="button" class="seg-btn" data-val="8" onclick="setSeg('usability',8)">8</button><button type="button" class="seg-btn" data-val="9" onclick="setSeg('usability',9)">9</button><button type="button" class="seg-btn" data-val="10" onclick="setSeg('usability',10)">10</button></div>
+      <input type="hidden" id="usability" value="5">
     </div>
     <div class="criteria-group">
       <div class="criteria-label"><span>Overall Impression</span><span class="score-display"><span id="overall-display">5</span>/10</span></div>
-      <input type="range" class="slider" id="overall" min="0" max="10" value="5" oninput="updateScore('overall')">
+      <div class="seg-track" id="overall-seg"><button type="button" class="seg-btn" data-val="1" onclick="setSeg('overall',1)">1</button><button type="button" class="seg-btn" data-val="2" onclick="setSeg('overall',2)">2</button><button type="button" class="seg-btn" data-val="3" onclick="setSeg('overall',3)">3</button><button type="button" class="seg-btn" data-val="4" onclick="setSeg('overall',4)">4</button><button type="button" class="seg-btn" data-val="5" onclick="setSeg('overall',5)">5</button><button type="button" class="seg-btn" data-val="6" onclick="setSeg('overall',6)">6</button><button type="button" class="seg-btn" data-val="7" onclick="setSeg('overall',7)">7</button><button type="button" class="seg-btn" data-val="8" onclick="setSeg('overall',8)">8</button><button type="button" class="seg-btn" data-val="9" onclick="setSeg('overall',9)">9</button><button type="button" class="seg-btn" data-val="10" onclick="setSeg('overall',10)">10</button></div>
+      <input type="hidden" id="overall" value="5">
     </div>
     <div class="form-group" style="margin-top:1rem;">
       <label>Comments <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
@@ -517,13 +528,26 @@ async function openModal(reg) {
   }
 
   document.getElementById('reviewModal').style.display = 'block';
-  ['clarity','innovation','execution','usability','overall'].forEach(id => {
-    document.getElementById(id).value = 5; updateScore(id);
-  });
+  initSegs();
   document.getElementById('comments').value = '';
 }
 
 function closeModal() { document.getElementById('reviewModal').style.display='none'; currentProject=null; }
+const SEG_COLORS = ['#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#22c55e','#10b981','#06b6d4','#3b82f6','#8b5cf6'];
+function setSeg(id, val) {
+  document.getElementById(id).value = val;
+  document.getElementById(id+'-display').textContent = val;
+  const btns = document.getElementById(id+'-seg').querySelectorAll('.seg-btn');
+  btns.forEach(b => {
+    const v = +b.dataset.val;
+    const on = v === val;
+    b.classList.toggle('seg-active', on);
+    b.style.background = on ? SEG_COLORS[v-1] : '';
+  });
+}
+function initSegs() {
+  ['clarity','innovation','execution','usability','overall'].forEach(id => setSeg(id, 5));
+}
 function updateScore(id) { document.getElementById(id+'-display').textContent = document.getElementById(id).value; }
 document.getElementById('reviewModal').addEventListener('click', e => {
   if(e.target===document.getElementById('reviewModal')) closeModal();
