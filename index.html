@@ -598,13 +598,13 @@ document.getElementById('emailInput').addEventListener('keydown', e => { if(e.ke
 
 function loginSuccess(student) {
   currentUser = student;
-  currentUser._college = selectedCollege;
+  currentUser._college = student.college || selectedCollege;
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('dashboard').style.display   = 'block';
   document.getElementById('userName').textContent         = student.name;
   document.getElementById('userReg').textContent          = student.register_number;
   document.getElementById('userCourse').textContent       = student.course;
-  document.getElementById('userCollegeBadge').textContent = selectedCollege;
+  document.getElementById('userCollegeBadge').textContent = currentUser._college;
   loadReviewedSet().then(() => loadProjects());
 }
 
@@ -642,8 +642,22 @@ async function loadProjects() {
   const c = document.getElementById('projectsContent');
   c.innerHTML = '<div class="loading"> Loading projects…</div>';
 
+  // Get all students from the same college
+  const { data: collegeStudents, error: collegeError } = await sb
+    .from('students').select('register_number')
+    .eq('college', currentUser._college);
+
+  if (collegeError) {
+    c.innerHTML = `<div class="alert alert-error">Error loading college data: ${collegeError.message}</div>`;
+    return;
+  }
+
+  const collegeRegs = (collegeStudents || []).map(s => s.register_number);
+
+  // Get projects only from students in same college (excluding own project)
   const { data: projects, error } = await sb
     .from('projects').select('*')
+    .in('register_number', collegeRegs)
     .neq('register_number', currentUser.register_number)
     .order('register_number');
 
