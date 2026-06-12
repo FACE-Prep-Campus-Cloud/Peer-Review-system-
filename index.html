@@ -650,11 +650,13 @@ async function loadProjects() {
 
   const collegeRegs = (collegeStudents || []).map(s => s.register_number);
 
-  const { data: projects, error } = await sb
-    .from('projects').select('*')
-    .in('register_number', collegeRegs)
-    .neq('register_number', currentUser.register_number)
-    .order('register_number');
+ // AFTER — fetch directly from students, no separate projects query needed
+const { data: projects, error } = await sb
+  .from('students')
+  .select('register_number, name, course, project_title, project_type, problem_statement')
+  .in('register_number', collegeRegs)
+  .neq('register_number', currentUser.register_number)
+  .order('register_number');
 
   if (error) { c.innerHTML=`<div class="alert alert-error">${error.message}</div>`; return; }
   if (!projects?.length) {
@@ -687,11 +689,11 @@ async function loadProjects() {
     const rev = reviewedSet.has(p.register_number);
     html += `<div class="project-card">
       <div class="type-chip">${escHtml(p.project_type||'Project')}</div>
-      <div class="project-title">${escHtml(p.title)}</div>
-      <div class="project-detail"><strong>Student:</strong> ${escHtml(stu?.name||'—')}</div>
-      <div class="project-detail"><strong>Course:</strong>  ${escHtml(stu?.course||'—')}</div>
-      ${p.problem ? `<div class="project-detail" style="margin-top:.4rem;color:var(--muted);font-size:.78rem">${escHtml(p.problem.slice(0,70))}${p.problem.length>70?'…':''}</div>` : ''}
-      <button class="review-btn ${rev?'reviewed':''}" ${rev ? 'disabled' : `onclick="openModal('${escHtml(p.register_number)}')"`}>
+      <div class="project-title">${escHtml(p.project_title||'Untitled')}</div>
+  <div class="project-detail"><strong>Student:</strong> ${escHtml(p.name||'—')}</div>
+  <div class="project-detail"><strong>Course:</strong>  ${escHtml(p.course||'—')}</div>
+  ${p.problem_statement ? `<div class="project-detail" style="margin-top:.4rem;color:var(--muted);font-size:.78rem">${escHtml(p.problem_statement.slice(0,70))}${p.problem_statement.length>70?'…':''}</div>` : ''}
+  <button ... onclick="openModal('${escHtml(p.register_number)}')">`;
         ${rev ? '✓ Reviewed' : 'Review Project'}
       </button>
     </div>`;
@@ -703,21 +705,23 @@ async function loadProjects() {
 
 // ── MODAL ────────────────────────────────────────────────────
 async function openModal(reg) {
-  const { data: p, error: pe } = await sb.from('projects').select('*').eq('register_number', reg).single();
-  if (pe || !p) return alert('Could not load project.');
+  const { data: s, error } = await sb
+    .from('students')
+    .select('register_number, name, course, project_title, project_type, problem_statement')
+    .eq('register_number', reg)
+    .single();
+  if (error || !s) return alert('Could not load project.');
 
-  const { data: stu } = await sb.from('students').select('name,course').eq('register_number', reg).single();
+  currentProject = { register_number: s.register_number, title: s.project_title };
 
-  currentProject = p;
-
-  document.getElementById('modalProjectType').textContent   = p.project_type || 'Project';
-  document.getElementById('modalProjectTitle').textContent  = p.title;
-  document.getElementById('modalStudentName').textContent   = stu?.name  || reg;
-  document.getElementById('modalStudentCourse').textContent = stu?.course || '—';
+  document.getElementById('modalProjectType').textContent   = s.project_type || 'Project';
+  document.getElementById('modalProjectTitle').textContent  = s.project_title || '—';
+  document.getElementById('modalStudentName').textContent   = s.name || reg;
+  document.getElementById('modalStudentCourse').textContent = s.course || '—';
 
   const problemBox = document.getElementById('modalProblemBox');
-  if (p.problem) {
-    document.getElementById('modalProblemText').textContent = p.problem;
+  if (s.problem_statement) {
+    document.getElementById('modalProblemText').textContent = s.problem_statement;
     problemBox.style.display = 'block';
   } else {
     problemBox.style.display = 'none';
