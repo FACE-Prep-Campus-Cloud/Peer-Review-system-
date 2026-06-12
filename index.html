@@ -59,7 +59,11 @@
     .user-bar{display:flex;justify-content:space-between;align-items:center;padding:1.2rem;margin-bottom:1.2rem;gap:.8rem;flex-wrap:wrap;}
     .user-name{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--text);}
     .user-meta{font-size:.75rem;color:var(--muted);margin-top:.1rem;}
-    .college-badge{display:inline-flex;align-items:center;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:100px;padding:.2rem .7rem;font-size:.7rem;font-weight:600;color:var(--accent);margin-top:.25rem;}
+    .badge-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem;}
+    .college-badge{display:inline-flex;align-items:center;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:100px;padding:.2rem .7rem;font-size:.7rem;font-weight:600;color:var(--accent);}
+    /* ── NEW: mentor badge ── */
+    .mentor-badge{display:inline-flex;align-items:center;gap:.3rem;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:100px;padding:.2rem .7rem;font-size:.7rem;font-weight:600;color:#7c3aed;}
+    .mentor-badge::before{content:'👨‍🏫';font-size:.7rem;}
     .tabs{display:flex;gap:0;margin-bottom:1.2rem;background:var(--surface2);padding:.3rem;border-radius:10px;border:1px solid var(--border);overflow-x:auto;}
     .tab{padding:.6rem 1rem;flex:1;text-align:center;border-radius:7px;cursor:pointer;transition:all .2s;font-weight:600;font-size:.8rem;color:var(--muted2);white-space:nowrap;}
     .tab.active{background:var(--surface);color:var(--accent);box-shadow:0 2px 8px var(--shadow);}
@@ -203,7 +207,11 @@
         <div>
           <div class="user-name" id="userName"></div>
           <div class="user-meta">Reg: <span id="userReg"></span> · <span id="userCourse"></span></div>
-          <div class="college-badge"><span id="userCollegeBadge"></span></div>
+          <!-- ── CHANGED: show both college badge and mentor badge ── -->
+          <div class="badge-row">
+            <span class="college-badge" id="userCollegeBadge"></span>
+            <span class="mentor-badge" id="userMentorBadge"></span>
+          </div>
         </div>
       </div>
       <button class="btn-ghost btn-sm" onclick="logout()">Sign Out</button>
@@ -371,19 +379,31 @@ document.getElementById('emailInput').addEventListener('keydown', e => { if (e.k
 function loginSuccess(student) {
   currentUser = student;
   currentUser._college = student.college || selectedCollege;
+  // ── CHANGED: store mentor for scoped filtering ──
+  currentUser._mentor  = student.mentor_assigned || null;
+
   document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'block';
-  document.getElementById('userName').textContent = student.name;
-  document.getElementById('userReg').textContent = student.register_number;
-  document.getElementById('userCourse').textContent = student.course;
+  document.getElementById('dashboard').style.display   = 'block';
+  document.getElementById('userName').textContent       = student.name;
+  document.getElementById('userReg').textContent        = student.register_number;
+  document.getElementById('userCourse').textContent     = student.course;
   document.getElementById('userCollegeBadge').textContent = currentUser._college;
+  // ── CHANGED: show mentor badge, hide if null ──
+  const mentorBadge = document.getElementById('userMentorBadge');
+  if (currentUser._mentor) {
+    mentorBadge.textContent = currentUser._mentor + "'s Group";
+    mentorBadge.style.display = 'inline-flex';
+  } else {
+    mentorBadge.style.display = 'none';
+  }
+
   loadReviewedSet().then(() => loadProjects());
 }
 
 function logout() {
   currentUser = null; selectedCollege = ''; reviewedSet.clear();
   document.getElementById('loginScreen').style.display = 'block';
-  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('dashboard').style.display   = 'none';
   document.getElementById('emailInput').value = '';
   document.getElementById('loginAlert').innerHTML = '';
   document.getElementById('collegeSelect').value = '';
@@ -409,34 +429,36 @@ function switchTab(name) {
 }
 
 // ── PROJECTS TAB ──────────────────────────────────────────
-// BUG FIX 1: was fetching from 'projects' table — now fetches from 'students' directly
-// BUG FIX 2: removed the redundant second students fetch (p already has name/course)
-// BUG FIX 3: fixed broken button HTML (had misplaced "..." and template literal split incorrectly)
+// ── CHANGED: scope to mentor_assigned instead of whole college ──
 async function loadProjects() {
   const c = document.getElementById('projectsContent');
   c.innerHTML = '<div class="loading">Loading projects…</div>';
 
-  const { data: collegeStudents, error: collegeError } = await sb
-    .from('students').select('register_number')
-    .eq('college', currentUser._college);
-
-  if (collegeError) {
-    c.innerHTML = `<div class="alert alert-error">Error: ${collegeError.message}</div>`;
+  // Guard: if student has no mentor assigned, show a message
+  if (!currentUser._mentor) {
+    c.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">👨‍🏫</div>
+      <h3>No mentor group found</h3>
+      <p>You haven't been assigned to a mentor group yet. Please contact your coordinator.</p>
+    </div>`;
     return;
   }
 
-  const collegeRegs = (collegeStudents || []).map(s => s.register_number);
-
+  // ── CHANGED: single query — filter by same mentor_assigned, exclude self ──
   const { data: projects, error } = await sb
     .from('students')
     .select('register_number, name, course, project_title, project_type, problem_statement')
-    .in('register_number', collegeRegs)
+    .eq('mentor_assigned', currentUser._mentor)
     .neq('register_number', currentUser.register_number)
     .order('name');
 
   if (error) { c.innerHTML = `<div class="alert alert-error">${error.message}</div>`; return; }
   if (!projects?.length) {
-    c.innerHTML = '<div class="empty-state"><div class="empty-icon">📂</div><h3>No projects found</h3><p>Check back later.</p></div>';
+    c.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📂</div>
+      <h3>No projects found</h3>
+      <p>No other students are in your mentor group yet.</p>
+    </div>`;
     return;
   }
 
@@ -446,7 +468,7 @@ async function loadProjects() {
   let html = `
     <div class="prog-strip">
       <div>
-        <div class="count">Reviewed <strong>${done}</strong> of <strong>${total}</strong></div>
+        <div class="count">Reviewed <strong>${done}</strong> of <strong>${total}</strong> in your group</div>
         <div class="prog-bar-wrap" style="width:100%;max-width:180px">
           <div class="prog-bar" style="width:${pct}%"></div>
         </div>
@@ -477,7 +499,6 @@ async function loadProjects() {
 }
 
 // ── MODAL ─────────────────────────────────────────────────
-// BUG FIX 4: was fetching from 'projects' table — now fetches from 'students'
 async function openModal(reg) {
   const { data: s, error } = await sb
     .from('students')
@@ -544,7 +565,6 @@ async function submitReview() {
 }
 
 // ── MY REVIEWS TAB ────────────────────────────────────────
-// BUG FIX 5: was fetching from 'projects' table — now fetches from 'students'
 async function loadMyReviews() {
   const c = document.getElementById('myReviewsContent');
   c.innerHTML = '<div class="loading">Loading…</div>';
@@ -595,7 +615,6 @@ async function loadMyReviews() {
 }
 
 // ── MY PROJECT STATS TAB ──────────────────────────────────
-// BUG FIX 6: was fetching from 'projects' table — now fetches from 'students'
 async function loadMyProjectStats() {
   const c = document.getElementById('myProjectContent');
   c.innerHTML = '<div class="loading">Loading…</div>';
