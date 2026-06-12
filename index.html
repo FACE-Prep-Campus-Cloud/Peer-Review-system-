@@ -3,318 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Peer Review System — I BCA</title>
+  <title>Peer Review System</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:        #f8fafc;
-      --surface:   #ffffff;
-      --surface2:  #f1f5f9;
-      --border:    #e2e8f0;
-      --border2:   #cbd5e1;
-      --accent:    #3b82f6;
-      --accent2:   #8b5cf6;
-      --green:     #10b981;
-      --amber:     #f59e0b;
-      --rose:      #ef4444;
-      --text:      #0f172a;
-      --muted:     #64748b;
-      --muted2:    #475569;
-      --shadow:    rgba(0,0,0,0.08);
-      --shadow2:   rgba(0,0,0,0.12);
+      --bg:#f8fafc; --surface:#ffffff; --surface2:#f1f5f9;
+      --border:#e2e8f0; --border2:#cbd5e1;
+      --accent:#3b82f6; --accent2:#8b5cf6;
+      --green:#10b981; --amber:#f59e0b; --rose:#ef4444;
+      --text:#0f172a; --muted:#64748b; --muted2:#475569;
+      --shadow:rgba(0,0,0,0.08); --shadow2:rgba(0,0,0,0.12);
     }
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body {
-      font-family:'Instrument Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-    body::before {
-      content:'';
-      position:fixed; inset:0; z-index:0; pointer-events:none;
-      background-image:
-        radial-gradient(ellipse 70% 40% at 50% 0%, rgba(59,130,246,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 30% at 80% 100%, rgba(139,92,246,0.05) 0%, transparent 50%);
-    }
-    .container { max-width:480px; margin:0 auto; padding:1rem; position:relative; z-index:1; }
-    header { text-align:center; padding: 2rem 0 1.5rem; }
-    h1 {
-      font-family:'Syne', sans-serif;
-      font-size:clamp(1.8rem,8vw,2.4rem);
-      font-weight:800;
-      letter-spacing:-1.5px;
-      line-height:1.1;
-      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      margin-bottom:.6rem;
-    }
-    .subtitle { font-size:.9rem; color:var(--muted); font-weight:400; letter-spacing:.01em; }
-    .card {
-      background: var(--surface);
-      border-radius:16px;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 16px var(--shadow);
-      overflow: hidden;
-    }
-    .login-wrap { padding:1.8rem 1.4rem; }
-    .login-wrap h2 { font-family:'Syne', sans-serif; font-size:1.5rem; font-weight:700; text-align:center; margin-bottom:.3rem; letter-spacing:-.5px; color:var(--text); }
-    .login-sub { text-align:center; color:var(--muted); font-size:.85rem; margin-bottom:1.5rem; }
-    .step-indicator { display:flex; justify-content:center; gap:.5rem; margin-bottom:1.5rem; }
-    .step-dot { width:24px; height:3px; border-radius:3px; background:var(--border2); transition:all .3s; }
-    .step-dot.active { background:var(--accent); }
-    .step-dot.done   { background:var(--green); }
-    .form-group { margin-bottom:1.2rem; }
-    label { display:block; margin-bottom:.45rem; font-size:.75rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--muted2); }
-    input, textarea, select {
-      width:100%; padding:.8rem 1rem;
-      background:var(--surface2);
-      border:1.5px solid var(--border);
-      border-radius:10px; color:var(--text);
-      font-size:.9rem; font-family:'Instrument Sans', sans-serif;
-      transition:all .2s;
-    }
-    input:focus, textarea:focus, select:focus {
-      outline:none; border-color: var(--accent); background:var(--surface);
-      box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
-    }
-    input::placeholder { color:var(--muted); }
-    textarea { resize:vertical; min-height:90px; }
-    select {
-      cursor:pointer; -webkit-appearance:none; appearance:none;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-      background-repeat:no-repeat; background-position:calc(100% - .9rem) center; padding-right:2.5rem;
-    }
-    select option { background:var(--surface); color:var(--text); }
-    .selected-college-pill {
-      display:flex; align-items:center; gap:.6rem;
-      background:rgba(16,185,129,0.08); border:1.5px solid rgba(16,185,129,0.25);
-      border-radius:10px; padding:.7rem .9rem; margin-bottom:1.2rem;
-    }
-    .selected-college-pill .pill-label { font-size:.7rem; color:var(--muted); display:block; margin-bottom:.05rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
-    .selected-college-pill .pill-val   { font-size:.88rem; font-weight:600; color:var(--green); }
-    button {
-      width:100%; padding:.85rem 1.4rem; border:none; border-radius:10px;
-      font-size:.9rem; font-weight:600; cursor:pointer; transition:all .2s;
-      font-family:'Instrument Sans', sans-serif; letter-spacing:.01em;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color:#fff; box-shadow: 0 4px 12px rgba(59,130,246,0.25); }
-    .btn-primary:active { transform:scale(0.98); }
-    .btn-primary:disabled { opacity:.5; cursor:not-allowed; transform:none; box-shadow:none; }
-    .btn-ghost { background:var(--surface2); color:var(--text); border:1.5px solid var(--border); }
-    .btn-ghost:active { background:var(--border); }
-    .btn-sm { width:auto; padding:.5rem 1rem; font-size:.8rem; border-radius:8px; }
-    .btn-row { display:flex; gap:.7rem; }
-    .btn-row .btn-ghost { flex:0 0 auto; width:auto; }
-    .btn-row .btn-primary { flex:1; }
-    .alert { padding:.8rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:.85rem; font-weight:500; }
-    .alert-error   { background:rgba(239,68,68,.08); border:1.5px solid rgba(239,68,68,.2); color:#dc2626; }
-    .alert-success { background:rgba(16,185,129,.08);  border:1.5px solid rgba(16,185,129,.2);  color:#059669; }
-    .alert-info    { background:rgba(245,158,11,.08);  border:1.5px solid rgba(245,158,11,.2);  color:#d97706; }
-    .dashboard { display:none; }
-    .user-bar { display:flex; justify-content:space-between; align-items:center; padding:1.2rem; margin-bottom:1.2rem; gap:.8rem; flex-wrap:wrap; }
-    .user-avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:.9rem; color:#fff; flex-shrink:0; }
-    .user-info { display:flex; align-items:center; gap:.8rem; }
-    .user-name  { font-family:'Syne',sans-serif; font-size:.95rem; font-weight:700; color:var(--text); }
-    .user-meta  { font-size:.75rem; color:var(--muted); margin-top:.1rem; }
-    .college-badge { display:inline-flex; align-items:center; gap:.3rem; background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:100px; padding:.2rem .7rem; font-size:.7rem; font-weight:600; color:var(--accent); margin-top:.25rem; }
-    .tabs { display:flex; gap:0; margin-bottom:1.2rem; background:var(--surface2); padding:.3rem; border-radius:10px; border:1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .tab { padding:.6rem 1rem; flex:1; text-align:center; border-radius:7px; cursor:pointer; transition:all .2s; font-weight:600; font-size:.8rem; color:var(--muted2); white-space:nowrap; -webkit-tap-highlight-color: transparent; }
-    .tab.active { background:var(--surface); color:var(--accent); box-shadow:0 2px 8px var(--shadow); }
-    .tab-content { display:none; }
-    .tab-content.active { display:block; }
-    .prog-strip { display:flex; justify-content:space-between; align-items:center; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:1rem; margin-bottom:1.2rem; gap:.8rem; }
-    .prog-strip .label { font-size:.8rem; color:var(--muted2); }
-    .prog-strip .count { font-family:'Syne',sans-serif; font-size:.9rem; font-weight:700; color:var(--text); }
-    .prog-strip .pct   { font-size:.8rem; color:var(--accent); font-weight:700; white-space:nowrap; }
-    .prog-bar-wrap { height:5px; border-radius:5px; background:var(--border); overflow:hidden; margin-top:.5rem; }
-    .prog-bar      { height:100%; border-radius:5px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .8s cubic-bezier(.16,1,.3,1); }
-    .projects-grid { display:flex; flex-direction:column; gap:1rem; margin-top:1.2rem; }
-    .project-card { background:var(--surface); border-radius:12px; padding:1.3rem; border:1.5px solid var(--border); transition:all .2s; position:relative; box-shadow:0 2px 8px var(--shadow); }
-    .project-card:active { transform:scale(0.98); box-shadow:0 4px 16px var(--shadow2); }
-    .type-chip { display:inline-block; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.2); color:#7c3aed; border-radius:6px; padding:.15rem .55rem; font-size:.68rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; margin-bottom:.7rem; }
-    .project-title  { font-family:'Syne',sans-serif; font-size:.98rem; font-weight:700; margin-bottom:.5rem; line-height:1.3; color:var(--text); }
-    .project-detail { font-size:.8rem; color:var(--muted2); margin-bottom:.3rem; }
-    .project-detail strong { color:var(--text); font-weight:600; }
-    .review-btn {
-      margin-top:1rem; padding:.7rem; font-size:.82rem; font-weight:700;
-      border-radius:8px; width:100%; cursor:pointer; border:none;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#fff; transition:all .2s;
-      box-shadow:0 3px 10px rgba(59,130,246,0.2);
-      font-family:'Instrument Sans',sans-serif; letter-spacing:.01em;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .review-btn:active { transform:scale(0.98); }
-    .review-btn.reviewed { background:rgba(16,185,129,0.1); color:var(--green); border:1.5px solid rgba(16,185,129,0.25); box-shadow:none; cursor:default; }
-    .review-btn.reviewed:active { transform:none; }
-
-    /* ── MODAL ── */
-    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); backdrop-filter:blur(4px); z-index:1000; overflow-y:auto; padding:1rem; }
-    .modal-content { max-width:480px; margin:1rem auto; background:var(--surface); border-radius:16px; padding:1.5rem; border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,.2); position:relative; }
-    .modal-project-info {
-      background: linear-gradient(135deg, rgba(59,130,246,0.05) 0%, rgba(139,92,246,0.06) 100%);
-      border: 1.5px solid rgba(59,130,246,0.15);
-      border-radius: 12px;
-      padding: 1rem 1.1rem;
-      margin-bottom: 1.4rem;
-    }
-    .modal-project-info .info-title { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; color:var(--text); line-height:1.3; margin-bottom:.6rem; }
-    .modal-project-info .info-row { display:flex; align-items:baseline; gap:.4rem; font-size:.78rem; color:var(--muted2); margin-bottom:.3rem; }
-    .modal-project-info .info-row .info-key { font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; font-size:.68rem; flex-shrink:0; }
-    .modal-project-info .info-row .info-val { color:var(--text); font-weight:500; }
-    .modal-problem-box { margin-top:.75rem; padding-top:.75rem; border-top:1px solid rgba(59,130,246,0.12); }
-    .modal-problem-box .problem-label { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin-bottom:.4rem; }
-    .modal-problem-box .problem-text  { font-size:.82rem; color:var(--muted2); line-height:1.6; }
-    .modal-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:.15rem; line-height:1.3; color:var(--text); }
-    .modal-sub   { color:var(--muted); font-size:.78rem; margin-bottom:1.4rem; }
-    .modal-btns { display:flex; gap:.7rem; margin-top:1.3rem; }
-
-    /* ── CRITERIA CARD ── */
-    .criteria-group {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.1rem;
-      margin-bottom: .9rem;
-    }
-    .criteria-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: .75rem;
-    }
-    .criteria-name {
-      font-size: .85rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    /* ── SCORE BADGE ── */
-    .score-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 52px;
-      height: 26px;
-      border-radius: 6px;
-      font-family: 'Syne', sans-serif;
-      font-size: .82rem;
-      font-weight: 700;
-      background: var(--surface);
-      border: 1.5px solid var(--border2);
-      color: var(--muted2);
-      transition: all .2s;
-      padding: 0 .5rem;
-    }
-    .score-badge.has-value {
-      border-color: var(--rc, var(--accent));
-      color: var(--rc, var(--accent));
-      background: color-mix(in srgb, var(--rc, var(--accent)) 8%, transparent);
-    }
-
-    /* ── RATING GRID (5×2 = 1–10) ── */
-    .rating-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-    }
-    .rating-btn {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      min-height: 40px;
-      border: 1.5px solid var(--border2);
-      border-radius: 8px;
-      background: var(--surface);
-      color: var(--muted2);
-      font-size: .83rem;
-      font-weight: 700;
-      font-family: 'Instrument Sans', sans-serif;
-      cursor: pointer;
-      transition: background .12s, color .12s, transform .1s, border-color .12s, box-shadow .12s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-    .rating-btn:hover  { background: var(--surface2); }
-    .rating-btn:active { transform: scale(.92); }
-
-    /* Color scale per value */
-    .rating-btn[data-val="1"]  { --rc: #ef4444; }
-    .rating-btn[data-val="2"]  { --rc: #f97316; }
-    .rating-btn[data-val="3"]  { --rc: #f59e0b; }
-    .rating-btn[data-val="4"]  { --rc: #eab308; }
-    .rating-btn[data-val="5"]  { --rc: #84cc16; }
-    .rating-btn[data-val="6"]  { --rc: #22c55e; }
-    .rating-btn[data-val="7"]  { --rc: #10b981; }
-    .rating-btn[data-val="8"]  { --rc: #06b6d4; }
-    .rating-btn[data-val="9"]  { --rc: #3b82f6; }
-    .rating-btn[data-val="10"] { --rc: #8b5cf6; }
-
-    .rating-btn.active {
-      background: var(--rc);
-      border-color: var(--rc);
-      color: #fff;
-      transform: scale(1.08);
-      box-shadow: 0 3px 10px color-mix(in srgb, var(--rc) 40%, transparent);
-      z-index: 1;
-      position: relative;
-    }
-
-    /* scale legend */
-    .scale-legend {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 6px;
-      font-size: .68rem;
-      color: var(--muted);
-      padding: 0 2px;
-    }
-
-    /* ── TABLE ── */
-    .tbl-wrap { border-radius:10px; overflow:hidden; border:1px solid var(--border); overflow-x:auto; -webkit-overflow-scrolling: touch; }
-    table { width:100%; border-collapse:collapse; min-width:600px; }
-    th, td { padding:.75rem .8rem; text-align:left; border-bottom:1px solid var(--border); font-size:.78rem; }
-    th { background:var(--surface2); font-family:'Syne',sans-serif; font-weight:700; font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted2); white-space:nowrap; }
-    tr:last-child td { border-bottom:none; }
-    tr:active td { background:var(--surface2); }
-
-    /* ── STATS ── */
-    .stats-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.8rem; margin-bottom:1.5rem; }
-    .stat-card { padding:1.2rem; border-radius:10px; text-align:center; border:1.5px solid var(--border); background:var(--surface); box-shadow:0 2px 8px var(--shadow); }
-    .stat-val  { font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; }
-    .stat-lbl  { font-size:.7rem; color:var(--muted); margin-top:.25rem; font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
-
-    /* ── MISC ── */
-    .loading    { text-align:center; padding:2.5rem; color:var(--muted); font-size:.88rem; }
-    .empty-state { text-align:center; padding:3rem 1.5rem; color:var(--muted); }
-    .empty-icon { font-size:2.5rem; margin-bottom:.8rem; }
-    .empty-state h3 { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; color:var(--muted2); margin-bottom:.3rem; }
-    .empty-state p { font-size:.85rem; }
-    .toast { position:fixed; bottom:1.5rem; left:1rem; right:1rem; z-index:9999; background:var(--surface); border:1.5px solid rgba(16,185,129,0.3); color:var(--green); padding:.85rem 1.2rem; border-radius:10px; font-weight:600; font-size:.85rem; text-align:center; animation:slideIn .3s cubic-bezier(.16,1,.3,1); box-shadow:0 8px 24px var(--shadow2); }
-    @keyframes slideIn { from{transform:translateY(20px);opacity:0} to{transform:none;opacity:1} }
-    .divider { height:1px; background:var(--border); margin:1.2rem 0; }
-    .section-title { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; margin-bottom:.9rem; color:var(--text); }
-
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(ellipse 70% 40% at 50% 0%,rgba(59,130,246,0.06) 0%,transparent 60%),radial-gradient(ellipse 60% 30% at 80% 100%,rgba(139,92,246,0.05) 0%,transparent 50%);}
+    .container{max-width:480px;margin:0 auto;padding:1rem;position:relative;z-index:1;}
+    header{text-align:center;padding:2rem 0 1.5rem;}
+    h1{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,8vw,2.4rem);font-weight:800;letter-spacing:-1.5px;line-height:1.1;background:linear-gradient(135deg,#3b82f6 0%,#8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.6rem;}
+    .subtitle{font-size:.9rem;color:var(--muted);font-weight:400;}
+    .card{background:var(--surface);border-radius:16px;border:1px solid var(--border);box-shadow:0 4px 16px var(--shadow);overflow:hidden;}
+    .login-wrap{padding:1.8rem 1.4rem;}
+    .login-wrap h2{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;text-align:center;margin-bottom:.3rem;color:var(--text);}
+    .login-sub{text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:1.5rem;}
+    .step-indicator{display:flex;justify-content:center;gap:.5rem;margin-bottom:1.5rem;}
+    .step-dot{width:24px;height:3px;border-radius:3px;background:var(--border2);transition:all .3s;}
+    .step-dot.active{background:var(--accent);}
+    .step-dot.done{background:var(--green);}
+    .form-group{margin-bottom:1.2rem;}
+    label{display:block;margin-bottom:.45rem;font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted2);}
+    input,textarea,select{width:100%;padding:.8rem 1rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:.9rem;font-family:'Instrument Sans',sans-serif;transition:all .2s;}
+    input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
+    input::placeholder{color:var(--muted);}
+    textarea{resize:vertical;min-height:90px;}
+    select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:calc(100% - .9rem) center;padding-right:2.5rem;}
+    select option{background:var(--surface);color:var(--text);}
+    .selected-college-pill{display:flex;align-items:center;gap:.6rem;background:rgba(16,185,129,0.08);border:1.5px solid rgba(16,185,129,0.25);border-radius:10px;padding:.7rem .9rem;margin-bottom:1.2rem;}
+    .selected-college-pill .pill-label{font-size:.7rem;color:var(--muted);display:block;margin-bottom:.05rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+    .selected-college-pill .pill-val{font-size:.88rem;font-weight:600;color:var(--green);}
+    button{width:100%;padding:.85rem 1.4rem;border:none;border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Instrument Sans',sans-serif;-webkit-tap-highlight-color:transparent;}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 12px rgba(59,130,246,0.25);}
+    .btn-primary:active{transform:scale(0.98);}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+    .btn-ghost{background:var(--surface2);color:var(--text);border:1.5px solid var(--border);}
+    .btn-ghost:active{background:var(--border);}
+    .btn-sm{width:auto;padding:.5rem 1rem;font-size:.8rem;border-radius:8px;}
+    .btn-row{display:flex;gap:.7rem;}
+    .btn-row .btn-ghost{flex:0 0 auto;width:auto;}
+    .btn-row .btn-primary{flex:1;}
+    .alert{padding:.8rem 1rem;border-radius:8px;margin-bottom:1rem;font-size:.85rem;font-weight:500;}
+    .alert-error{background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.2);color:#dc2626;}
+    .alert-success{background:rgba(16,185,129,.08);border:1.5px solid rgba(16,185,129,.2);color:#059669;}
+    .dashboard{display:none;}
+    .user-bar{display:flex;justify-content:space-between;align-items:center;padding:1.2rem;margin-bottom:1.2rem;gap:.8rem;flex-wrap:wrap;}
+    .user-name{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--text);}
+    .user-meta{font-size:.75rem;color:var(--muted);margin-top:.1rem;}
+    .college-badge{display:inline-flex;align-items:center;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:100px;padding:.2rem .7rem;font-size:.7rem;font-weight:600;color:var(--accent);margin-top:.25rem;}
+    .tabs{display:flex;gap:0;margin-bottom:1.2rem;background:var(--surface2);padding:.3rem;border-radius:10px;border:1px solid var(--border);overflow-x:auto;}
+    .tab{padding:.6rem 1rem;flex:1;text-align:center;border-radius:7px;cursor:pointer;transition:all .2s;font-weight:600;font-size:.8rem;color:var(--muted2);white-space:nowrap;}
+    .tab.active{background:var(--surface);color:var(--accent);box-shadow:0 2px 8px var(--shadow);}
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+    .prog-strip{display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:1.2rem;gap:.8rem;}
+    .prog-strip .count{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);}
+    .prog-strip .pct{font-size:.8rem;color:var(--accent);font-weight:700;white-space:nowrap;}
+    .prog-bar-wrap{height:5px;border-radius:5px;background:var(--border);overflow:hidden;margin-top:.5rem;}
+    .prog-bar{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .8s cubic-bezier(.16,1,.3,1);}
+    .projects-grid{display:flex;flex-direction:column;gap:1rem;margin-top:1.2rem;}
+    .project-card{background:var(--surface);border-radius:12px;padding:1.3rem;border:1.5px solid var(--border);box-shadow:0 2px 8px var(--shadow);}
+    .type-chip{display:inline-block;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);color:#7c3aed;border-radius:6px;padding:.15rem .55rem;font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.7rem;}
+    .project-title{font-family:'Syne',sans-serif;font-size:.98rem;font-weight:700;margin-bottom:.5rem;line-height:1.3;color:var(--text);}
+    .project-detail{font-size:.8rem;color:var(--muted2);margin-bottom:.3rem;}
+    .project-detail strong{color:var(--text);font-weight:600;}
+    .review-btn{margin-top:1rem;padding:.7rem;font-size:.82rem;font-weight:700;border-radius:8px;width:100%;cursor:pointer;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;transition:all .2s;box-shadow:0 3px 10px rgba(59,130,246,0.2);font-family:'Instrument Sans',sans-serif;}
+    .review-btn:active{transform:scale(0.98);}
+    .review-btn.reviewed{background:rgba(16,185,129,0.1);color:var(--green);border:1.5px solid rgba(16,185,129,0.25);box-shadow:none;cursor:default;}
+    .review-btn.reviewed:active{transform:none;}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:1000;overflow-y:auto;padding:1rem;}
+    .modal-content{max-width:480px;margin:1rem auto;background:var(--surface);border-radius:16px;padding:1.5rem;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,.2);}
+    .modal-project-info{background:linear-gradient(135deg,rgba(59,130,246,0.05) 0%,rgba(139,92,246,0.06) 100%);border:1.5px solid rgba(59,130,246,0.15);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.4rem;}
+    .modal-project-info .info-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:.6rem;}
+    .modal-project-info .info-row{display:flex;align-items:baseline;gap:.4rem;font-size:.78rem;color:var(--muted2);margin-bottom:.3rem;}
+    .modal-project-info .info-row .info-key{font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-size:.68rem;flex-shrink:0;}
+    .modal-project-info .info-row .info-val{color:var(--text);font-weight:500;}
+    .modal-problem-box{margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(59,130,246,0.12);}
+    .modal-problem-box .problem-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:.4rem;}
+    .modal-problem-box .problem-text{font-size:.82rem;color:var(--muted2);line-height:1.6;}
+    .modal-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:.15rem;color:var(--text);}
+    .modal-sub{color:var(--muted);font-size:.78rem;margin-bottom:1.4rem;}
+    .modal-btns{display:flex;gap:.7rem;margin-top:1.3rem;}
+    .criteria-group{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;margin-bottom:.9rem;}
+    .criteria-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;}
+    .criteria-name{font-size:.85rem;font-weight:600;color:var(--text);}
+    .score-badge{display:inline-flex;align-items:center;justify-content:center;min-width:52px;height:26px;border-radius:6px;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;background:var(--surface);border:1.5px solid var(--border2);color:var(--muted2);transition:all .2s;padding:0 .5rem;}
+    .score-badge.has-value{border-color:var(--rc,var(--accent));color:var(--rc,var(--accent));background:color-mix(in srgb,var(--rc,var(--accent)) 8%,transparent);}
+    .rating-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+    .rating-btn{width:100%;aspect-ratio:1/1;min-height:40px;border:1.5px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--muted2);font-size:.83rem;font-weight:700;font-family:'Instrument Sans',sans-serif;cursor:pointer;transition:background .12s,color .12s,transform .1s,border-color .12s,box-shadow .12s;display:flex;align-items:center;justify-content:center;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
+    .rating-btn:hover{background:var(--surface2);}
+    .rating-btn:active{transform:scale(.92);}
+    .rating-btn[data-val="1"]{--rc:#ef4444;} .rating-btn[data-val="2"]{--rc:#f97316;} .rating-btn[data-val="3"]{--rc:#f59e0b;} .rating-btn[data-val="4"]{--rc:#eab308;} .rating-btn[data-val="5"]{--rc:#84cc16;} .rating-btn[data-val="6"]{--rc:#22c55e;} .rating-btn[data-val="7"]{--rc:#10b981;} .rating-btn[data-val="8"]{--rc:#06b6d4;} .rating-btn[data-val="9"]{--rc:#3b82f6;} .rating-btn[data-val="10"]{--rc:#8b5cf6;}
+    .rating-btn.active{background:var(--rc);border-color:var(--rc);color:#fff;transform:scale(1.08);box-shadow:0 3px 10px color-mix(in srgb,var(--rc) 40%,transparent);z-index:1;position:relative;}
+    .scale-legend{display:flex;justify-content:space-between;margin-top:6px;font-size:.68rem;color:var(--muted);padding:0 2px;}
+    .tbl-wrap{border-radius:10px;overflow:hidden;border:1px solid var(--border);overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;min-width:600px;}
+    th,td{padding:.75rem .8rem;text-align:left;border-bottom:1px solid var(--border);font-size:.78rem;}
+    th{background:var(--surface2);font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted2);white-space:nowrap;}
+    tr:last-child td{border-bottom:none;}
+    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin-bottom:1.5rem;}
+    .stat-card{padding:1.2rem;border-radius:10px;text-align:center;border:1.5px solid var(--border);background:var(--surface);box-shadow:0 2px 8px var(--shadow);}
+    .stat-val{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;}
+    .stat-lbl{font-size:.7rem;color:var(--muted);margin-top:.25rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+    .loading{text-align:center;padding:2.5rem;color:var(--muted);font-size:.88rem;}
+    .empty-state{text-align:center;padding:3rem 1.5rem;color:var(--muted);}
+    .empty-icon{font-size:2.5rem;margin-bottom:.8rem;}
+    .empty-state h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--muted2);margin-bottom:.3rem;}
+    .empty-state p{font-size:.85rem;}
+    .toast{position:fixed;bottom:1.5rem;left:1rem;right:1rem;z-index:9999;background:var(--surface);border:1.5px solid rgba(16,185,129,0.3);color:var(--green);padding:.85rem 1.2rem;border-radius:10px;font-weight:600;font-size:.85rem;text-align:center;animation:slideIn .3s cubic-bezier(.16,1,.3,1);box-shadow:0 8px 24px var(--shadow2);}
+    @keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+    .section-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.9rem;color:var(--text);}
     @media(max-width:480px){
-      .container { padding:.8rem; }
-      header { padding:1.5rem 0 1rem; }
-      h1 { font-size:1.8rem; }
-      .login-wrap { padding:1.4rem 1.1rem; }
-      .user-bar { padding:1rem; }
-      .stats-grid { grid-template-columns:1fr; }
-      .project-card { padding:1.1rem; }
-      .modal-content { padding:1.2rem; margin:.5rem auto; }
-      .criteria-group { padding:.85rem; }
-      .rating-btn { min-height: 42px; font-size: .82rem; }
+      .container{padding:.8rem;} header{padding:1.5rem 0 1rem;} h1{font-size:1.8rem;}
+      .login-wrap{padding:1.4rem 1.1rem;} .user-bar{padding:1rem;}
+      .stats-grid{grid-template-columns:1fr;} .project-card{padding:1.1rem;}
+      .modal-content{padding:1.2rem;margin:.5rem auto;} .criteria-group{padding:.85rem;}
+      .rating-btn{min-height:42px;}
     }
   </style>
 </head>
@@ -331,7 +144,7 @@
     <p class="login-sub">Sign in with your registered email to continue</p>
     <div class="step-indicator">
       <div class="step-dot active" id="dot1"></div>
-      <div class="step-dot"        id="dot2"></div>
+      <div class="step-dot" id="dot2"></div>
     </div>
     <div id="loginAlert"></div>
     <div id="step1">
@@ -367,7 +180,6 @@
     </div>
     <div id="step2" style="display:none">
       <div class="selected-college-pill">
-        <span></span>
         <div>
           <span class="pill-label">Selected College</span>
           <span class="pill-val" id="selectedCollegeDisplay"></span>
@@ -396,14 +208,12 @@
       </div>
       <button class="btn-ghost btn-sm" onclick="logout()">Sign Out</button>
     </div>
-
     <div class="tabs">
-      <div class="tab active" id="tab-projects"  onclick="switchTab('projects')">Projects</div>
-      <div class="tab"        id="tab-myReviews" onclick="switchTab('myReviews')">My Reviews</div>
-      <div class="tab"        id="tab-myProject" onclick="switchTab('myProject')">My Stats</div>
+      <div class="tab active" id="tab-projects" onclick="switchTab('projects')">Projects</div>
+      <div class="tab" id="tab-myReviews" onclick="switchTab('myReviews')">My Reviews</div>
+      <div class="tab" id="tab-myProject" onclick="switchTab('myProject')">My Stats</div>
     </div>
-
-    <div id="projectsTab"  class="tab-content active"><div id="projectsContent"></div></div>
+    <div id="projectsTab" class="tab-content active"><div id="projectsContent"></div></div>
     <div id="myReviewsTab" class="tab-content"><div id="myReviewsContent"></div></div>
     <div id="myProjectTab" class="tab-content"><div id="myProjectContent"></div></div>
   </div>
@@ -412,9 +222,9 @@
 <!-- REVIEW MODAL -->
 <div id="reviewModal" class="modal">
   <div class="modal-content">
-    <div class="modal-project-info" id="modalProjectInfo">
+    <div class="modal-project-info">
       <div class="type-chip" id="modalProjectType"></div>
-      <div class="info-title"  id="modalProjectTitle"></div>
+      <div class="info-title" id="modalProjectTitle"></div>
       <div class="info-row">
         <span class="info-key">Student</span>
         <span class="info-val" id="modalStudentName"></span>
@@ -428,65 +238,38 @@
         <div class="problem-text" id="modalProblemText"></div>
       </div>
     </div>
-
     <div class="modal-title">Rate this Project</div>
     <div class="modal-sub">Tap a number to score each criterion (1 – 10)</div>
-
-    <!-- CRITERIA: Problem Clarity -->
     <div class="criteria-group">
-      <div class="criteria-header">
-        <span class="criteria-name">Problem Clarity</span>
-        <span class="score-badge" id="clarity-badge">—</span>
-      </div>
+      <div class="criteria-header"><span class="criteria-name">Problem Clarity</span><span class="score-badge" id="clarity-badge">—</span></div>
       <div class="rating-grid" id="clarity-grid"></div>
       <div class="scale-legend"><span>Poor</span><span>Excellent</span></div>
       <input type="hidden" id="clarity" value="">
     </div>
-
-    <!-- CRITERIA: Innovation -->
     <div class="criteria-group">
-      <div class="criteria-header">
-        <span class="criteria-name">Innovation</span>
-        <span class="score-badge" id="innovation-badge">—</span>
-      </div>
+      <div class="criteria-header"><span class="criteria-name">Innovation</span><span class="score-badge" id="innovation-badge">—</span></div>
       <div class="rating-grid" id="innovation-grid"></div>
       <div class="scale-legend"><span>Poor</span><span>Excellent</span></div>
       <input type="hidden" id="innovation" value="">
     </div>
-
-    <!-- CRITERIA: Execution -->
     <div class="criteria-group">
-      <div class="criteria-header">
-        <span class="criteria-name">Execution</span>
-        <span class="score-badge" id="execution-badge">—</span>
-      </div>
+      <div class="criteria-header"><span class="criteria-name">Execution</span><span class="score-badge" id="execution-badge">—</span></div>
       <div class="rating-grid" id="execution-grid"></div>
       <div class="scale-legend"><span>Poor</span><span>Excellent</span></div>
       <input type="hidden" id="execution" value="">
     </div>
-
-    <!-- CRITERIA: Usability -->
     <div class="criteria-group">
-      <div class="criteria-header">
-        <span class="criteria-name">Usability</span>
-        <span class="score-badge" id="usability-badge">—</span>
-      </div>
+      <div class="criteria-header"><span class="criteria-name">Usability</span><span class="score-badge" id="usability-badge">—</span></div>
       <div class="rating-grid" id="usability-grid"></div>
       <div class="scale-legend"><span>Poor</span><span>Excellent</span></div>
       <input type="hidden" id="usability" value="">
     </div>
-
-    <!-- CRITERIA: Overall Impression -->
     <div class="criteria-group">
-      <div class="criteria-header">
-        <span class="criteria-name">Overall Impression</span>
-        <span class="score-badge" id="overall-badge">—</span>
-      </div>
+      <div class="criteria-header"><span class="criteria-name">Overall Impression</span><span class="score-badge" id="overall-badge">—</span></div>
       <div class="rating-grid" id="overall-grid"></div>
       <div class="scale-legend"><span>Poor</span><span>Excellent</span></div>
       <input type="hidden" id="overall" value="">
     </div>
-
     <div class="form-group" style="margin-top:1rem;">
       <label>Comments <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
       <textarea id="comments" placeholder="Share your honest feedback…"></textarea>
@@ -505,14 +288,9 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null, reviewedSet = new Set(), currentProject = null, selectedCollege = '';
 
-// ── COLOR MAP ────────────────────────────────────────────────
-const COLOR_MAP = {
-  1:'#ef4444', 2:'#f97316', 3:'#f59e0b', 4:'#eab308', 5:'#84cc16',
-  6:'#22c55e', 7:'#10b981', 8:'#06b6d4', 9:'#3b82f6', 10:'#8b5cf6'
-};
+const COLOR_MAP = {1:'#ef4444',2:'#f97316',3:'#f59e0b',4:'#eab308',5:'#84cc16',6:'#22c55e',7:'#10b981',8:'#06b6d4',9:'#3b82f6',10:'#8b5cf6'};
 function getColor(v) { return COLOR_MAP[v] || '#94a3b8'; }
 
-// ── RATING GRID BUILDER ──────────────────────────────────────
 const CRITERIA = ['clarity','innovation','execution','usability','overall'];
 
 function buildRatingGrids() {
@@ -538,11 +316,8 @@ function setRating(id, val) {
   badge.textContent = val + '/10';
   badge.className = 'score-badge has-value';
   badge.style.setProperty('--rc', getColor(val));
-
   const grid = document.getElementById(id + '-grid');
-  grid.querySelectorAll('.rating-btn').forEach(btn => {
-    btn.classList.toggle('active', +btn.dataset.val === val);
-  });
+  grid.querySelectorAll('.rating-btn').forEach(btn => btn.classList.toggle('active', +btn.dataset.val === val));
 }
 
 function resetRatings() {
@@ -557,18 +332,17 @@ function resetRatings() {
   });
 }
 
-// Build grids on load
 buildRatingGrids();
 
-// ── LOGIN ────────────────────────────────────────────────────
+// ── LOGIN ──────────────────────────────────────────────────
 function goToStep2() {
   const c = document.getElementById('collegeSelect').value;
-  if (!c) return showAlert('loginAlert','Please select your college first.','error');
+  if (!c) return showAlert('loginAlert', 'Please select your college first.', 'error');
   selectedCollege = c;
   document.getElementById('selectedCollegeDisplay').textContent = c;
   document.getElementById('step1').style.display = 'none';
   document.getElementById('step2').style.display = 'block';
-  document.getElementById('dot1').classList.replace('active','done');
+  document.getElementById('dot1').classList.replace('active', 'done');
   document.getElementById('dot2').classList.add('active');
   document.getElementById('emailInput').focus();
 }
@@ -585,23 +359,23 @@ function backToStep1() {
 async function emailLogin() {
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-    return showAlert('loginAlert','Please enter a valid email address.','error');
+    return showAlert('loginAlert', 'Please enter a valid email address.', 'error');
   setLoading('loginBtn', true, 'Signing in…');
   const { data: student, error } = await sb.from('students').select('*').eq('email', email).single();
   setLoading('loginBtn', false, 'Sign In');
-  if (error || !student) return showAlert('loginAlert','Email not found. Please check and try again.','error');
+  if (error || !student) return showAlert('loginAlert', 'Email not found. Please check and try again.', 'error');
   loginSuccess(student);
 }
-document.getElementById('emailInput').addEventListener('keydown', e => { if(e.key==='Enter') emailLogin(); });
+document.getElementById('emailInput').addEventListener('keydown', e => { if (e.key === 'Enter') emailLogin(); });
 
 function loginSuccess(student) {
   currentUser = student;
   currentUser._college = student.college || selectedCollege;
   document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('dashboard').style.display   = 'block';
-  document.getElementById('userName').textContent         = student.name;
-  document.getElementById('userReg').textContent          = student.register_number;
-  document.getElementById('userCourse').textContent       = student.course;
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('userName').textContent = student.name;
+  document.getElementById('userReg').textContent = student.register_number;
+  document.getElementById('userCourse').textContent = student.course;
   document.getElementById('userCollegeBadge').textContent = currentUser._college;
   loadReviewedSet().then(() => loadProjects());
 }
@@ -609,32 +383,35 @@ function loginSuccess(student) {
 function logout() {
   currentUser = null; selectedCollege = ''; reviewedSet.clear();
   document.getElementById('loginScreen').style.display = 'block';
-  document.getElementById('dashboard').style.display   = 'none';
+  document.getElementById('dashboard').style.display = 'none';
   document.getElementById('emailInput').value = '';
   document.getElementById('loginAlert').innerHTML = '';
   document.getElementById('collegeSelect').value = '';
   backToStep1();
 }
 
-// ── REVIEWED SET ─────────────────────────────────────────────
+// ── REVIEWED SET ──────────────────────────────────────────
 async function loadReviewedSet() {
   const { data } = await sb.from('reviews').select('project_reg').eq('reviewer_reg', currentUser.register_number);
   reviewedSet.clear();
-  (data||[]).forEach(r => reviewedSet.add(r.project_reg));
+  (data || []).forEach(r => reviewedSet.add(r.project_reg));
 }
 
-// ── TABS ─────────────────────────────────────────────────────
+// ── TABS ──────────────────────────────────────────────────
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  document.getElementById(name+'Tab').classList.add('active');
-  if(name==='projects')  loadProjects();
-  if(name==='myReviews') loadMyReviews();
-  if(name==='myProject') loadMyProjectStats();
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById(name + 'Tab').classList.add('active');
+  if (name === 'projects')  loadProjects();
+  if (name === 'myReviews') loadMyReviews();
+  if (name === 'myProject') loadMyProjectStats();
 }
 
-// ── PROJECTS TAB ─────────────────────────────────────────────
+// ── PROJECTS TAB ──────────────────────────────────────────
+// BUG FIX 1: was fetching from 'projects' table — now fetches from 'students' directly
+// BUG FIX 2: removed the redundant second students fetch (p already has name/course)
+// BUG FIX 3: fixed broken button HTML (had misplaced "..." and template literal split incorrectly)
 async function loadProjects() {
   const c = document.getElementById('projectsContent');
   c.innerHTML = '<div class="loading">Loading projects…</div>';
@@ -644,33 +421,27 @@ async function loadProjects() {
     .eq('college', currentUser._college);
 
   if (collegeError) {
-    c.innerHTML = `<div class="alert alert-error">Error loading college data: ${collegeError.message}</div>`;
+    c.innerHTML = `<div class="alert alert-error">Error: ${collegeError.message}</div>`;
     return;
   }
 
   const collegeRegs = (collegeStudents || []).map(s => s.register_number);
 
- // AFTER — fetch directly from students, no separate projects query needed
-const { data: projects, error } = await sb
-  .from('students')
-  .select('register_number, name, course, project_title, project_type, problem_statement')
-  .in('register_number', collegeRegs)
-  .neq('register_number', currentUser.register_number)
-  .order('register_number');
+  const { data: projects, error } = await sb
+    .from('students')
+    .select('register_number, name, course, project_title, project_type, problem_statement')
+    .in('register_number', collegeRegs)
+    .neq('register_number', currentUser.register_number)
+    .order('name');
 
-  if (error) { c.innerHTML=`<div class="alert alert-error">${error.message}</div>`; return; }
+  if (error) { c.innerHTML = `<div class="alert alert-error">${error.message}</div>`; return; }
   if (!projects?.length) {
-    c.innerHTML = '<div class="empty-state"><h3>No projects found</h3><p>Check back later.</p></div>';
+    c.innerHTML = '<div class="empty-state"><div class="empty-icon">📂</div><h3>No projects found</h3><p>Check back later.</p></div>';
     return;
   }
 
-  const regs = projects.map(p => p.register_number);
-  const { data: students } = await sb.from('students').select('register_number,name,course').in('register_number', regs);
-  const stuMap = {};
-  (students||[]).forEach(s => stuMap[s.register_number] = s);
-
   await loadReviewedSet();
-  const done=reviewedSet.size, total=projects.length, pct=total?Math.round(done/total*100):0;
+  const done = reviewedSet.size, total = projects.length, pct = total ? Math.round(done / total * 100) : 0;
 
   let html = `
     <div class="prog-strip">
@@ -685,15 +456,17 @@ const { data: projects, error } = await sb
     <div class="projects-grid">`;
 
   projects.forEach(p => {
-    const stu = stuMap[p.register_number];
     const rev = reviewedSet.has(p.register_number);
+    const problemSnippet = p.problem_statement
+      ? `<div class="project-detail" style="margin-top:.4rem;color:var(--muted);font-size:.78rem">${escHtml(p.problem_statement.slice(0, 80))}${p.problem_statement.length > 80 ? '…' : ''}</div>`
+      : '';
     html += `<div class="project-card">
-      <div class="type-chip">${escHtml(p.project_type||'Project')}</div>
-      <div class="project-title">${escHtml(p.project_title||'Untitled')}</div>
-  <div class="project-detail"><strong>Student:</strong> ${escHtml(p.name||'—')}</div>
-  <div class="project-detail"><strong>Course:</strong>  ${escHtml(p.course||'—')}</div>
-  ${p.problem_statement ? `<div class="project-detail" style="margin-top:.4rem;color:var(--muted);font-size:.78rem">${escHtml(p.problem_statement.slice(0,70))}${p.problem_statement.length>70?'…':''}</div>` : ''}
-  <button ... onclick="openModal('${escHtml(p.register_number)}')">`;
+      <div class="type-chip">${escHtml(p.project_type || 'Project')}</div>
+      <div class="project-title">${escHtml(p.project_title || 'Untitled')}</div>
+      <div class="project-detail"><strong>Student:</strong> ${escHtml(p.name || '—')}</div>
+      <div class="project-detail"><strong>Course:</strong> ${escHtml(p.course || '—')}</div>
+      ${problemSnippet}
+      <button class="review-btn ${rev ? 'reviewed' : ''}" ${rev ? 'disabled' : `onclick="openModal('${escHtml(p.register_number)}')"`}>
         ${rev ? '✓ Reviewed' : 'Review Project'}
       </button>
     </div>`;
@@ -703,7 +476,8 @@ const { data: projects, error } = await sb
   c.innerHTML = html;
 }
 
-// ── MODAL ────────────────────────────────────────────────────
+// ── MODAL ─────────────────────────────────────────────────
+// BUG FIX 4: was fetching from 'projects' table — now fetches from 'students'
 async function openModal(reg) {
   const { data: s, error } = await sb
     .from('students')
@@ -732,22 +506,19 @@ async function openModal(reg) {
   document.getElementById('reviewModal').style.display = 'block';
 }
 
-function closeModal() { document.getElementById('reviewModal').style.display='none'; currentProject=null; }
+function closeModal() { document.getElementById('reviewModal').style.display = 'none'; currentProject = null; }
 
 document.getElementById('reviewModal').addEventListener('click', e => {
-  if(e.target===document.getElementById('reviewModal')) closeModal();
+  if (e.target === document.getElementById('reviewModal')) closeModal();
 });
 
-// ── SUBMIT REVIEW ────────────────────────────────────────────
+// ── SUBMIT REVIEW ─────────────────────────────────────────
 async function submitReview() {
   if (!currentProject) return;
   if (reviewedSet.has(currentProject.register_number)) { alert('Already reviewed.'); closeModal(); return; }
 
   const missing = CRITERIA.filter(id => !document.getElementById(id).value);
-  if (missing.length) {
-    alert('Please rate all 5 criteria before submitting.');
-    return;
-  }
+  if (missing.length) { alert('Please rate all 5 criteria before submitting.'); return; }
 
   setLoading('submitReviewBtn', true, 'Submitting…');
   const { error } = await sb.from('reviews').insert({
@@ -772,53 +543,46 @@ async function submitReview() {
   showToast('Review submitted successfully! ✓');
 }
 
-// ── MY REVIEWS TAB ───────────────────────────────────────────
+// ── MY REVIEWS TAB ────────────────────────────────────────
+// BUG FIX 5: was fetching from 'projects' table — now fetches from 'students'
 async function loadMyReviews() {
   const c = document.getElementById('myReviewsContent');
   c.innerHTML = '<div class="loading">Loading…</div>';
 
   const { data: reviews, error } = await sb
-    .from('reviews')
-    .select('*')
+    .from('reviews').select('*')
     .eq('reviewer_reg', currentUser.register_number)
     .order('created_at', { ascending: false });
 
-  if (error) { c.innerHTML=`<div class="alert alert-error">${error.message}</div>`; return; }
-
+  if (error) { c.innerHTML = `<div class="alert alert-error">${error.message}</div>`; return; }
   if (!reviews?.length) {
-    c.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">📋</div>
-      <h3>No reviews submitted yet</h3>
-      <p>Head over to the Projects tab to start reviewing.</p>
-    </div>`;
+    c.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><h3>No reviews submitted yet</h3><p>Head over to the Projects tab to start reviewing.</p></div>`;
     return;
   }
 
   const regs = [...new Set(reviews.map(r => r.project_reg))];
-  const { data: projects } = await sb
-    .from('projects')
-    .select('register_number,title,project_type')
+  const { data: stuData } = await sb
+    .from('students')
+    .select('register_number, project_title, project_type')
     .in('register_number', regs);
 
-  const projMap = {};
-  (projects||[]).forEach(p => projMap[p.register_number] = p);
+  const stuMap = {};
+  (stuData || []).forEach(s => stuMap[s.register_number] = s);
 
   let html = `<p style="color:var(--muted2);font-size:.82rem;font-weight:500;margin-bottom:1rem">
     You have submitted <strong style="color:var(--text)">${reviews.length}</strong> review(s)</p>
     <div class="tbl-wrap"><table>
       <thead><tr>
-        <th>Project</th><th>Type</th><th>College</th>
-        <th>Clarity</th><th>Innovation</th><th>Execution</th>
-        <th>Usability</th><th>Overall</th><th>Avg</th><th>Date</th>
+        <th>Project</th><th>Type</th><th>Clarity</th><th>Innovation</th>
+        <th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Date</th>
       </tr></thead><tbody>`;
 
   reviews.forEach(r => {
-    const proj = projMap[r.project_reg];
-    const avg  = ((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);
+    const s = stuMap[r.project_reg];
+    const avg = ((r.clarity + r.innovation + r.execution + r.usability + r.overall) / 5).toFixed(1);
     html += `<tr>
-      <td><strong>${escHtml(proj?.title || r.project_reg)}</strong></td>
-      <td><span class="type-chip" style="font-size:.65rem">${escHtml(proj?.project_type||'—')}</span></td>
-      <td style="color:var(--muted);font-size:.75rem">${escHtml(r.reviewer_college||'—')}</td>
+      <td><strong>${escHtml(s?.project_title || r.project_reg)}</strong></td>
+      <td><span class="type-chip" style="font-size:.65rem">${escHtml(s?.project_type || '—')}</span></td>
       <td>${r.clarity}/10</td><td>${r.innovation}/10</td><td>${r.execution}/10</td>
       <td>${r.usability}/10</td><td>${r.overall}/10</td>
       <td><strong style="color:var(--green)">${avg}</strong></td>
@@ -830,17 +594,19 @@ async function loadMyReviews() {
   c.innerHTML = html;
 }
 
-// ── MY PROJECT STATS TAB ─────────────────────────────────────
+// ── MY PROJECT STATS TAB ──────────────────────────────────
+// BUG FIX 6: was fetching from 'projects' table — now fetches from 'students'
 async function loadMyProjectStats() {
   const c = document.getElementById('myProjectContent');
   c.innerHTML = '<div class="loading">Loading…</div>';
 
-  const { data: myProject, error: pe } = await sb
-    .from('projects').select('*')
+  const { data: me, error: pe } = await sb
+    .from('students')
+    .select('register_number, project_title, project_type, problem_statement')
     .eq('register_number', currentUser.register_number)
     .single();
 
-  if (pe || !myProject) {
+  if (pe || !me || !me.project_title) {
     c.innerHTML = '<div class="empty-state"><div class="empty-icon">📂</div><h3>No project found.</h3><p>Your project hasn\'t been added yet.</p></div>';
     return;
   }
@@ -850,41 +616,34 @@ async function loadMyProjectStats() {
     .eq('project_reg', currentUser.register_number)
     .order('created_at');
 
-  if (re) { c.innerHTML=`<div class="alert alert-error">${re.message}</div>`; return; }
+  if (re) { c.innerHTML = `<div class="alert alert-error">${re.message}</div>`; return; }
 
   let html = `<div class="card" style="padding:1.5rem;margin-bottom:1.2rem;">
-    <div class="type-chip">${escHtml(myProject.project_type||'Project')}</div>
-    <h2 style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin:.5rem 0 .7rem;line-height:1.3;color:var(--text)">${escHtml(myProject.title)}</h2>
-    ${myProject.problem ? `<div class="project-detail" style="font-size:.82rem">${escHtml(myProject.problem)}</div>` : ''}
+    <div class="type-chip">${escHtml(me.project_type || 'Project')}</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin:.5rem 0 .7rem;line-height:1.3;color:var(--text)">${escHtml(me.project_title)}</h2>
+    ${me.problem_statement ? `<div class="project-detail" style="font-size:.82rem">${escHtml(me.problem_statement)}</div>` : ''}
   </div>`;
 
   if (!reviews?.length) {
-    html += `<div class="empty-state">
-      <div class="empty-icon">⏳</div>
-      <h3>No reviews yet</h3>
-      <p style="color:var(--muted);font-size:.85rem;margin-top:.4rem">Your peers haven't reviewed your project yet.</p>
-    </div>`;
+    html += `<div class="empty-state"><div class="empty-icon">⏳</div><h3>No reviews yet</h3><p style="color:var(--muted);font-size:.85rem;margin-top:.4rem">Your peers haven't reviewed your project yet.</p></div>`;
     c.innerHTML = html; return;
   }
 
   const n = reviews.length;
-  const avg = f => (reviews.reduce((s,r) => s + r[f], 0) / n).toFixed(1);
+  const avg = f => (reviews.reduce((s, r) => s + r[f], 0) / n).toFixed(1);
   const avgs = {
-    clarity:    avg('clarity'),
-    innovation: avg('innovation'),
-    execution:  avg('execution'),
-    usability:  avg('usability'),
-    overall:    avg('overall')
+    clarity: avg('clarity'), innovation: avg('innovation'),
+    execution: avg('execution'), usability: avg('usability'), overall: avg('overall')
   };
-  const grand = (Object.values(avgs).reduce((s,v) => s + (+v), 0) / 5).toFixed(1);
+  const grand = (Object.values(avgs).reduce((s, v) => s + (+v), 0) / 5).toFixed(1);
 
   const cards = [
-    { label:'Clarity',    val:avgs.clarity,    color:'var(--accent)'  },
-    { label:'Innovation', val:avgs.innovation, color:'#8b5cf6'        },
-    { label:'Execution',  val:avgs.execution,  color:'var(--amber)'   },
-    { label:'Usability',  val:avgs.usability,  color:'#06b6d4'        },
-    { label:'Overall',    val:avgs.overall,    color:'var(--green)'   },
-    { label:'Grand Avg',  val:grand,           color:'var(--text)'    },
+    { label:'Clarity',    val:avgs.clarity,    color:'var(--accent)' },
+    { label:'Innovation', val:avgs.innovation, color:'#8b5cf6'       },
+    { label:'Execution',  val:avgs.execution,  color:'var(--amber)'  },
+    { label:'Usability',  val:avgs.usability,  color:'#06b6d4'       },
+    { label:'Overall',    val:avgs.overall,    color:'var(--green)'  },
+    { label:'Grand Avg',  val:grand,           color:'var(--text)'   },
   ];
 
   html += `<div class="stats-grid">
@@ -893,7 +652,7 @@ async function loadMyProjectStats() {
         <div class="stat-val" style="color:${card.color}">${card.val}</div>
         <div class="stat-lbl">${card.label}</div>
         <div class="prog-bar-wrap" style="margin-top:.6rem">
-          <div class="prog-bar" style="width:${card.val*10}%;background:${card.color}"></div>
+          <div class="prog-bar" style="width:${card.val * 10}%;background:${card.color}"></div>
         </div>
       </div>`).join('')}
   </div>
@@ -908,14 +667,14 @@ async function loadMyProjectStats() {
     </tr></thead><tbody>`;
 
   reviews.forEach((r, i) => {
-    const ra = ((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);
+    const ra = ((r.clarity + r.innovation + r.execution + r.usability + r.overall) / 5).toFixed(1);
     html += `<tr>
-      <td style="color:var(--muted);font-size:.75rem">Peer ${i+1}</td>
-      <td style="color:var(--muted2);font-size:.75rem">${escHtml(r.reviewer_college||'—')}</td>
+      <td style="color:var(--muted);font-size:.75rem">Peer ${i + 1}</td>
+      <td style="color:var(--muted2);font-size:.75rem">${escHtml(r.reviewer_college || '—')}</td>
       <td>${r.clarity}/10</td><td>${r.innovation}/10</td><td>${r.execution}/10</td>
       <td>${r.usability}/10</td><td>${r.overall}/10</td>
       <td><strong style="color:var(--green)">${ra}</strong></td>
-      <td style="color:var(--muted2);font-size:.75rem;max-width:140px">${escHtml(r.comments||'—')}</td>
+      <td style="color:var(--muted2);font-size:.75rem;max-width:140px">${escHtml(r.comments || '—')}</td>
       <td style="color:var(--muted);font-size:.75rem">${new Date(r.created_at).toLocaleDateString('en-IN')}</td>
     </tr>`;
   });
@@ -924,7 +683,7 @@ async function loadMyProjectStats() {
   c.innerHTML = html;
 }
 
-// ── HELPERS ──────────────────────────────────────────────────
+// ── HELPERS ───────────────────────────────────────────────
 function showAlert(id, msg, type) {
   document.getElementById(id).innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
   setTimeout(() => document.getElementById(id).innerHTML = '', 7000);
