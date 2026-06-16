@@ -450,6 +450,7 @@ async function loadProjects() {
     .select('register_number, name, course, project_title, project_type, problem_statement')
     .eq('mentor_assigned', currentUser._mentor)
     .eq('college', currentUser._college)
+    .eq('course', currentUser.course)
     .neq('register_number', currentUser.register_number)
     .order('name');
 
