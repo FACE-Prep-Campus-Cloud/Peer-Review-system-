@@ -445,10 +445,11 @@ async function loadProjects() {
   }
 
   // ── CHANGED: single query — filter by same mentor_assigned, exclude self ──
-  const { data: projects, error } = await sb
+ const { data: projects, error } = await sb
     .from('students')
     .select('register_number, name, course, project_title, project_type, problem_statement')
     .eq('mentor_assigned', currentUser._mentor)
+    .eq('college', currentUser._college)
     .neq('register_number', currentUser.register_number)
     .order('name');
 
