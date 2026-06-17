@@ -511,6 +511,16 @@
 
         <!-- Students tab -->
         <div id="adminStudentsTab" class="admin-tab-pane active">
+          <!-- View toggle bar -->
+          <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.75rem;gap:.5rem">
+            <span style="font-size:12px;color:var(--muted)">View:</span>
+            <div style="display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+              <button id="vbtn-dept" class="filter-pill active" style="border:none;border-radius:0;padding:.35rem .9rem" onclick="setStudentView('dept')">By department</button>
+              <button id="vbtn-flat" class="filter-pill" style="border:none;border-radius:0;padding:.35rem .9rem" onclick="setStudentView('flat')">All students</button>
+            </div>
+          </div>
+          <div id="deptView" style="display:none"></div>
+
           <div class="search-filter-bar">
             <div class="search-wrap">
               <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1159,6 +1169,125 @@ function showToast(msg) {
 }
 function setLoading(id, on, label) { const b = document.getElementById(id); if (!b) return; b.disabled = on; b.textContent = label; }
 function escHtml(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ── STUDENT VIEW TOGGLE ── */
+let studentViewMode = 'dept';
+
+function setStudentView(mode) {
+  studentViewMode = mode;
+  document.getElementById('vbtn-dept').classList.toggle('active', mode === 'dept');
+  document.getElementById('vbtn-flat').classList.toggle('active', mode === 'flat');
+  const deptDiv = document.getElementById('deptView');
+  const flatDiv = document.getElementById('studentsTableWrap');
+  if (mode === 'dept') {
+    flatDiv.style.display = 'none';
+    document.querySelector('.search-filter-bar').style.display = 'none';
+    deptDiv.style.display = 'block';
+    renderDeptView(adminStudentsCache, adminReviewsCache);
+  } else {
+    flatDiv.style.display = 'block';
+    document.querySelector('.search-filter-bar').style.display = 'flex';
+    deptDiv.style.display = 'none';
+  }
+}
+
+function renderDeptView(students, reviews) {
+  const deptDiv = document.getElementById('deptView');
+  const rcvdMap = {}, givenMap = {}, scoresMap = {};
+  reviews.forEach(r => {
+    rcvdMap[r.project_reg] = (rcvdMap[r.project_reg] || 0) + 1;
+    givenMap[r.reviewer_reg] = (givenMap[r.reviewer_reg] || 0) + 1;
+    if (!scoresMap[r.project_reg]) scoresMap[r.project_reg] = [];
+    scoresMap[r.project_reg].push((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5);
+  });
+  const avgMap = {};
+  Object.keys(scoresMap).forEach(reg => {
+    const a = scoresMap[reg];
+    avgMap[reg] = (a.reduce((s,v)=>s+v,0)/a.length).toFixed(1);
+  });
+
+  // Group by course
+  const groups = {};
+  students.forEach(s => {
+    const key = s.course || 'Unassigned';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(s);
+  });
+
+  const DEPT_COLORS = ['#534ab7','#185fa5','#3b6d11','#854f0b','#993556','#0f6e56','#a32d2d','#3c3489'];
+  const courses = Object.keys(groups).sort();
+  const totalPeers = students.length - 1;
+
+  let html = '';
+  courses.forEach((course, ci) => {
+    const color = DEPT_COLORS[ci % DEPT_COLORS.length];
+    const stuList = groups[course];
+    const reviewedCount = stuList.filter(s => (rcvdMap[s.register_number]||0) > 0).length;
+    const pendingCount = stuList.length - reviewedCount;
+    const pct = stuList.length ? Math.round(reviewedCount / stuList.length * 100) : 0;
+    const dId = 'dept_' + ci;
+
+    const rows = stuList.map(s => {
+      const rcvd = rcvdMap[s.register_number] || 0;
+      const given = givenMap[s.register_number] || 0;
+      const avg = avgMap[s.register_number];
+      const pillClass = rcvd === 0 ? 'none' : rcvd >= 3 ? 'done' : 'partial';
+      const pillLabel = rcvd === 0 ? 'None' : rcvd + ' received';
+      const initials = (s.name||'?').split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
+      return `<tr onclick="openStudentDetail('${escHtml(s.register_number)}')" style="cursor:pointer">
+        <td>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div style="width:30px;height:30px;border-radius:7px;background:${color}18;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:${color};flex-shrink:0">${initials}</div>
+            <div><div class="stu-name">${escHtml(s.name||'—')}</div><div class="stu-reg">${escHtml(s.register_number||'')}</div></div>
+          </div>
+        </td>
+        <td style="max-width:180px">
+          ${s.project_title
+            ? `<div style="font-size:12.5px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(s.project_title.slice(0,50))}${s.project_title.length>50?'…':''}</div>`
+            : `<span style="font-size:12px;color:var(--rose)">No project</span>`}
+        </td>
+        <td><span class="status-pill ${pillClass}">${pillLabel}</span></td>
+        <td><span class="given-text">${given} / ${Math.max(0, totalPeers)}</span></td>
+        <td>${avg ? `<span class="score-pill">${avg}</span>` : '<span style="color:var(--muted);font-size:12px">—</span>'}</td>
+      </tr>`;
+    }).join('');
+
+    html += `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:.85rem">
+        <div onclick="toggleDept('${dId}')" style="display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;background:var(--surface2);cursor:pointer;user-select:none">
+          <div style="display:flex;align-items:center;gap:.7rem">
+            <div style="width:9px;height:9px;border-radius:50%;background:${color};flex-shrink:0"></div>
+            <div>
+              <div style="font-size:13.5px;font-weight:600;color:var(--text)">${escHtml(course)}</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:.1rem">${stuList.length} student${stuList.length!==1?'s':''} · ${pct}% reviewed</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            ${reviewedCount > 0 ? `<span class="status-pill done" style="font-size:11px">${reviewedCount} reviewed</span>` : ''}
+            ${pendingCount > 0 ? `<span class="status-pill none" style="font-size:11px">${pendingCount} pending</span>` : ''}
+            <span id="chv_${dId}" style="color:var(--muted);font-size:13px;transition:transform .2s;display:inline-block">▾</span>
+          </div>
+        </div>
+        <div style="height:3px;background:var(--border)"><div style="height:100%;width:${pct}%;background:${color};border-radius:0 2px 2px 0;transition:width .6s"></div></div>
+        <div id="${dId}">
+          <table class="student-table">
+            <thead><tr><th>Student</th><th>Project</th><th>Reviews received</th><th>Reviewed</th><th>Avg score</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>`;
+  });
+
+  deptDiv.innerHTML = html;
+}
+
+function toggleDept(id) {
+  const el = document.getElementById(id);
+  const ch = document.getElementById('chv_' + id);
+  const isHidden = el.style.display === 'none';
+  el.style.display = isHidden ? 'block' : 'none';
+  if (ch) ch.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(-90deg)';
+}
 </script>
 </body>
 </html>
