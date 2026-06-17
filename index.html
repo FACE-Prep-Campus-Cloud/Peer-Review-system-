@@ -38,7 +38,6 @@
     input::placeholder{color:var(--muted);}
     textarea{resize:vertical;min-height:90px;}
     select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:calc(100% - .9rem) center;padding-right:2.5rem;}
-    select option{background:var(--surface);color:var(--text);}
     .selected-college-pill{display:flex;align-items:center;gap:.6rem;background:rgba(16,185,129,0.08);border:1.5px solid rgba(16,185,129,0.25);border-radius:10px;padding:.7rem .9rem;margin-bottom:1.2rem;}
     .selected-college-pill .pill-label{font-size:.7rem;color:var(--muted);display:block;margin-bottom:.05rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
     .selected-college-pill .pill-val{font-size:.88rem;font-weight:600;color:var(--green);}
@@ -48,6 +47,7 @@
     .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
     .btn-ghost{background:var(--surface2);color:var(--text);border:1.5px solid var(--border);}
     .btn-ghost:active{background:var(--border);}
+    .btn-admin{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;box-shadow:0 4px 12px rgba(124,58,237,0.25);}
     .btn-sm{width:auto;padding:.5rem 1rem;font-size:.8rem;border-radius:8px;}
     .btn-row{display:flex;gap:.7rem;}
     .btn-row .btn-ghost{flex:0 0 auto;width:auto;}
@@ -55,6 +55,23 @@
     .alert{padding:.8rem 1rem;border-radius:8px;margin-bottom:1rem;font-size:.85rem;font-weight:500;}
     .alert-error{background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.2);color:#dc2626;}
     .alert-success{background:rgba(16,185,129,.08);border:1.5px solid rgba(16,185,129,.2);color:#059669;}
+
+    /* ROLE SELECTOR */
+    .role-picker{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.4rem;}
+    .role-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;padding:1.4rem .8rem;border-radius:14px;border:2px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .25s;font-family:'Instrument Sans',sans-serif;}
+    .role-btn:hover{border-color:var(--accent);background:rgba(59,130,246,0.04);}
+    .role-btn.student-role:hover,.role-btn.student-role.selected{border-color:var(--accent);background:rgba(59,130,246,0.08);}
+    .role-btn.admin-role:hover,.role-btn.admin-role.selected{border-color:#7c3aed;background:rgba(124,58,237,0.08);}
+    .role-btn.selected{transform:scale(1.03);}
+    .role-icon{font-size:2rem;}
+    .role-label{font-size:.9rem;font-weight:700;color:var(--text);}
+    .role-desc{font-size:.72rem;color:var(--muted);text-align:center;}
+
+    /* PIN INPUT */
+    .pin-row{display:flex;gap:.6rem;justify-content:center;margin-bottom:1.2rem;}
+    .pin-digit{width:52px;height:58px;text-align:center;font-size:1.4rem;font-weight:700;letter-spacing:.05em;border-radius:10px;}
+
+    /* DASHBOARD */
     .dashboard{display:none;}
     .user-bar{display:flex;justify-content:space-between;align-items:center;padding:1.2rem;margin-bottom:1.2rem;gap:.8rem;flex-wrap:wrap;}
     .user-name{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--text);}
@@ -62,7 +79,7 @@
     .badge-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem;}
     .college-badge{display:inline-flex;align-items:center;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:100px;padding:.2rem .7rem;font-size:.7rem;font-weight:600;color:var(--accent);}
     .mentor-badge{display:inline-flex;align-items:center;gap:.3rem;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:100px;padding:.2rem .7rem;font-size:.7rem;font-weight:600;color:#7c3aed;}
-    .mentor-badge::before{content:'';font-size:.7rem;}
+    .admin-badge{display:inline-flex;align-items:center;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:100px;padding:.2rem .7rem;font-size:.7rem;font-weight:700;color:#7c3aed;letter-spacing:.03em;}
     .tabs{display:flex;gap:0;margin-bottom:1.2rem;background:var(--surface2);padding:.3rem;border-radius:10px;border:1px solid var(--border);overflow-x:auto;}
     .tab{padding:.6rem 1rem;flex:1;text-align:center;border-radius:7px;cursor:pointer;transition:all .2s;font-weight:600;font-size:.8rem;color:var(--muted2);white-space:nowrap;}
     .tab.active{background:var(--surface);color:var(--accent);box-shadow:0 2px 8px var(--shadow);}
@@ -125,13 +142,39 @@
     .toast{position:fixed;bottom:1.5rem;left:1rem;right:1rem;z-index:9999;background:var(--surface);border:1.5px solid rgba(16,185,129,0.3);color:var(--green);padding:.85rem 1.2rem;border-radius:10px;font-weight:600;font-size:.85rem;text-align:center;animation:slideIn .3s cubic-bezier(.16,1,.3,1);box-shadow:0 8px 24px var(--shadow2);}
     @keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
     .section-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.9rem;color:var(--text);}
-    @media(max-width:480px){
-      .container{padding:.8rem;} header{padding:1.5rem 0 1rem;} h1{font-size:1.8rem;}
-      .login-wrap{padding:1.4rem 1.1rem;} .user-bar{padding:1rem;}
-      .stats-grid{grid-template-columns:1fr;} .project-card{padding:1.1rem;}
-      .modal-content{padding:1.2rem;margin:.5rem auto;} .criteria-group{padding:.85rem;}
-      .rating-btn{min-height:42px;}
-    }
+
+    /* ADMIN STYLES */
+    .admin-dashboard{display:none;}
+    .admin-bar{display:flex;justify-content:space-between;align-items:center;padding:1.2rem;margin-bottom:1.2rem;gap:.8rem;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(79,70,229,0.08));border:1px solid rgba(124,58,237,0.2);border-radius:16px;}
+    .admin-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:#7c3aed;}
+    .admin-college-name{font-size:.78rem;color:var(--muted2);margin-top:.15rem;}
+    .admin-tabs{display:flex;gap:0;margin-bottom:1.2rem;background:var(--surface2);padding:.3rem;border-radius:10px;border:1px solid var(--border);overflow-x:auto;}
+    .admin-tab{padding:.6rem 1rem;flex:1;text-align:center;border-radius:7px;cursor:pointer;transition:all .2s;font-weight:600;font-size:.8rem;color:var(--muted2);white-space:nowrap;}
+    .admin-tab.active{background:var(--surface);color:#7c3aed;box-shadow:0 2px 8px var(--shadow);}
+    .admin-tab-content{display:none;}
+    .admin-tab-content.active{display:block;}
+    .admin-stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin-bottom:1.2rem;}
+    .admin-stat{padding:1rem;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);text-align:center;}
+    .admin-stat-val{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:#7c3aed;}
+    .admin-stat-lbl{font-size:.7rem;color:var(--muted);margin-top:.2rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+    .student-row{background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:1rem;margin-bottom:.8rem;cursor:pointer;transition:all .2s;}
+    .student-row:hover{border-color:rgba(124,58,237,0.3);box-shadow:0 2px 12px rgba(124,58,237,0.08);}
+    .student-row-name{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;color:var(--text);}
+    .student-row-meta{font-size:.75rem;color:var(--muted);margin-top:.2rem;}
+    .student-row-badges{display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap;}
+    .progress-pill{display:inline-flex;align-items:center;gap:.3rem;border-radius:100px;padding:.15rem .65rem;font-size:.7rem;font-weight:700;}
+    .progress-pill.done{background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.25);}
+    .progress-pill.partial{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.25);}
+    .progress-pill.none{background:rgba(239,68,68,0.08);color:var(--rose);border:1px solid rgba(239,68,68,0.2);}
+    .avg-pill{display:inline-flex;align-items:center;border-radius:100px;padding:.15rem .65rem;font-size:.7rem;font-weight:700;background:rgba(59,130,246,0.1);color:var(--accent);border:1px solid rgba(59,130,246,0.2);}
+    .detail-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:2000;overflow-y:auto;padding:1rem;}
+    .detail-modal-content{max-width:500px;margin:1rem auto;background:var(--surface);border-radius:16px;padding:1.5rem;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,.2);}
+    .search-bar{display:flex;gap:.6rem;margin-bottom:1rem;}
+    .search-bar input{flex:1;margin:0;}
+    .filter-row{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap;}
+    .filter-chip{padding:.35rem .8rem;border-radius:100px;border:1.5px solid var(--border);background:var(--surface2);font-size:.75rem;font-weight:600;cursor:pointer;color:var(--muted2);transition:all .2s;}
+    .filter-chip.active{background:rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.4);color:#7c3aed;}
+    @media(max-width:480px){.container{padding:.8rem;}header{padding:1.5rem 0 1rem;}h1{font-size:1.8rem;}.login-wrap{padding:1.4rem 1.1rem;}.stats-grid{grid-template-columns:1fr;}.project-card{padding:1.1rem;}.modal-content{padding:1.2rem;margin:.5rem auto;}.criteria-group{padding:.85rem;}.rating-btn{min-height:42px;}.admin-stat-grid{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
@@ -141,15 +184,18 @@
     <p class="subtitle">Project Evaluation &amp; Feedback Portal</p>
   </header>
 
-  <!-- LOGIN -->
+  <!-- STEP 1: College + Role -->
   <div id="loginScreen" class="login-wrap card">
-    <h2>Welcome Back</h2>
-    <p class="login-sub">Sign in with your registered email to continue</p>
+    <h2>Welcome</h2>
+    <p class="login-sub">Select your institution to get started</p>
     <div class="step-indicator">
       <div class="step-dot active" id="dot1"></div>
       <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
     </div>
     <div id="loginAlert"></div>
+
+    <!-- STEP 1: College -->
     <div id="step1">
       <div class="form-group">
         <label>Your College</label>
@@ -181,6 +227,8 @@
       </div>
       <button class="btn-primary" onclick="goToStep2()">Continue →</button>
     </div>
+
+    <!-- STEP 2: Role selection -->
     <div id="step2" style="display:none">
       <div class="selected-college-pill">
         <div>
@@ -188,18 +236,66 @@
           <span class="pill-val" id="selectedCollegeDisplay"></span>
         </div>
       </div>
+      <label style="margin-bottom:.8rem">I am a…</label>
+      <div class="role-picker">
+        <button class="role-btn student-role" onclick="selectRole('student')">
+          <span class="role-icon">🎓</span>
+          <span class="role-label">Student</span>
+          <span class="role-desc">Review peers &amp; see my scores</span>
+        </button>
+        <button class="role-btn admin-role" onclick="selectRole('admin')">
+          <span class="role-icon">🛡️</span>
+          <span class="role-label">Admin</span>
+          <span class="role-desc">View all student progress</span>
+        </button>
+      </div>
+      <button class="btn-ghost" onclick="backToStep1()" style="width:auto;padding:.5rem 1rem;font-size:.8rem;">← Back</button>
+    </div>
+
+    <!-- STEP 3a: Student email -->
+    <div id="step3student" style="display:none">
+      <div class="selected-college-pill">
+        <div>
+          <span class="pill-label">Selected College</span>
+          <span class="pill-val" id="selectedCollegeDisplay2"></span>
+        </div>
+      </div>
       <div class="form-group">
         <label>Registered Email</label>
         <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" />
       </div>
       <div class="btn-row">
-        <button class="btn-ghost" onclick="backToStep1()">← Back</button>
+        <button class="btn-ghost" onclick="backToStep2()">← Back</button>
         <button id="loginBtn" class="btn-primary" onclick="emailLogin()">Sign In</button>
+      </div>
+    </div>
+
+    <!-- STEP 3b: Admin PIN -->
+    <div id="step3admin" style="display:none">
+      <div class="selected-college-pill" style="background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.25);">
+        <div>
+          <span class="pill-label">Admin Access</span>
+          <span class="pill-val" style="color:#7c3aed" id="adminCollegeDisplay"></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label style="text-align:center;display:block">Enter 4-Digit Admin PIN</label>
+        <div class="pin-row">
+          <input class="pin-digit" type="password" maxlength="1" inputmode="numeric" id="pin0" oninput="pinInput(0)" onkeydown="pinKey(event,0)"/>
+          <input class="pin-digit" type="password" maxlength="1" inputmode="numeric" id="pin1" oninput="pinInput(1)" onkeydown="pinKey(event,1)"/>
+          <input class="pin-digit" type="password" maxlength="1" inputmode="numeric" id="pin2" oninput="pinInput(2)" onkeydown="pinKey(event,2)"/>
+          <input class="pin-digit" type="password" maxlength="1" inputmode="numeric" id="pin3" oninput="pinInput(3)" onkeydown="pinKey(event,3)"/>
+        </div>
+      </div>
+      <div id="pinAlert"></div>
+      <div class="btn-row">
+        <button class="btn-ghost" onclick="backToStep2()">← Back</button>
+        <button id="adminLoginBtn" class="btn-admin" onclick="adminLogin()">🛡️ Enter Admin</button>
       </div>
     </div>
   </div>
 
-  <!-- DASHBOARD -->
+  <!-- STUDENT DASHBOARD -->
   <div id="dashboard" class="dashboard">
     <div class="user-bar card">
       <div class="user-info">
@@ -223,22 +319,37 @@
     <div id="myReviewsTab" class="tab-content"><div id="myReviewsContent"></div></div>
     <div id="myProjectTab" class="tab-content"><div id="myProjectContent"></div></div>
   </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="adminDashboard" class="admin-dashboard">
+    <div class="admin-bar">
+      <div>
+        <div class="admin-title">🛡️ Admin Panel</div>
+        <div class="admin-college-name" id="adminCollegeName"></div>
+        <div class="badge-row" style="margin-top:.4rem"><span class="admin-badge">ADMINISTRATOR</span></div>
+      </div>
+      <button class="btn-ghost btn-sm" onclick="adminLogout()">Sign Out</button>
+    </div>
+    <div class="admin-stat-grid" id="adminStatGrid"></div>
+    <div class="admin-tabs">
+      <div class="admin-tab active" id="atab-students" onclick="switchAdminTab('students')">Students</div>
+      <div class="admin-tab" id="atab-reviews" onclick="switchAdminTab('reviews')">Reviews</div>
+      <div class="admin-tab" id="atab-leaderboard" onclick="switchAdminTab('leaderboard')">Leaderboard</div>
+    </div>
+    <div id="adminStudentsTab" class="admin-tab-content active"><div id="adminStudentsContent"></div></div>
+    <div id="adminReviewsTab" class="admin-tab-content"><div id="adminReviewsContent"></div></div>
+    <div id="adminLeaderboardTab" class="admin-tab-content"><div id="adminLeaderboardContent"></div></div>
+  </div>
 </div>
 
-<!-- REVIEW MODAL -->
+<!-- REVIEW MODAL (Student) -->
 <div id="reviewModal" class="modal">
   <div class="modal-content">
     <div class="modal-project-info">
       <div class="type-chip" id="modalProjectType"></div>
       <div class="info-title" id="modalProjectTitle"></div>
-      <div class="info-row">
-        <span class="info-key">Student</span>
-        <span class="info-val" id="modalStudentName"></span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Course</span>
-        <span class="info-val" id="modalStudentCourse"></span>
-      </div>
+      <div class="info-row"><span class="info-key">Student</span><span class="info-val" id="modalStudentName"></span></div>
+      <div class="info-row"><span class="info-key">Course</span><span class="info-val" id="modalStudentCourse"></span></div>
       <div class="modal-problem-box" id="modalProblemBox">
         <div class="problem-label">Problem Statement</div>
         <div class="problem-text" id="modalProblemText"></div>
@@ -287,16 +398,27 @@
   </div>
 </div>
 
+<!-- ADMIN STUDENT DETAIL MODAL -->
+<div id="detailModal" class="detail-modal">
+  <div class="detail-modal-content">
+    <div id="detailModalContent"></div>
+    <div style="margin-top:1.2rem">
+      <button class="btn-ghost" onclick="closeDetailModal()">← Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL      = 'https://zykmcumlzhucnvxqhpgm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5a21jdW1semh1Y252eHFocGdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3NzE5MDYsImV4cCI6MjA5NTM0NzkwNn0.kqUgSpGFSwMXpHkWRihhVJXDtVfl0tGdU24POxmXHWc';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let currentUser = null, reviewedSet = new Set(), currentProject = null, selectedCollege = '';
+const ADMIN_PIN = '7867';
+let currentUser = null, reviewedSet = new Set(), currentProject = null, selectedCollege = '', selectedRole = '';
+let adminCollege = '', adminStudentsCache = [], adminReviewsCache = [];
 
 const COLOR_MAP = {1:'#ef4444',2:'#f97316',3:'#f59e0b',4:'#eab308',5:'#84cc16',6:'#22c55e',7:'#10b981',8:'#06b6d4',9:'#3b82f6',10:'#8b5cf6'};
 function getColor(v) { return COLOR_MAP[v] || '#94a3b8'; }
-
 const CRITERIA = ['clarity','innovation','execution','usability','overall'];
 
 function buildRatingGrids() {
@@ -306,55 +428,31 @@ function buildRatingGrids() {
     grid.innerHTML = '';
     for (let v = 1; v <= 10; v++) {
       const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'rating-btn';
-      btn.dataset.val = v;
-      btn.textContent = v;
+      btn.type = 'button'; btn.className = 'rating-btn'; btn.dataset.val = v; btn.textContent = v;
       btn.onclick = () => setRating(id, v);
       grid.appendChild(btn);
     }
   });
 }
-
 function setRating(id, val) {
   document.getElementById(id).value = val;
   const badge = document.getElementById(id + '-badge');
-  badge.textContent = val + '/10';
-  badge.className = 'score-badge has-value';
+  badge.textContent = val + '/10'; badge.className = 'score-badge has-value';
   badge.style.setProperty('--rc', getColor(val));
-  const grid = document.getElementById(id + '-grid');
-  grid.querySelectorAll('.rating-btn').forEach(btn => btn.classList.toggle('active', +btn.dataset.val === val));
+  document.getElementById(id + '-grid').querySelectorAll('.rating-btn').forEach(btn => btn.classList.toggle('active', +btn.dataset.val === val));
 }
-
 function resetRatings() {
   CRITERIA.forEach(id => {
     document.getElementById(id).value = '';
     const badge = document.getElementById(id + '-badge');
-    badge.textContent = '—';
-    badge.className = 'score-badge';
-    badge.style.removeProperty('--rc');
+    badge.textContent = '—'; badge.className = 'score-badge'; badge.style.removeProperty('--rc');
     const grid = document.getElementById(id + '-grid');
     if (grid) grid.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
   });
 }
-
 buildRatingGrids();
 
-// ── ALLIANCE COURSE GROUPS ────────────────────────────────
-const ALLIANCE_COURSE_GROUPS = {
-  'II BCA AI & ML (A+B)': ['II BCA AI & ML (A+B)'],
-  'I MCA - A': ['I MCA - A', 'I MCA - B'],
-  'I MCA - B': ['I MCA - A', 'I MCA - B'],
-};
-
-function getCourseGroup(college, course) {
-  if (college === 'Alliance University' && ALLIANCE_COURSE_GROUPS[course]) {
-    return ALLIANCE_COURSE_GROUPS[course];
-  }
-  return [course];
-}
-
-// ── LOGIN ──────────────────────────────────────────────────
+// ── STEP NAVIGATION ────────────────────────────────────────
 function goToStep2() {
   const c = document.getElementById('collegeSelect').value;
   if (!c) return showAlert('loginAlert', 'Please select your college first.', 'error');
@@ -362,25 +460,345 @@ function goToStep2() {
   document.getElementById('selectedCollegeDisplay').textContent = c;
   document.getElementById('step1').style.display = 'none';
   document.getElementById('step2').style.display = 'block';
-  document.getElementById('dot1').classList.replace('active', 'done');
+  document.getElementById('dot1').classList.replace('active','done');
   document.getElementById('dot2').classList.add('active');
-  document.getElementById('emailInput').focus();
 }
-
 function backToStep1() {
   document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3student').style.display = 'none';
+  document.getElementById('step3admin').style.display = 'none';
   document.getElementById('step1').style.display = 'block';
-  document.getElementById('dot2').classList.remove('active');
-  document.getElementById('dot1').classList.remove('done');
-  document.getElementById('dot1').classList.add('active');
+  document.getElementById('dot2').classList.remove('active','done');
+  document.getElementById('dot3').classList.remove('active','done');
+  document.getElementById('dot1').classList.remove('done'); document.getElementById('dot1').classList.add('active');
   document.getElementById('loginAlert').innerHTML = '';
 }
+function backToStep2() {
+  document.getElementById('step3student').style.display = 'none';
+  document.getElementById('step3admin').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+  document.getElementById('dot3').classList.remove('active');
+  document.getElementById('dot2').classList.add('active');
+  document.getElementById('loginAlert').innerHTML = '';
+}
+function selectRole(role) {
+  selectedRole = role;
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('dot2').classList.replace('active','done');
+  document.getElementById('dot3').classList.add('active');
+  if (role === 'student') {
+    document.getElementById('selectedCollegeDisplay2').textContent = selectedCollege;
+    document.getElementById('step3student').style.display = 'block';
+    setTimeout(() => document.getElementById('emailInput').focus(), 100);
+  } else {
+    document.getElementById('adminCollegeDisplay').textContent = selectedCollege;
+    document.getElementById('step3admin').style.display = 'block';
+    clearPins();
+    setTimeout(() => document.getElementById('pin0').focus(), 100);
+  }
+}
 
+// ── PIN LOGIC ──────────────────────────────────────────────
+function pinInput(i) {
+  const val = document.getElementById('pin' + i).value;
+  if (val && i < 3) document.getElementById('pin' + (i+1)).focus();
+  if (i === 3 && val) adminLogin();
+}
+function pinKey(e, i) {
+  if (e.key === 'Backspace' && !document.getElementById('pin' + i).value && i > 0)
+    document.getElementById('pin' + (i-1)).focus();
+}
+function clearPins() {
+  for (let i = 0; i < 4; i++) document.getElementById('pin'+i).value = '';
+}
+function getPin() {
+  return [0,1,2,3].map(i => document.getElementById('pin'+i).value).join('');
+}
+
+function adminLogin() {
+  const pin = getPin();
+  if (pin.length < 4) return showAlert('pinAlert', 'Enter all 4 digits.', 'error');
+  if (pin !== ADMIN_PIN) {
+    showAlert('pinAlert', 'Incorrect PIN. Please try again.', 'error');
+    clearPins(); document.getElementById('pin0').focus(); return;
+  }
+  adminCollege = selectedCollege;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminDashboard').style.display = 'block';
+  document.getElementById('adminCollegeName').textContent = adminCollege;
+  loadAdminData();
+}
+
+function adminLogout() {
+  adminCollege = ''; adminStudentsCache = []; adminReviewsCache = [];
+  document.getElementById('adminDashboard').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'block';
+  backToStep1();
+}
+
+// ── ADMIN DATA ─────────────────────────────────────────────
+async function loadAdminData() {
+  document.getElementById('adminStatGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem">Loading data…</div>';
+  document.getElementById('adminStudentsContent').innerHTML = '<div class="loading">Loading students…</div>';
+
+  const { data: students } = await sb.from('students').select('*').eq('college', adminCollege).order('name');
+  adminStudentsCache = students || [];
+
+  const regs = adminStudentsCache.map(s => s.register_number);
+  let reviewsData = [];
+  if (regs.length) {
+    const { data: rev } = await sb.from('reviews').select('*').in('project_reg', regs);
+    reviewsData = rev || [];
+  }
+  adminReviewsCache = reviewsData;
+
+  // Stats
+  const totalStudents = adminStudentsCache.length;
+  const studentsWithProject = adminStudentsCache.filter(s => s.project_title).length;
+  const totalReviews = reviewsData.length;
+  const reviewersSet = new Set(reviewsData.map(r => r.reviewer_reg));
+  const activeReviewers = reviewersSet.size;
+
+  document.getElementById('adminStatGrid').innerHTML = `
+    <div class="admin-stat"><div class="admin-stat-val">${totalStudents}</div><div class="admin-stat-lbl">Students</div></div>
+    <div class="admin-stat"><div class="admin-stat-val">${studentsWithProject}</div><div class="admin-stat-lbl">Projects</div></div>
+    <div class="admin-stat"><div class="admin-stat-val">${totalReviews}</div><div class="admin-stat-lbl">Reviews Given</div></div>
+    <div class="admin-stat"><div class="admin-stat-val">${activeReviewers}</div><div class="admin-stat-lbl">Active Reviewers</div></div>
+  `;
+
+  renderAdminStudents(adminStudentsCache, reviewsData);
+}
+
+function renderAdminStudents(students, reviews, filter='all', query='') {
+  const c = document.getElementById('adminStudentsContent');
+  if (!students.length) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-icon">👥</div><h3>No students found</h3><p>No students registered for this college yet.</p></div>';
+    return;
+  }
+
+  // Build review counts per project
+  const reviewCountMap = {};
+  reviews.forEach(r => { reviewCountMap[r.project_reg] = (reviewCountMap[r.project_reg] || 0) + 1; });
+
+  // Build avg scores per project
+  const avgMap = {};
+  const scoresByProject = {};
+  reviews.forEach(r => {
+    if (!scoresByProject[r.project_reg]) scoresByProject[r.project_reg] = [];
+    const avg = (r.clarity + r.innovation + r.execution + r.usability + r.overall) / 5;
+    scoresByProject[r.project_reg].push(avg);
+  });
+  Object.keys(scoresByProject).forEach(reg => {
+    const arr = scoresByProject[reg];
+    avgMap[reg] = (arr.reduce((a,b) => a+b, 0) / arr.length).toFixed(1);
+  });
+
+  // Build reviews given count per student
+  const givenMap = {};
+  reviews.forEach(r => { givenMap[r.reviewer_reg] = (givenMap[r.reviewer_reg] || 0) + 1; });
+
+  let filtered = students.filter(s => {
+    if (query && !s.name.toLowerCase().includes(query.toLowerCase()) && !(s.register_number || '').toLowerCase().includes(query.toLowerCase())) return false;
+    if (filter === 'reviewed') return (reviewCountMap[s.register_number] || 0) > 0;
+    if (filter === 'pending') return (reviewCountMap[s.register_number] || 0) === 0;
+    return true;
+  });
+
+  const totalPeers = students.length - 1;
+
+  let html = `
+    <div class="search-bar">
+      <input type="text" placeholder="Search by name or reg number…" id="adminSearch" oninput="adminSearchFilter()" value="${escHtml(query)}"/>
+    </div>
+    <div class="filter-row">
+      <span class="filter-chip ${filter==='all'?'active':''}" onclick="adminFilter('all')">All (${students.length})</span>
+      <span class="filter-chip ${filter==='reviewed'?'active':''}" onclick="adminFilter('reviewed')">Has Reviews</span>
+      <span class="filter-chip ${filter==='pending'?'active':''}" onclick="adminFilter('pending')">No Reviews</span>
+    </div>
+    <div style="color:var(--muted);font-size:.78rem;margin-bottom:.8rem">${filtered.length} student(s)</div>
+  `;
+
+  filtered.forEach(s => {
+    const rcvd = reviewCountMap[s.register_number] || 0;
+    const given = givenMap[s.register_number] || 0;
+    const avg = avgMap[s.register_number];
+    let pillClass = rcvd === 0 ? 'none' : rcvd >= 3 ? 'done' : 'partial';
+    let pillLabel = rcvd === 0 ? '0 reviews received' : `${rcvd} review${rcvd>1?'s':''} received`;
+    let givenPct = totalPeers > 0 ? Math.round(given / totalPeers * 100) : 0;
+
+    html += `<div class="student-row" onclick="openStudentDetail('${escHtml(s.register_number)}')">
+      <div class="student-row-name">${escHtml(s.name || '—')}</div>
+      <div class="student-row-meta">${escHtml(s.register_number || '')} · ${escHtml(s.course || '')}${s.mentor_assigned ? ' · ' + escHtml(s.mentor_assigned) + "'s group" : ''}</div>
+      ${s.project_title ? `<div style="font-size:.75rem;color:var(--muted2);margin-top:.3rem;font-style:italic">${escHtml(s.project_title.slice(0,60))}${s.project_title.length>60?'…':''}</div>` : '<div style="font-size:.75rem;color:var(--rose);margin-top:.3rem">No project added</div>'}
+      <div class="student-row-badges">
+        <span class="progress-pill ${pillClass}">${pillLabel}</span>
+        <span class="progress-pill partial">Reviewed ${given}/${totalPeers}</span>
+        ${avg ? `<span class="avg-pill">Avg ${avg}/10</span>` : ''}
+      </div>
+    </div>`;
+  });
+
+  c.innerHTML = html;
+}
+
+let adminCurrentFilter = 'all', adminCurrentQuery = '';
+function adminFilter(f) {
+  adminCurrentFilter = f;
+  renderAdminStudents(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
+}
+function adminSearchFilter() {
+  adminCurrentQuery = document.getElementById('adminSearch')?.value || '';
+  renderAdminStudents(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
+}
+
+async function openStudentDetail(reg) {
+  const s = adminStudentsCache.find(x => x.register_number === reg);
+  if (!s) return;
+  const { data: reviews } = await sb.from('reviews').select('*').eq('project_reg', reg).order('created_at');
+  const revs = reviews || [];
+  const n = revs.length;
+
+  let html = `
+    <div style="background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(59,130,246,0.06));border:1.5px solid rgba(124,58,237,0.15);border-radius:12px;padding:1rem;margin-bottom:1.2rem;">
+      <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text)">${escHtml(s.name || '—')}</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">${escHtml(s.register_number)} · ${escHtml(s.course)}</div>
+      ${s.mentor_assigned ? `<div style="font-size:.75rem;color:#7c3aed;margin-top:.2rem">Group: ${escHtml(s.mentor_assigned)}'s group</div>` : ''}
+    </div>
+  `;
+
+  if (s.project_title) {
+    html += `<div style="margin-bottom:1.2rem;">
+      <div class="type-chip">${escHtml(s.project_type || 'Project')}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin:.5rem 0 .4rem">${escHtml(s.project_title)}</div>
+      ${s.problem_statement ? `<div style="font-size:.8rem;color:var(--muted2);line-height:1.6">${escHtml(s.problem_statement)}</div>` : ''}
+    </div>`;
+  } else {
+    html += `<div style="color:var(--rose);font-size:.85rem;margin-bottom:1rem">⚠️ No project submitted yet</div>`;
+  }
+
+  if (n === 0) {
+    html += `<div class="empty-state" style="padding:1.5rem"><div class="empty-icon">⏳</div><h3>No reviews yet</h3></div>`;
+  } else {
+    const avg = f => (revs.reduce((s,r) => s+r[f], 0)/n).toFixed(1);
+    const avgs = {clarity:avg('clarity'),innovation:avg('innovation'),execution:avg('execution'),usability:avg('usability'),overall:avg('overall')};
+    const grand = (Object.values(avgs).reduce((s,v) => s+(+v),0)/5).toFixed(1);
+    html += `
+      <div style="margin-bottom:1rem">
+        <div class="section-title">Review Summary (${n} review${n>1?'s':''})</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem">
+          ${[['Clarity',avgs.clarity,'var(--accent)'],['Innovation',avgs.innovation,'#8b5cf6'],['Execution',avgs.execution,'var(--amber)'],['Usability',avgs.usability,'#06b6d4'],['Overall',avgs.overall,'var(--green)'],['Grand Avg',grand,'var(--text)']].map(([l,v,c]) => `
+          <div style="text-align:center;padding:.7rem;border-radius:8px;border:1px solid var(--border);background:var(--surface)">
+            <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:${c}">${v}</div>
+            <div style="font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:.2rem">${l}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>#</th><th>Clarity</th><th>Innovation</th><th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Date</th></tr></thead>
+        <tbody>
+          ${revs.map((r,i) => {
+            const ra = ((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);
+            return `<tr><td style="color:var(--muted)">Peer ${i+1}</td><td>${r.clarity}</td><td>${r.innovation}</td><td>${r.execution}</td><td>${r.usability}</td><td>${r.overall}</td><td><strong style="color:var(--green)">${ra}</strong></td><td style="color:var(--muted);font-size:.72rem">${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`;
+          }).join('')}
+        </tbody>
+      </table></div>
+    `;
+  }
+
+  document.getElementById('detailModalContent').innerHTML = html;
+  document.getElementById('detailModal').style.display = 'block';
+}
+function closeDetailModal() { document.getElementById('detailModal').style.display = 'none'; }
+document.getElementById('detailModal').addEventListener('click', e => { if (e.target === document.getElementById('detailModal')) closeDetailModal(); });
+
+function switchAdminTab(name) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('atab-' + name).classList.add('active');
+  document.getElementById('admin' + name.charAt(0).toUpperCase() + name.slice(1) + 'Tab').classList.add('active');
+  if (name === 'reviews') renderAdminReviews();
+  if (name === 'leaderboard') renderAdminLeaderboard();
+  if (name === 'students') renderAdminStudents(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
+}
+
+function renderAdminReviews() {
+  const c = document.getElementById('adminReviewsContent');
+  const reviews = adminReviewsCache;
+  if (!reviews.length) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><h3>No reviews yet</h3><p>No peer reviews have been submitted yet.</p></div>';
+    return;
+  }
+  const stuMap = {};
+  adminStudentsCache.forEach(s => stuMap[s.register_number] = s);
+
+  let html = `<p style="color:var(--muted2);font-size:.82rem;margin-bottom:1rem"><strong style="color:var(--text)">${reviews.length}</strong> total review(s) submitted for this college</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Project</th><th>Reviewer</th><th>Avg</th><th>Date</th></tr></thead><tbody>`;
+
+  reviews.forEach(r => {
+    const proj = stuMap[r.project_reg];
+    const reviewer = stuMap[r.reviewer_reg];
+    const avg = ((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);
+    html += `<tr>
+      <td><strong style="font-size:.75rem">${escHtml(proj?.project_title || r.project_reg)}</strong><br><span style="color:var(--muted);font-size:.7rem">${escHtml(proj?.name || '')}</span></td>
+      <td style="font-size:.75rem">${escHtml(reviewer?.name || r.reviewer_reg)}</td>
+      <td><strong style="color:var(--green)">${avg}</strong></td>
+      <td style="color:var(--muted);font-size:.72rem">${new Date(r.created_at).toLocaleDateString('en-IN')}</td>
+    </tr>`;
+  });
+  html += '</tbody></table></div>';
+  c.innerHTML = html;
+}
+
+function renderAdminLeaderboard() {
+  const c = document.getElementById('adminLeaderboardContent');
+  const reviews = adminReviewsCache;
+  if (!reviews.length) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-icon">🏆</div><h3>No data yet</h3><p>Leaderboard will appear once reviews are submitted.</p></div>';
+    return;
+  }
+  const stuMap = {};
+  adminStudentsCache.forEach(s => stuMap[s.register_number] = s);
+
+  const scoresByProject = {};
+  reviews.forEach(r => {
+    if (!scoresByProject[r.project_reg]) scoresByProject[r.project_reg] = [];
+    scoresByProject[r.project_reg].push((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5);
+  });
+
+  const leaderboard = Object.entries(scoresByProject).map(([reg, scores]) => ({
+    reg, avg:(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(2), count:scores.length,
+    student: stuMap[reg]
+  })).filter(x => x.student).sort((a,b) => b.avg - a.avg);
+
+  const medals = ['🥇','🥈','🥉'];
+  let html = `<p style="color:var(--muted2);font-size:.82rem;margin-bottom:1rem">Ranked by average peer review score</p>`;
+  leaderboard.forEach((item, i) => {
+    const medal = medals[i] || `#${i+1}`;
+    html += `<div style="display:flex;align-items:center;gap:.9rem;padding:1rem;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;margin-bottom:.7rem;${i<3?'border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.04)':''}">
+      <div style="font-size:1.4rem;width:2rem;text-align:center">${medal}</div>
+      <div style="flex:1">
+        <div style="font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700">${escHtml(item.student.name)}</div>
+        <div style="font-size:.73rem;color:var(--muted);margin-top:.1rem">${escHtml(item.student.project_title?.slice(0,45) || 'No title')}${item.student.project_title?.length>45?'…':''}</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">${item.count} review(s)</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--green)">${item.avg}</div>
+        <div style="font-size:.65rem;color:var(--muted)">avg /10</div>
+      </div>
+    </div>`;
+  });
+  c.innerHTML = html;
+}
+
+// ── STUDENT FLOW ───────────────────────────────────────────
 async function emailLogin() {
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
-if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@.]+(\.[^\s@.]+)*$/.test(email))    return showAlert('loginAlert', 'Please enter a valid email address.', 'error');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@.]+(\.[^\s@.]+)*$/.test(email))
+    return showAlert('loginAlert', 'Please enter a valid email address.', 'error');
   setLoading('loginBtn', true, 'Signing in…');
-const { data: student, error } = await sb.from('students').select('*').ilike('email', email).single();  setLoading('loginBtn', false, 'Sign In');
+  const { data: student, error } = await sb.from('students').select('*').ilike('email', email).single();
+  setLoading('loginBtn', false, 'Sign In');
   if (error || !student) return showAlert('loginAlert', 'Email not found. Please check and try again.', 'error');
   loginSuccess(student);
 }
@@ -390,26 +808,20 @@ function loginSuccess(student) {
   currentUser = student;
   currentUser._college = student.college || selectedCollege;
   currentUser._mentor  = student.mentor_assigned || null;
-
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('dashboard').style.display   = 'block';
-  document.getElementById('userName').textContent       = student.name;
-  document.getElementById('userReg').textContent        = student.register_number;
-  document.getElementById('userCourse').textContent     = student.course;
+  document.getElementById('loginScreen').style.display   = 'none';
+  document.getElementById('dashboard').style.display     = 'block';
+  document.getElementById('userName').textContent         = student.name;
+  document.getElementById('userReg').textContent          = student.register_number;
+  document.getElementById('userCourse').textContent       = student.course;
   document.getElementById('userCollegeBadge').textContent = currentUser._college;
   const mentorBadge = document.getElementById('userMentorBadge');
-  if (currentUser._mentor) {
-    mentorBadge.textContent = currentUser._mentor + "'s Group";
-    mentorBadge.style.display = 'inline-flex';
-  } else {
-    mentorBadge.style.display = 'none';
-  }
-
+  if (currentUser._mentor) { mentorBadge.textContent = currentUser._mentor + "'s Group"; mentorBadge.style.display = 'inline-flex'; }
+  else mentorBadge.style.display = 'none';
   loadReviewedSet().then(() => loadProjects());
 }
 
 function logout() {
-  currentUser = null; selectedCollege = ''; reviewedSet.clear();
+  currentUser = null; selectedCollege = ''; selectedRole = ''; reviewedSet.clear();
   document.getElementById('loginScreen').style.display = 'block';
   document.getElementById('dashboard').style.display   = 'none';
   document.getElementById('emailInput').value = '';
@@ -418,314 +830,124 @@ function logout() {
   backToStep1();
 }
 
-// ── REVIEWED SET ──────────────────────────────────────────
 async function loadReviewedSet() {
   const { data } = await sb.from('reviews').select('project_reg').eq('reviewer_reg', currentUser.register_number);
   reviewedSet.clear();
   (data || []).forEach(r => reviewedSet.add(r.project_reg));
 }
 
-// ── TABS ──────────────────────────────────────────────────
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   document.getElementById(name + 'Tab').classList.add('active');
-  if (name === 'projects')  loadProjects();
+  if (name === 'projects') loadProjects();
   if (name === 'myReviews') loadMyReviews();
   if (name === 'myProject') loadMyProjectStats();
 }
 
-// ── PROJECTS TAB ──────────────────────────────────────────
 async function loadProjects() {
   const c = document.getElementById('projectsContent');
   c.innerHTML = '<div class="loading">Loading projects…</div>';
-
   const ALLIANCE = 'Alliance University';
-  const ALLIANCE_GROUPS = [
-    ['I MCA - A', 'I MCA - B'],
-    ['II BCA AI & ML (A+B)'],
-  ];
-
-  let query = sb
-    .from('students')
-    .select('register_number, name, course, project_title, project_type, problem_statement')
-    .neq('register_number', currentUser.register_number)
-    .order('name');
-
+  const ALLIANCE_GROUPS = [['I MCA - A','I MCA - B'],['II BCA AI & ML (A+B)']];
+  let query = sb.from('students').select('register_number,name,course,project_title,project_type,problem_statement').neq('register_number', currentUser.register_number).order('name');
   if (currentUser._college === ALLIANCE) {
     const group = ALLIANCE_GROUPS.find(g => g.includes(currentUser.course));
-    if (!group) {
-      c.innerHTML = `<div class="empty-state">
-        <div class="empty-icon">📂</div>
-        <h3>No group found</h3>
-        <p>Your course hasn't been assigned to a group yet.</p>
-      </div>`;
-      return;
-    }
+    if (!group) { c.innerHTML = `<div class="empty-state"><div class="empty-icon">📂</div><h3>No group found</h3></div>`; return; }
     query = query.eq('college', ALLIANCE).in('course', group);
   } else {
-    if (!currentUser._mentor) {
-      c.innerHTML = `<div class="empty-state">
-        <div class="empty-icon">👨‍🏫</div>
-        <h3>No mentor group found</h3>
-        <p>You haven't been assigned to a mentor group yet. Please contact your coordinator.</p>
-      </div>`;
-      return;
-    }
-    query = query
-      .eq('mentor_assigned', currentUser._mentor)
-      .eq('college', currentUser._college)
-      .eq('course', currentUser.course);
+    if (!currentUser._mentor) { c.innerHTML = `<div class="empty-state"><div class="empty-icon">👨‍🏫</div><h3>No mentor group found</h3></div>`; return; }
+    query = query.eq('mentor_assigned', currentUser._mentor).eq('college', currentUser._college).eq('course', currentUser.course);
   }
-
   const { data: projects, error } = await query;
-
   if (error) { c.innerHTML = `<div class="alert alert-error">${error.message}</div>`; return; }
-  if (!projects?.length) {
-    c.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">📂</div>
-      <h3>No projects found</h3>
-      <p>No other students are in your group yet.</p>
-    </div>`;
-    return;
-  }
-
+  if (!projects?.length) { c.innerHTML = `<div class="empty-state"><div class="empty-icon">📂</div><h3>No projects found</h3></div>`; return; }
   await loadReviewedSet();
-  const done = reviewedSet.size, total = projects.length, pct = total ? Math.round(done / total * 100) : 0;
-
-  let html = `
-    <div class="prog-strip">
-      <div>
-        <div class="count">Reviewed <strong>${done}</strong> of <strong>${total}</strong> in your group</div>
-        <div class="prog-bar-wrap" style="width:100%;max-width:180px">
-          <div class="prog-bar" style="width:${pct}%"></div>
-        </div>
-      </div>
-      <div class="pct">${pct}%</div>
-    </div>
-    <div class="projects-grid">`;
-
+  const done = reviewedSet.size, total = projects.length, pct = total ? Math.round(done/total*100) : 0;
+  let html = `<div class="prog-strip"><div><div class="count">Reviewed <strong>${done}</strong> of <strong>${total}</strong></div><div class="prog-bar-wrap" style="width:180px"><div class="prog-bar" style="width:${pct}%"></div></div></div><div class="pct">${pct}%</div></div><div class="projects-grid">`;
   projects.forEach(p => {
     const rev = reviewedSet.has(p.register_number);
-    const problemSnippet = p.problem_statement
-      ? `<div class="project-detail" style="margin-top:.4rem;color:var(--muted);font-size:.78rem">${escHtml(p.problem_statement.slice(0, 80))}${p.problem_statement.length > 80 ? '…' : ''}</div>`
-      : '';
-    html += `<div class="project-card">
-      <div class="type-chip">${escHtml(p.project_type || 'Project')}</div>
-      <div class="project-title">${escHtml(p.project_title || 'Untitled')}</div>
-      <div class="project-detail"><strong>Student:</strong> ${escHtml(p.name || '—')}</div>
-      <div class="project-detail"><strong>Course:</strong> ${escHtml(p.course || '—')}</div>
-      ${problemSnippet}
-      <button class="review-btn ${rev ? 'reviewed' : ''}" ${rev ? 'disabled' : `onclick="openModal('${escHtml(p.register_number)}')"`}>
-        ${rev ? '✓ Reviewed' : 'Review Project'}
-      </button>
-    </div>`;
+    const snippet = p.problem_statement ? `<div class="project-detail" style="margin-top:.4rem;color:var(--muted);font-size:.78rem">${escHtml(p.problem_statement.slice(0,80))}${p.problem_statement.length>80?'…':''}</div>` : '';
+    html += `<div class="project-card"><div class="type-chip">${escHtml(p.project_type||'Project')}</div><div class="project-title">${escHtml(p.project_title||'Untitled')}</div><div class="project-detail"><strong>Student:</strong> ${escHtml(p.name||'—')}</div><div class="project-detail"><strong>Course:</strong> ${escHtml(p.course||'—')}</div>${snippet}<button class="review-btn ${rev?'reviewed':''}" ${rev?'disabled':`onclick="openModal('${escHtml(p.register_number)}')"`}>${rev?'✓ Reviewed':'Review Project'}</button></div>`;
   });
-
   html += '</div>';
   c.innerHTML = html;
 }
-// ── MODAL ─────────────────────────────────────────────────
+
 async function openModal(reg) {
-  const { data: s, error } = await sb
-    .from('students')
-    .select('register_number, name, course, project_title, project_type, problem_statement')
-    .eq('register_number', reg)
-    .single();
+  const { data: s, error } = await sb.from('students').select('register_number,name,course,project_title,project_type,problem_statement').eq('register_number', reg).single();
   if (error || !s) return alert('Could not load project.');
-
   currentProject = { register_number: s.register_number, title: s.project_title };
-
   document.getElementById('modalProjectType').textContent   = s.project_type || 'Project';
   document.getElementById('modalProjectTitle').textContent  = s.project_title || '—';
   document.getElementById('modalStudentName').textContent   = s.name || reg;
   document.getElementById('modalStudentCourse').textContent = s.course || '—';
-
-  const problemBox = document.getElementById('modalProblemBox');
-  if (s.problem_statement) {
-    document.getElementById('modalProblemText').textContent = s.problem_statement;
-    problemBox.style.display = 'block';
-  } else {
-    problemBox.style.display = 'none';
-  }
-
-  resetRatings();
-  document.getElementById('comments').value = '';
+  const pb = document.getElementById('modalProblemBox');
+  if (s.problem_statement) { document.getElementById('modalProblemText').textContent = s.problem_statement; pb.style.display = 'block'; } else pb.style.display = 'none';
+  resetRatings(); document.getElementById('comments').value = '';
   document.getElementById('reviewModal').style.display = 'block';
 }
-
 function closeModal() { document.getElementById('reviewModal').style.display = 'none'; currentProject = null; }
+document.getElementById('reviewModal').addEventListener('click', e => { if (e.target===document.getElementById('reviewModal')) closeModal(); });
 
-document.getElementById('reviewModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('reviewModal')) closeModal();
-});
-
-// ── SUBMIT REVIEW ─────────────────────────────────────────
 async function submitReview() {
   if (!currentProject) return;
   if (reviewedSet.has(currentProject.register_number)) { alert('Already reviewed.'); closeModal(); return; }
-
   const missing = CRITERIA.filter(id => !document.getElementById(id).value);
   if (missing.length) { alert('Please rate all 5 criteria before submitting.'); return; }
-
   setLoading('submitReviewBtn', true, 'Submitting…');
   const { error } = await sb.from('reviews').insert({
-    reviewer_reg:     currentUser.register_number,
-    project_reg:      currentProject.register_number,
+    reviewer_reg: currentUser.register_number, project_reg: currentProject.register_number,
     reviewer_college: currentUser._college || null,
-    clarity:    +document.getElementById('clarity').value,
-    innovation: +document.getElementById('innovation').value,
-    execution:  +document.getElementById('execution').value,
-    usability:  +document.getElementById('usability').value,
-    overall:    +document.getElementById('overall').value,
-    comments:   document.getElementById('comments').value.trim() || null
+    clarity: +document.getElementById('clarity').value, innovation: +document.getElementById('innovation').value,
+    execution: +document.getElementById('execution').value, usability: +document.getElementById('usability').value,
+    overall: +document.getElementById('overall').value, comments: document.getElementById('comments').value.trim() || null
   });
   setLoading('submitReviewBtn', false, 'Submit Review');
-  if (error) {
-    alert(error.code === '23505' ? 'Already reviewed.' : 'Error: ' + error.message);
-    closeModal(); return;
-  }
-  reviewedSet.add(currentProject.register_number);
-  closeModal();
-  await loadProjects();
-  showToast('Review submitted successfully! ✓');
+  if (error) { alert(error.code==='23505'?'Already reviewed.':'Error: '+error.message); closeModal(); return; }
+  reviewedSet.add(currentProject.register_number); closeModal();
+  await loadProjects(); showToast('Review submitted successfully! ✓');
 }
 
-// ── MY REVIEWS TAB ────────────────────────────────────────
 async function loadMyReviews() {
   const c = document.getElementById('myReviewsContent');
   c.innerHTML = '<div class="loading">Loading…</div>';
-
-  const { data: reviews, error } = await sb
-    .from('reviews').select('*')
-    .eq('reviewer_reg', currentUser.register_number)
-    .order('created_at', { ascending: false });
-
+  const { data: reviews, error } = await sb.from('reviews').select('*').eq('reviewer_reg', currentUser.register_number).order('created_at', { ascending: false });
   if (error) { c.innerHTML = `<div class="alert alert-error">${error.message}</div>`; return; }
-  if (!reviews?.length) {
-    c.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><h3>No reviews submitted yet</h3><p>Head over to the Projects tab to start reviewing.</p></div>`;
-    return;
-  }
-
+  if (!reviews?.length) { c.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><h3>No reviews yet</h3><p>Head to Projects tab to start reviewing.</p></div>`; return; }
   const regs = [...new Set(reviews.map(r => r.project_reg))];
-  const { data: stuData } = await sb
-    .from('students')
-    .select('register_number, project_title, project_type')
-    .in('register_number', regs);
-
-  const stuMap = {};
-  (stuData || []).forEach(s => stuMap[s.register_number] = s);
-
-  let html = `<p style="color:var(--muted2);font-size:.82rem;font-weight:500;margin-bottom:1rem">
-    You have submitted <strong style="color:var(--text)">${reviews.length}</strong> review(s)</p>
-    <div class="tbl-wrap"><table>
-      <thead><tr>
-        <th>Project</th><th>Type</th><th>Clarity</th><th>Innovation</th>
-        <th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Date</th>
-      </tr></thead><tbody>`;
-
+  const { data: stuData } = await sb.from('students').select('register_number,project_title,project_type').in('register_number', regs);
+  const stuMap = {}; (stuData||[]).forEach(s => stuMap[s.register_number]=s);
+  let html = `<p style="color:var(--muted2);font-size:.82rem;margin-bottom:1rem">You submitted <strong style="color:var(--text)">${reviews.length}</strong> review(s)</p><div class="tbl-wrap"><table><thead><tr><th>Project</th><th>Type</th><th>Clarity</th><th>Innovation</th><th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Date</th></tr></thead><tbody>`;
   reviews.forEach(r => {
     const s = stuMap[r.project_reg];
-    const avg = ((r.clarity + r.innovation + r.execution + r.usability + r.overall) / 5).toFixed(1);
-    html += `<tr>
-      <td><strong>${escHtml(s?.project_title || r.project_reg)}</strong></td>
-      <td><span class="type-chip" style="font-size:.65rem">${escHtml(s?.project_type || '—')}</span></td>
-      <td>${r.clarity}/10</td><td>${r.innovation}/10</td><td>${r.execution}/10</td>
-      <td>${r.usability}/10</td><td>${r.overall}/10</td>
-      <td><strong style="color:var(--green)">${avg}</strong></td>
-      <td style="color:var(--muted);font-size:.75rem">${new Date(r.created_at).toLocaleDateString('en-IN')}</td>
-    </tr>`;
+    const avg = ((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);
+    html += `<tr><td><strong>${escHtml(s?.project_title||r.project_reg)}</strong></td><td><span class="type-chip" style="font-size:.65rem">${escHtml(s?.project_type||'—')}</span></td><td>${r.clarity}/10</td><td>${r.innovation}/10</td><td>${r.execution}/10</td><td>${r.usability}/10</td><td>${r.overall}/10</td><td><strong style="color:var(--green)">${avg}</strong></td><td style="color:var(--muted);font-size:.75rem">${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`;
   });
-
   html += '</tbody></table></div>';
   c.innerHTML = html;
 }
 
-// ── MY PROJECT STATS TAB ──────────────────────────────────
 async function loadMyProjectStats() {
   const c = document.getElementById('myProjectContent');
   c.innerHTML = '<div class="loading">Loading…</div>';
-
-  const { data: me, error: pe } = await sb
-    .from('students')
-    .select('register_number, project_title, project_type, problem_statement')
-    .eq('register_number', currentUser.register_number)
-    .single();
-
-  if (pe || !me || !me.project_title) {
-    c.innerHTML = '<div class="empty-state"><div class="empty-icon">📂</div><h3>No project found.</h3><p>Your project hasn\'t been added yet.</p></div>';
-    return;
-  }
-
-  const { data: reviews, error: re } = await sb
-    .from('reviews').select('*')
-    .eq('project_reg', currentUser.register_number)
-    .order('created_at');
-
+  const { data: me, error: pe } = await sb.from('students').select('register_number,project_title,project_type,problem_statement').eq('register_number', currentUser.register_number).single();
+  if (pe || !me || !me.project_title) { c.innerHTML = '<div class="empty-state"><div class="empty-icon">📂</div><h3>No project found.</h3></div>'; return; }
+  const { data: reviews, error: re } = await sb.from('reviews').select('*').eq('project_reg', currentUser.register_number).order('created_at');
   if (re) { c.innerHTML = `<div class="alert alert-error">${re.message}</div>`; return; }
-
-  let html = `<div class="card" style="padding:1.5rem;margin-bottom:1.2rem;">
-    <div class="type-chip">${escHtml(me.project_type || 'Project')}</div>
-    <h2 style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin:.5rem 0 .7rem;line-height:1.3;color:var(--text)">${escHtml(me.project_title)}</h2>
-    ${me.problem_statement ? `<div class="project-detail" style="font-size:.82rem">${escHtml(me.problem_statement)}</div>` : ''}
-  </div>`;
-
-  if (!reviews?.length) {
-    html += `<div class="empty-state"><div class="empty-icon">⏳</div><h3>No reviews yet</h3><p style="color:var(--muted);font-size:.85rem;margin-top:.4rem">Your peers haven't reviewed your project yet.</p></div>`;
-    c.innerHTML = html; return;
-  }
-
+  let html = `<div class="card" style="padding:1.5rem;margin-bottom:1.2rem;"><div class="type-chip">${escHtml(me.project_type||'Project')}</div><h2 style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin:.5rem 0 .7rem">${escHtml(me.project_title)}</h2>${me.problem_statement?`<div class="project-detail" style="font-size:.82rem">${escHtml(me.problem_statement)}</div>`:''}</div>`;
+  if (!reviews?.length) { html += `<div class="empty-state"><div class="empty-icon">⏳</div><h3>No reviews yet</h3></div>`; c.innerHTML = html; return; }
   const n = reviews.length;
-  const avg = f => (reviews.reduce((s, r) => s + r[f], 0) / n).toFixed(1);
-  const avgs = {
-    clarity: avg('clarity'), innovation: avg('innovation'),
-    execution: avg('execution'), usability: avg('usability'), overall: avg('overall')
-  };
-  const grand = (Object.values(avgs).reduce((s, v) => s + (+v), 0) / 5).toFixed(1);
-
-  const cards = [
-    { label:'Clarity',    val:avgs.clarity,    color:'var(--accent)' },
-    { label:'Innovation', val:avgs.innovation, color:'#8b5cf6'       },
-    { label:'Execution',  val:avgs.execution,  color:'var(--amber)'  },
-    { label:'Usability',  val:avgs.usability,  color:'#06b6d4'       },
-    { label:'Overall',    val:avgs.overall,    color:'var(--green)'  },
-    { label:'Grand Avg',  val:grand,           color:'var(--text)'   },
-  ];
-
-  html += `<div class="stats-grid">
-    ${cards.map(card => `
-      <div class="stat-card">
-        <div class="stat-val" style="color:${card.color}">${card.val}</div>
-        <div class="stat-lbl">${card.label}</div>
-        <div class="prog-bar-wrap" style="margin-top:.6rem">
-          <div class="prog-bar" style="width:${card.val * 10}%;background:${card.color}"></div>
-        </div>
-      </div>`).join('')}
-  </div>
-  <p style="color:var(--muted);font-size:.82rem;margin-bottom:1.2rem">
-    Based on <strong style="color:var(--text)">${n}</strong> review(s)
-  </p>
-  <div class="section-title">Individual Reviews</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr>
-      <th>#</th><th>College</th><th>Clarity</th><th>Innovation</th>
-      <th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Comments</th><th>Date</th>
-    </tr></thead><tbody>`;
-
-  reviews.forEach((r, i) => {
-    const ra = ((r.clarity + r.innovation + r.execution + r.usability + r.overall) / 5).toFixed(1);
-    html += `<tr>
-      <td style="color:var(--muted);font-size:.75rem">Peer ${i + 1}</td>
-      <td style="color:var(--muted2);font-size:.75rem">${escHtml(r.reviewer_college || '—')}</td>
-      <td>${r.clarity}/10</td><td>${r.innovation}/10</td><td>${r.execution}/10</td>
-      <td>${r.usability}/10</td><td>${r.overall}/10</td>
-      <td><strong style="color:var(--green)">${ra}</strong></td>
-      <td style="color:var(--muted2);font-size:.75rem;max-width:140px">${escHtml(r.comments || '—')}</td>
-      <td style="color:var(--muted);font-size:.75rem">${new Date(r.created_at).toLocaleDateString('en-IN')}</td>
-    </tr>`;
+  const avg = f => (reviews.reduce((s,r)=>s+r[f],0)/n).toFixed(1);
+  const avgs = {clarity:avg('clarity'),innovation:avg('innovation'),execution:avg('execution'),usability:avg('usability'),overall:avg('overall')};
+  const grand = (Object.values(avgs).reduce((s,v)=>s+(+v),0)/5).toFixed(1);
+  const cards = [['Clarity',avgs.clarity,'var(--accent)'],['Innovation',avgs.innovation,'#8b5cf6'],['Execution',avgs.execution,'var(--amber)'],['Usability',avgs.usability,'#06b6d4'],['Overall',avgs.overall,'var(--green)'],['Grand Avg',grand,'var(--text)']];
+  html += `<div class="stats-grid">${cards.map(([l,v,col])=>`<div class="stat-card"><div class="stat-val" style="color:${col}">${v}</div><div class="stat-lbl">${l}</div><div class="prog-bar-wrap" style="margin-top:.6rem"><div class="prog-bar" style="width:${v*10}%;background:${col}"></div></div></div>`).join('')}</div><p style="color:var(--muted);font-size:.82rem;margin-bottom:1.2rem">Based on <strong style="color:var(--text)">${n}</strong> review(s)</p><div class="section-title">Individual Reviews</div><div class="tbl-wrap"><table><thead><tr><th>#</th><th>College</th><th>Clarity</th><th>Innovation</th><th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Comments</th><th>Date</th></tr></thead><tbody>`;
+  reviews.forEach((r,i) => {
+    const ra = ((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);
+    html += `<tr><td style="color:var(--muted)">Peer ${i+1}</td><td style="color:var(--muted2);font-size:.75rem">${escHtml(r.reviewer_college||'—')}</td><td>${r.clarity}/10</td><td>${r.innovation}/10</td><td>${r.execution}/10</td><td>${r.usability}/10</td><td>${r.overall}/10</td><td><strong style="color:var(--green)">${ra}</strong></td><td style="color:var(--muted2);font-size:.75rem;max-width:140px">${escHtml(r.comments||'—')}</td><td style="color:var(--muted);font-size:.75rem">${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`;
   });
-
   html += '</tbody></table></div>';
   c.innerHTML = html;
 }
@@ -733,24 +955,14 @@ async function loadMyProjectStats() {
 // ── HELPERS ───────────────────────────────────────────────
 function showAlert(id, msg, type) {
   document.getElementById(id).innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
-  setTimeout(() => document.getElementById(id).innerHTML = '', 7000);
+  setTimeout(() => { const el = document.getElementById(id); if (el) el.innerHTML = ''; }, 7000);
 }
 function showToast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 4000);
+  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 4000);
 }
-function setLoading(id, on, label) {
-  const b = document.getElementById(id);
-  b.disabled = on;
-  b.textContent = label;
-}
-function escHtml(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function setLoading(id, on, label) { const b = document.getElementById(id); b.disabled = on; b.textContent = label; }
+function escHtml(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
