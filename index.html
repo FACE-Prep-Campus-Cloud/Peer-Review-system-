@@ -443,30 +443,52 @@ async function loadProjects() {
   const c = document.getElementById('projectsContent');
   c.innerHTML = '<div class="loading">Loading projects…</div>';
 
-  if (!currentUser._mentor) {
-    c.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">👨‍🏫</div>
-      <h3>No mentor group found</h3>
-      <p>You haven't been assigned to a mentor group yet. Please contact your coordinator.</p>
-    </div>`;
-    return;
-  }
+  const ALLIANCE = 'Alliance University';
+  const ALLIANCE_GROUPS = [
+    ['I MCA - A', 'I MCA - B'],
+    ['II BCA AI & ML (A+B)'],
+  ];
 
-  const { data: projects, error } = await sb
+  let query = sb
     .from('students')
     .select('register_number, name, course, project_title, project_type, problem_statement')
-    .eq('mentor_assigned', currentUser._mentor)
-    .eq('college', currentUser._college)
-    .in('course', getCourseGroup(currentUser._college, currentUser.course))
     .neq('register_number', currentUser.register_number)
     .order('name');
+
+  if (currentUser._college === ALLIANCE) {
+    const group = ALLIANCE_GROUPS.find(g => g.includes(currentUser.course));
+    if (!group) {
+      c.innerHTML = `<div class="empty-state">
+        <div class="empty-icon">📂</div>
+        <h3>No group found</h3>
+        <p>Your course hasn't been assigned to a group yet.</p>
+      </div>`;
+      return;
+    }
+    query = query.eq('college', ALLIANCE).in('course', group);
+  } else {
+    if (!currentUser._mentor) {
+      c.innerHTML = `<div class="empty-state">
+        <div class="empty-icon">👨‍🏫</div>
+        <h3>No mentor group found</h3>
+        <p>You haven't been assigned to a mentor group yet. Please contact your coordinator.</p>
+      </div>`;
+      return;
+    }
+    query = query
+      .eq('mentor_assigned', currentUser._mentor)
+      .eq('college', currentUser._college)
+      .eq('course', currentUser.course);
+  }
+
+  const { data: projects, error } = await query;
 
   if (error) { c.innerHTML = `<div class="alert alert-error">${error.message}</div>`; return; }
   if (!projects?.length) {
     c.innerHTML = `<div class="empty-state">
       <div class="empty-icon">📂</div>
       <h3>No projects found</h3>
-      <p>No other students are in your mentor group yet.</p>
+      <p>No other students are in your group yet.</p>
     </div>`;
     return;
   }
@@ -506,7 +528,6 @@ async function loadProjects() {
   html += '</div>';
   c.innerHTML = html;
 }
-
 // ── MODAL ─────────────────────────────────────────────────
 async function openModal(reg) {
   const { data: s, error } = await sb
