@@ -1021,7 +1021,10 @@ async function loadProjects() {
   if (!projects?.length) { c.innerHTML = `<div class="loading">No projects found in your group.</div>`; return; }
   await loadReviewedSet();
   const done = reviewedSet.size, total = projects.length, pct = total ? Math.round(done/total*100) : 0;
-  let html = `<div class="prog-banner"><div class="prog-text">Reviewed <strong>${done}</strong> of <strong>${total}</strong> projects</div><div class="prog-right"><span class="prog-pct">${pct}%</span><div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div></div></div><div class="projects-list">`;
+  const groupLabel = currentUser._mentor
+    ? `<strong>${escHtml(currentUser._mentor)}</strong>'s group · `
+    : '';
+  let html = `<div class="prog-banner"><div class="prog-text">${groupLabel}Reviewed <strong>${done}</strong> of <strong>${total}</strong> projects</div><div class="prog-right"><span class="prog-pct">${pct}%</span><div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div></div></div><div class="projects-list">`;
   projects.forEach(p => {
     const rev = reviewedSet.has(p.register_number);
     html += `<div class="project-card">
