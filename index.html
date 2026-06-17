@@ -61,7 +61,6 @@
     .user-meta{font-size:.75rem;color:var(--muted);margin-top:.1rem;}
     .badge-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem;}
     .college-badge{display:inline-flex;align-items:center;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:100px;padding:.2rem .7rem;font-size:.7rem;font-weight:600;color:var(--accent);}
-    /* ── NEW: mentor badge ── */
     .mentor-badge{display:inline-flex;align-items:center;gap:.3rem;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:100px;padding:.2rem .7rem;font-size:.7rem;font-weight:600;color:#7c3aed;}
     .mentor-badge::before{content:'';font-size:.7rem;}
     .tabs{display:flex;gap:0;margin-bottom:1.2rem;background:var(--surface2);padding:.3rem;border-radius:10px;border:1px solid var(--border);overflow-x:auto;}
@@ -207,7 +206,6 @@
         <div>
           <div class="user-name" id="userName"></div>
           <div class="user-meta">Reg: <span id="userReg"></span> · <span id="userCourse"></span></div>
-          <!-- ── CHANGED: show both college badge and mentor badge ── -->
           <div class="badge-row">
             <span class="college-badge" id="userCollegeBadge"></span>
             <span class="mentor-badge" id="userMentorBadge"></span>
@@ -342,6 +340,20 @@ function resetRatings() {
 
 buildRatingGrids();
 
+// ── ALLIANCE COURSE GROUPS ────────────────────────────────
+const ALLIANCE_COURSE_GROUPS = {
+  'II BCA AI & ML (A+B)': ['II BCA AI & ML (A+B)'],
+  'I MCA - A': ['I MCA - A', 'I MCA - B'],
+  'I MCA - B': ['I MCA - A', 'I MCA - B'],
+};
+
+function getCourseGroup(college, course) {
+  if (college === 'Alliance University' && ALLIANCE_COURSE_GROUPS[course]) {
+    return ALLIANCE_COURSE_GROUPS[course];
+  }
+  return [course];
+}
+
 // ── LOGIN ──────────────────────────────────────────────────
 function goToStep2() {
   const c = document.getElementById('collegeSelect').value;
@@ -379,7 +391,6 @@ document.getElementById('emailInput').addEventListener('keydown', e => { if (e.k
 function loginSuccess(student) {
   currentUser = student;
   currentUser._college = student.college || selectedCollege;
-  // ── CHANGED: store mentor for scoped filtering ──
   currentUser._mentor  = student.mentor_assigned || null;
 
   document.getElementById('loginScreen').style.display = 'none';
@@ -388,7 +399,6 @@ function loginSuccess(student) {
   document.getElementById('userReg').textContent        = student.register_number;
   document.getElementById('userCourse').textContent     = student.course;
   document.getElementById('userCollegeBadge').textContent = currentUser._college;
-  // ── CHANGED: show mentor badge, hide if null ──
   const mentorBadge = document.getElementById('userMentorBadge');
   if (currentUser._mentor) {
     mentorBadge.textContent = currentUser._mentor + "'s Group";
@@ -429,12 +439,10 @@ function switchTab(name) {
 }
 
 // ── PROJECTS TAB ──────────────────────────────────────────
-// ── CHANGED: scope to mentor_assigned instead of whole college ──
 async function loadProjects() {
   const c = document.getElementById('projectsContent');
   c.innerHTML = '<div class="loading">Loading projects…</div>';
 
-  // Guard: if student has no mentor assigned, show a message
   if (!currentUser._mentor) {
     c.innerHTML = `<div class="empty-state">
       <div class="empty-icon">👨‍🏫</div>
@@ -444,13 +452,12 @@ async function loadProjects() {
     return;
   }
 
-  // ── CHANGED: single query — filter by same mentor_assigned, exclude self ──
- const { data: projects, error } = await sb
+  const { data: projects, error } = await sb
     .from('students')
     .select('register_number, name, course, project_title, project_type, problem_statement')
     .eq('mentor_assigned', currentUser._mentor)
     .eq('college', currentUser._college)
-    .eq('course', currentUser.course)
+    .in('course', getCourseGroup(currentUser._college, currentUser.course))
     .neq('register_number', currentUser.register_number)
     .order('name');
 
