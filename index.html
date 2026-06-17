@@ -261,12 +261,13 @@
     .criteria-name { font-size: 13px; font-weight: 600; color: var(--text); }
     .score-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 48px; height: 24px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600; background: var(--surface); border: 1px solid var(--border2); color: var(--muted); transition: all .15s; padding: 0 .45rem; }
     .score-badge.set { border-color: var(--rc, var(--accent)); color: var(--rc, var(--accent)); background: color-mix(in srgb, var(--rc, var(--accent)) 8%, transparent); }
-    .rating-strip { display: flex; gap: 4px; width: 100%; }
-    .r-btn { flex: 1 1 0; min-width: 0; aspect-ratio: 1; max-height: 36px; border: 1px solid var(--border2); border-radius: 6px; background: var(--surface); color: var(--muted2); font-size: clamp(10px, 2.6vw, 12.5px); font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all .1s; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; user-select: none; padding: 0; }
-    .r-btn:hover { background: var(--surface2); }
-    .r-btn:active { transform: scale(.92); }
-    .r-btn[data-v="1"]{--rc:#e03a3a} .r-btn[data-v="2"]{--rc:#e85c1a} .r-btn[data-v="3"]{--rc:#d4820a} .r-btn[data-v="4"]{--rc:#c9a00a} .r-btn[data-v="5"]{--rc:#7fb313} .r-btn[data-v="6"]{--rc:#2bab48} .r-btn[data-v="7"]{--rc:#1a9c6e} .r-btn[data-v="8"]{--rc:#1591ae} .r-btn[data-v="9"]{--rc:#3578d4} .r-btn[data-v="10"]{--rc:#7241c9}
-    .r-btn.active { background: var(--rc); border-color: var(--rc); color: #fff; transform: scale(1.06); position: relative; z-index: 1; }
+    .rating-slider-row { display: flex; align-items: center; gap: .85rem; width: 100%; }
+    .rating-slider { flex: 1; -webkit-appearance: none; appearance: none; height: 5px; border-radius: 4px; background: var(--border2); outline: none; cursor: pointer; }
+    .rating-slider::-webkit-slider-runnable-track { height: 5px; border-radius: 4px; background: var(--border2); }
+    .rating-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--rc, var(--accent)); border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--rc, var(--accent)); cursor: pointer; transition: background .15s; margin-top: -1px; }
+    .rating-slider::-moz-range-track { height: 5px; border-radius: 4px; background: var(--border2); }
+    .rating-slider::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--rc, var(--accent)); border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--rc, var(--accent)); cursor: pointer; }
+    .rating-slider-out { display: inline-flex; align-items: center; justify-content: center; min-width: 42px; height: 32px; border-radius: 7px; font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 600; background: var(--rc, var(--accent)); color: #fff; flex-shrink: 0; transition: background .15s; padding: 0 .4rem; }
     .scale-legend { display: flex; justify-content: space-between; margin-top: 5px; font-size: 11px; color: var(--muted); padding: 0 1px; }
     .modal-btns { display: flex; gap: .65rem; margin-top: 1.5rem; }
     .modal-btns .btn-ghost { flex-shrink: 0; }
@@ -608,33 +609,36 @@ function buildCriteriaBlocks() {
         <span class="criteria-name">${c.label}</span>
         <span class="score-badge" id="badge-${c.id}">—</span>
       </div>
-      <div class="rating-strip" id="grid-${c.id}"></div>
+      <div class="rating-slider-row">
+        <input type="range" class="rating-slider" id="slider-${c.id}" min="1" max="10" step="1" value="5" oninput="setRating('${c.id}', this.value)">
+        <span class="rating-slider-out" id="out-${c.id}">—</span>
+      </div>
       <div class="scale-legend"><span>Poor</span><span>Excellent</span></div>
       <input type="hidden" id="${c.id}" value="">
     `;
     wrap.appendChild(div);
-    const strip = div.querySelector('.rating-strip');
-    for (let v = 1; v <= 10; v++) {
-      const btn = document.createElement('button');
-      btn.type = 'button'; btn.className = 'r-btn'; btn.dataset.v = v; btn.textContent = v;
-      btn.onclick = () => setRating(c.id, v);
-      strip.appendChild(btn);
-    }
   });
 }
 function setRating(id, val) {
+  val = +val;
   document.getElementById(id).value = val;
   const badge = document.getElementById('badge-' + id);
   badge.textContent = val + '/10'; badge.className = 'score-badge set';
   badge.style.setProperty('--rc', CMAP[val] || 'var(--accent)');
-  document.getElementById('grid-' + id).querySelectorAll('.r-btn').forEach(b => b.classList.toggle('active', +b.dataset.v === val));
+  const out = document.getElementById('out-' + id);
+  out.textContent = val;
+  out.style.setProperty('--rc', CMAP[val] || 'var(--accent)');
+  document.getElementById('slider-' + id).style.setProperty('--rc', CMAP[val] || 'var(--accent)');
 }
 function resetRatings() {
   CRITERIA.forEach(c => {
     document.getElementById(c.id).value = '';
     const badge = document.getElementById('badge-' + c.id);
     badge.textContent = '—'; badge.className = 'score-badge'; badge.style.removeProperty('--rc');
-    document.getElementById('grid-' + c.id)?.querySelectorAll('.r-btn').forEach(b => b.classList.remove('active'));
+    const slider = document.getElementById('slider-' + c.id);
+    if (slider) { slider.value = 5; slider.style.removeProperty('--rc'); }
+    const out = document.getElementById('out-' + c.id);
+    if (out) { out.textContent = '—'; out.style.removeProperty('--rc'); }
   });
 }
 buildCriteriaBlocks();
