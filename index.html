@@ -95,16 +95,19 @@
 
     /* ── STUDENT DASHBOARD ── */
     .student-shell { display: none; min-height: 100vh; background: var(--bg); }
-    .student-topbar { height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; position: sticky; top: 0; z-index: 100; }
-    .topbar-left { display: flex; align-items: center; gap: .8rem; }
+    .student-topbar { height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; position: sticky; top: 0; z-index: 100; gap: 1rem; }
+    .topbar-left { display: flex; align-items: center; gap: .8rem; flex-shrink: 0; }
     .topbar-logo { width: 28px; height: 28px; border-radius: 6px; background: var(--accent); display: flex; align-items: center; justify-content: center; }
     .topbar-logo svg { width: 14px; height: 14px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .topbar-title { font-size: 14px; font-weight: 600; }
-    .topbar-user { display: flex; align-items: center; gap: .6rem; }
-    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-dim); border: 1.5px solid rgba(47,98,212,.2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--accent); }
+    .topbar-user { display: flex; align-items: center; gap: .6rem; min-width: 0; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-dim); border: 1.5px solid rgba(47,98,212,.2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
     .user-info-small { text-align: right; }
     .user-name-small { font-size: 13px; font-weight: 600; }
     .user-meta-small { font-size: 11.5px; color: var(--muted); }
+    .mentor-pill { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; padding: .35rem .7rem; border-radius: 8px; background: var(--accent-dim); border: 1px solid rgba(47,98,212,.15); flex-shrink: 0; max-width: 140px; }
+    .mentor-pill-label { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); }
+    .mentor-pill-name { font-size: 12px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
     .student-content { max-width: 880px; margin: 0 auto; padding: 2rem 1.5rem; }
     .page-tabs { display: flex; gap: 0; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
     .page-tab { padding: .6rem 1.2rem; font-size: 13.5px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; }
@@ -112,7 +115,7 @@
     .page-tab:hover:not(.active) { color: var(--text); }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    .prog-banner { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; gap: 1rem; }
+    .prog-banner { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
     .prog-text { font-size: 13px; color: var(--muted2); }
     .prog-text strong { color: var(--text); font-weight: 600; }
     .prog-right { display: flex; align-items: center; gap: .8rem; }
@@ -258,8 +261,8 @@
     .criteria-name { font-size: 13px; font-weight: 600; color: var(--text); }
     .score-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 48px; height: 24px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600; background: var(--surface); border: 1px solid var(--border2); color: var(--muted); transition: all .15s; padding: 0 .45rem; }
     .score-badge.set { border-color: var(--rc, var(--accent)); color: var(--rc, var(--accent)); background: color-mix(in srgb, var(--rc, var(--accent)) 8%, transparent); }
-     .rating-strip { display: flex; gap: 4px; width: 100%; }
-.r-btn { flex: 1 1 0; min-width: 0; aspect-ratio: 1; max-height: 36px; border: 1px solid var(--border2); border-radius: 6px; background: var(--surface); color: var(--muted2); font-size: clamp(10px, 2.6vw, 12.5px); font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all .1s; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; user-select: none; padding: 0; }
+    .rating-strip { display: flex; gap: 4px; width: 100%; }
+    .r-btn { flex: 1 1 0; min-width: 0; aspect-ratio: 1; max-height: 36px; border: 1px solid var(--border2); border-radius: 6px; background: var(--surface); color: var(--muted2); font-size: clamp(10px, 2.6vw, 12.5px); font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all .1s; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; user-select: none; padding: 0; }
     .r-btn:hover { background: var(--surface2); }
     .r-btn:active { transform: scale(.92); }
     .r-btn[data-v="1"]{--rc:#e03a3a} .r-btn[data-v="2"]{--rc:#e85c1a} .r-btn[data-v="3"]{--rc:#d4820a} .r-btn[data-v="4"]{--rc:#c9a00a} .r-btn[data-v="5"]{--rc:#7fb313} .r-btn[data-v="6"]{--rc:#2bab48} .r-btn[data-v="7"]{--rc:#1a9c6e} .r-btn[data-v="8"]{--rc:#1591ae} .r-btn[data-v="9"]{--rc:#3578d4} .r-btn[data-v="10"]{--rc:#7241c9}
@@ -275,6 +278,11 @@
     .loading { text-align: center; padding: 3rem; color: var(--muted); font-size: 13px; }
     .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; background: var(--text); color: #fff; padding: .75rem 1.1rem; border-radius: 9px; font-size: 13px; font-weight: 500; animation: toastIn .25s ease; pointer-events: none; }
     @keyframes toastIn { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+    /* ── RESPONSIVE TOPBAR ── */
+    @media (max-width: 560px) {
+      .mentor-pill { display: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -425,6 +433,10 @@
         <div class="user-meta-small" id="stuMeta"></div>
       </div>
       <div class="user-avatar" id="stuAvatar"></div>
+      <div class="mentor-pill" id="mentorPill" style="display:none">
+        <span class="mentor-pill-label">Mentor</span>
+        <span class="mentor-pill-name" id="mentorPillName"></span>
+      </div>
       <button class="btn-ghost btn-sm" onclick="logout()">Sign out</button>
     </div>
   </header>
@@ -973,6 +985,12 @@ function loginSuccess(student) {
   document.getElementById('stuMeta').textContent = student.register_number + ' · ' + student.course;
   const initials = (student.name||'?').split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
   document.getElementById('stuAvatar').textContent = initials;
+  if (currentUser._mentor) {
+    document.getElementById('mentorPillName').textContent = currentUser._mentor;
+    document.getElementById('mentorPill').style.display = 'flex';
+  } else {
+    document.getElementById('mentorPill').style.display = 'none';
+  }
   loadReviewedSet().then(() => loadProjects());
 }
 function logout() {
@@ -982,6 +1000,7 @@ function logout() {
   document.getElementById('emailInput').value = '';
   document.getElementById('loginAlert').innerHTML = '';
   document.getElementById('collegeSelect').value = '';
+  document.getElementById('mentorPill').style.display = 'none';
   backStep1();
 }
 
