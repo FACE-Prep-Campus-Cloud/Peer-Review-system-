@@ -1206,7 +1206,6 @@ function renderDeptView(students, reviews) {
     avgMap[reg] = (a.reduce((s,v)=>s+v,0)/a.length).toFixed(1);
   });
 
-  // Group by course
   const groups = {};
   students.forEach(s => {
     const key = s.course || 'Unassigned';
@@ -1217,8 +1216,10 @@ function renderDeptView(students, reviews) {
   const DEPT_COLORS = ['#534ab7','#185fa5','#3b6d11','#854f0b','#993556','#0f6e56','#a32d2d','#3c3489'];
   const courses = Object.keys(groups).sort();
   const totalPeers = students.length - 1;
+  let openDept = -1;
 
-  let html = '';
+  let html = `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)">`;
+
   courses.forEach((course, ci) => {
     const color = DEPT_COLORS[ci % DEPT_COLORS.length];
     const stuList = groups[course];
@@ -1226,6 +1227,7 @@ function renderDeptView(students, reviews) {
     const pendingCount = stuList.length - reviewedCount;
     const pct = stuList.length ? Math.round(reviewedCount / stuList.length * 100) : 0;
     const dId = 'dept_' + ci;
+    const isLast = ci === courses.length - 1;
 
     const rows = stuList.map(s => {
       const rcvd = rcvdMap[s.register_number] || 0;
@@ -1253,23 +1255,21 @@ function renderDeptView(students, reviews) {
     }).join('');
 
     html += `
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:.85rem">
-        <div onclick="toggleDept('${dId}')" style="display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;background:var(--surface2);cursor:pointer;user-select:none">
-          <div style="display:flex;align-items:center;gap:.7rem">
-            <div style="width:9px;height:9px;border-radius:50%;background:${color};flex-shrink:0"></div>
-            <div>
-              <div style="font-size:13.5px;font-weight:600;color:var(--text)">${escHtml(course)}</div>
-              <div style="font-size:12px;color:var(--muted);margin-top:.1rem">${stuList.length} student${stuList.length!==1?'s':''} · ${pct}% reviewed</div>
-            </div>
+      <div style="border-bottom:${isLast?'none':'1px solid var(--border)'}">
+        <div id="dhdr_${ci}" onclick="deptToggle(${ci})" style="display:flex;align-items:center;gap:.75rem;padding:.9rem 1rem;cursor:pointer;user-select:none;background:var(--surface2);transition:background .15s">
+          <div style="width:9px;height:9px;border-radius:50%;background:${color};flex-shrink:0"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13.5px;font-weight:600;color:var(--text)">${escHtml(course)}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:.1rem">${stuList.length} student${stuList.length!==1?'s':''} · ${pct}% reviewed</div>
           </div>
-          <div style="display:flex;align-items:center;gap:.5rem">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0">
             ${reviewedCount > 0 ? `<span class="status-pill done" style="font-size:11px">${reviewedCount} reviewed</span>` : ''}
             ${pendingCount > 0 ? `<span class="status-pill none" style="font-size:11px">${pendingCount} pending</span>` : ''}
-            <span id="chv_${dId}" style="color:var(--muted);font-size:13px;transition:transform .2s;display:inline-block">▾</span>
+            <span id="dchv_${ci}" style="color:var(--muted);font-size:13px;transition:transform .2s;display:inline-block">▾</span>
           </div>
         </div>
         <div style="height:3px;background:var(--border)"><div style="height:100%;width:${pct}%;background:${color};border-radius:0 2px 2px 0;transition:width .6s"></div></div>
-        <div id="${dId}">
+        <div id="${dId}" style="display:none">
           <table class="student-table">
             <thead><tr><th>Student</th><th>Project</th><th>Reviews received</th><th>Reviewed</th><th>Avg score</th></tr></thead>
             <tbody>${rows}</tbody>
@@ -1278,9 +1278,27 @@ function renderDeptView(students, reviews) {
       </div>`;
   });
 
+  html += `</div>`;
   deptDiv.innerHTML = html;
-}
 
+  window._openDept = -1;
+  window.deptToggle = function(i) {
+    const prev = window._openDept;
+    if (prev >= 0 && prev !== i) {
+      document.getElementById('dept_' + prev).style.display = 'none';
+      document.getElementById('dchv_' + prev).style.transform = '';
+      document.getElementById('dhdr_' + prev).style.background = 'var(--surface2)';
+    }
+    const body = document.getElementById('dept_' + i);
+    const chev = document.getElementById('dchv_' + i);
+    const hdr  = document.getElementById('dhdr_' + i);
+    const isOpen = body.style.display === 'block';
+    body.style.display = isOpen ? 'none' : 'block';
+    chev.style.transform = isOpen ? '' : 'rotate(180deg)';
+    hdr.style.background = isOpen ? 'var(--surface2)' : 'var(--surface)';
+    window._openDept = isOpen ? -1 : i;
+  };
+}
 function toggleDept(id) {
   const el = document.getElementById(id);
   const ch = document.getElementById('chv_' + id);
