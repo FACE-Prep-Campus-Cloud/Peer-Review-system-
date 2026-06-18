@@ -248,6 +248,26 @@
     .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; background: var(--text); color: #fff; padding: .75rem 1.1rem; border-radius: 9px; font-size: 13px; font-weight: 500; animation: toastIn .25s ease; pointer-events: none; }
     @keyframes toastIn { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
     @media (max-width: 560px) { .mentor-pill { display: none !important; } }
+
+    /* Mentor group accordion */
+    .mentor-groups-wrap { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
+    .mg-separator { border-bottom: 1px solid var(--border); }
+    .mg-header { display: flex; align-items: center; gap: .8rem; padding: .95rem 1rem; cursor: pointer; user-select: none; transition: background .15s; }
+    .mg-header:hover { background: var(--surface2); }
+    .mg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .mg-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    .mg-meta { flex: 1; min-width: 0; }
+    .mg-name { font-size: 13.5px; font-weight: 600; color: var(--text); }
+    .mg-sub { font-size: 12px; color: var(--muted); margin-top: .1rem; }
+    .mg-badges { display: flex; align-items: center; gap: .4rem; flex-shrink: 0; }
+    .mg-chevron { color: var(--muted); font-size: 12px; transition: transform .2s; margin-left: .2rem; flex-shrink: 0; }
+    .mg-chevron.open { transform: rotate(180deg); }
+    .mg-progress { height: 3px; background: var(--border); }
+    .mg-progress-fill { height: 100%; transition: width .6s; }
+    .mg-body { display: none; }
+    .mg-body.open { display: block; }
+    .unassigned-banner { display: flex; align-items: center; gap: .6rem; padding: .65rem .9rem; border-radius: 8px; background: var(--amber-dim); border: 1px solid rgba(196,124,10,.22); font-size: 12.5px; color: var(--amber); margin-bottom: .75rem; }
+    .mentor-avatar-sm { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -385,7 +405,7 @@
     </aside>
     <main class="admin-main">
       <div class="admin-topbar">
-        <div><div class="admin-page-title" id="adminPageTitle">Students</div><div class="admin-page-sub" id="adminPageSub">All registered students and their review activity</div></div>
+        <div><div class="admin-page-title" id="adminPageTitle">Students</div><div class="admin-page-sub" id="adminPageSub">All registered students grouped by mentor</div></div>
         <div id="adminTopbarKpi" style="display:flex;gap:1.5rem;align-items:center"></div>
       </div>
       <div class="admin-content">
@@ -395,18 +415,15 @@
           <div class="kpi-card purple"><div class="kpi-val" id="kpiReviewers">—</div><div class="kpi-label">Active reviewers</div></div>
         </div>
         <div id="adminStudentsTab" class="admin-tab-pane active">
-          <!-- View toggle -->
           <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.75rem;gap:.5rem">
             <span style="font-size:12px;color:var(--muted)">View:</span>
             <div style="display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden">
-              <button id="vbtn-dept" class="filter-pill active" style="border:none;border-radius:0;padding:.35rem .9rem" onclick="setStudentView('dept')">By department</button>
+              <button id="vbtn-mentor" class="filter-pill active" style="border:none;border-radius:0;padding:.35rem .9rem" onclick="setStudentView('mentor')">By mentor</button>
               <button id="vbtn-flat" class="filter-pill" style="border:none;border-radius:0;padding:.35rem .9rem" onclick="setStudentView('flat')">All students</button>
             </div>
           </div>
-          <!-- Dept view: visible by default -->
-          <div id="deptView"></div>
-          <!-- Flat view: hidden by default -->
-          <div class="search-filter-bar" style="display:none">
+          <div id="mentorView"></div>
+          <div class="search-filter-bar" id="flatSearchBar" style="display:none">
             <div class="search-wrap">
               <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               <input type="text" id="adminSearch" placeholder="Search by name or reg number" oninput="adminSearchFilter()" />
@@ -474,11 +491,14 @@ const CRITERIA = [
   { id: 'overall',    label: 'Overall impression' },
 ];
 const CMAP = {1:'#e03a3a',2:'#e85c1a',3:'#d4820a',4:'#c9a00a',5:'#7fb313',6:'#2bab48',7:'#1a9c6e',8:'#1591ae',9:'#3578d4',10:'#7241c9'};
+const MENTOR_COLORS = ['#534ab7','#185fa5','#3b6d11','#854f0b','#993556','#0f6e56','#a32d2d','#3c3489','#7b5c00','#2d6b8a','#6d3a91','#18685a'];
 
 let currentUser = null, reviewedSet = new Set(), currentProject = null;
 let selectedCollege = '', selectedRole = '';
 let adminCollege = '', adminStudentsCache = [], adminReviewsCache = [];
 let adminCurrentFilter = 'all', adminCurrentQuery = '';
+let studentViewMode = 'mentor';
+let openMentorIdx = -1;
 
 /* ── CRITERIA ── */
 function buildCriteriaBlocks() {
@@ -593,9 +613,7 @@ function adminLogout() {
 
 /* ── ADMIN DATA ── */
 async function loadAdminData() {
-  /* Show loading inside dept view (which is visible by default) */
-  document.getElementById('deptView').innerHTML = '<div class="loading">Loading students…</div>';
-
+  document.getElementById('mentorView').innerHTML = '<div class="loading">Loading students…</div>';
   const { data: students } = await sb.from('students').select('*').eq('college', adminCollege).order('name');
   adminStudentsCache = students || [];
   const regs = adminStudentsCache.map(s => s.register_number);
@@ -605,15 +623,130 @@ async function loadAdminData() {
     reviewsData = rev || [];
   }
   adminReviewsCache = reviewsData;
-
   document.getElementById('kpiStudents').textContent = adminStudentsCache.length;
   document.getElementById('kpiReviews').textContent = reviewsData.length;
   document.getElementById('kpiReviewers').textContent = new Set(reviewsData.map(r => r.reviewer_reg)).size;
-
-  /* ── Always open with department view ── */
-  setStudentView('dept');
+  setStudentView('mentor');
 }
 
+/* ── MENTOR VIEW ── */
+function renderMentorView(students, reviews) {
+  const mentorDiv = document.getElementById('mentorView');
+
+  /* Build lookup maps */
+  const rcvdMap = {}, givenMap = {}, scoresMap = {};
+  reviews.forEach(r => {
+    rcvdMap[r.project_reg] = (rcvdMap[r.project_reg] || 0) + 1;
+    givenMap[r.reviewer_reg] = (givenMap[r.reviewer_reg] || 0) + 1;
+    if (!scoresMap[r.project_reg]) scoresMap[r.project_reg] = [];
+    scoresMap[r.project_reg].push((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5);
+  });
+  const avgMap = {};
+  Object.keys(scoresMap).forEach(reg => { const a = scoresMap[reg]; avgMap[reg] = (a.reduce((s,v)=>s+v,0)/a.length).toFixed(1); });
+
+  /* Group students by mentor */
+  const groups = {};
+  students.forEach(s => {
+    const key = s.mentor_assigned || '__unassigned__';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(s);
+  });
+
+  const unassigned = groups['__unassigned__'] || [];
+  delete groups['__unassigned__'];
+  const mentors = Object.keys(groups).sort();
+
+  if (!mentors.length && !unassigned.length) {
+    mentorDiv.innerHTML = `<div class="empty-table" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3rem;text-align:center"><h3 style="color:var(--muted2)">No students found</h3><p style="color:var(--muted);font-size:13px;margin-top:.25rem">No students registered for this institution yet.</p></div>`;
+    return;
+  }
+
+  const allGroups = mentors.map((m, i) => ({ key: m, label: m, students: groups[m], color: MENTOR_COLORS[i % MENTOR_COLORS.length] }));
+  if (unassigned.length) allGroups.push({ key: '__unassigned__', label: 'Unassigned', students: unassigned, color: '#9a9790' });
+
+  let html = '';
+  if (unassigned.length) {
+    html += `<div class="unassigned-banner"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>${unassigned.length} student${unassigned.length>1?'s have':' has'} no mentor assigned yet.</div>`;
+  }
+
+  html += `<div class="mentor-groups-wrap">`;
+
+  allGroups.forEach(({ key, label, students: stuList, color }, ci) => {
+    const reviewedCount = stuList.filter(s => (rcvdMap[s.register_number]||0) > 0).length;
+    const pendingCount = stuList.length - reviewedCount;
+    const pct = stuList.length ? Math.round(reviewedCount / stuList.length * 100) : 0;
+    /* Each mentor group uses its own student count as the "total peers" denominator */
+    const totalPeers = stuList.length - 1;
+    const isLast = ci === allGroups.length - 1;
+    const isUnassigned = key === '__unassigned__';
+
+    /* Mentor initials for the icon */
+    const mentorInitials = isUnassigned ? '?' : label.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
+
+    const rows = stuList.map(s => {
+      const rcvd = rcvdMap[s.register_number] || 0, given = givenMap[s.register_number] || 0, avg = avgMap[s.register_number];
+      const pillClass = rcvd === 0 ? 'none' : rcvd >= 3 ? 'done' : 'partial';
+      const initials = (s.name||'?').split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
+      return `<tr onclick="openStudentDetail('${escHtml(s.register_number)}')" style="cursor:pointer">
+        <td><div style="display:flex;align-items:center;gap:.75rem">
+          <div class="mentor-avatar-sm" style="background:${color}18;color:${color}">${initials}</div>
+          <div><div class="stu-name">${escHtml(s.name||'—')}</div><div class="stu-reg">${escHtml(s.register_number||'')}</div></div>
+        </div></td>
+        <td style="font-size:12.5px;color:var(--muted2)">${escHtml(s.course||'—')}</td>
+        <td style="max-width:180px">${s.project_title ? `<div style="font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(s.project_title.slice(0,50))}${s.project_title.length>50?'…':''}</div>` : `<span style="font-size:12px;color:var(--rose)">No project</span>`}</td>
+        <td><span class="status-pill ${pillClass}">${rcvd === 0 ? 'None' : rcvd + ' received'}</span></td>
+        <td><span class="given-text">${given} / ${Math.max(0, totalPeers)}</span></td>
+        <td>${avg ? `<span class="score-pill">${avg}</span>` : '<span style="color:var(--muted);font-size:12px">—</span>'}</td>
+      </tr>`;
+    }).join('');
+
+    html += `
+      <div${!isLast ? ' class="mg-separator"' : ''}>
+        <div id="mghdr_${ci}" class="mg-header" onclick="mentorToggle(${ci})" style="background:${color}0d">
+          <div class="mg-icon" style="background:${color}20;color:${color}">${mentorInitials}</div>
+          <div class="mg-meta">
+            <div class="mg-name">${isUnassigned ? '<em style="color:var(--muted);font-style:italic">Unassigned</em>' : escHtml(label)}</div>
+            <div class="mg-sub">${stuList.length} student${stuList.length!==1?'s':''} · ${pct}% reviewed</div>
+          </div>
+          <div class="mg-badges">
+            ${reviewedCount>0 ? `<span class="status-pill done" style="font-size:11px">${reviewedCount} reviewed</span>` : ''}
+            ${pendingCount>0 ? `<span class="status-pill none" style="font-size:11px">${pendingCount} pending</span>` : ''}
+            <span class="mg-chevron" id="mgchv_${ci}">▾</span>
+          </div>
+        </div>
+        <div class="mg-progress"><div class="mg-progress-fill" style="width:${pct}%;background:${color}"></div></div>
+        <div class="mg-body" id="mgbody_${ci}">
+          <table class="student-table">
+            <thead><tr><th>Student</th><th>Course</th><th>Project</th><th>Reviews received</th><th>Reviewed</th><th>Avg score</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+          <div style="padding:.55rem 1rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--surface2)">${stuList.length} student${stuList.length!==1?'s':''} in this group</div>
+        </div>
+      </div>`;
+  });
+
+  html += `</div>`;
+  mentorDiv.innerHTML = html;
+
+  openMentorIdx = -1;
+  window.mentorToggle = function(i) {
+    const prev = openMentorIdx;
+    if (prev >= 0 && prev !== i) {
+      const pb = document.getElementById('mgbody_' + prev);
+      const pc = document.getElementById('mgchv_' + prev);
+      if (pb) pb.classList.remove('open');
+      if (pc) pc.classList.remove('open');
+    }
+    const body = document.getElementById('mgbody_' + i);
+    const chev = document.getElementById('mgchv_' + i);
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chev.classList.toggle('open', !isOpen);
+    openMentorIdx = isOpen ? -1 : i;
+  };
+}
+
+/* ── FLAT TABLE VIEW ── */
 function renderStudentsTable(students, reviews, filter = 'all', query = '') {
   const wrap = document.getElementById('studentsTableWrap');
   const rcvdMap = {}, givenMap = {}, scoresMap = {};
@@ -643,13 +776,32 @@ function renderStudentsTable(students, reviews, filter = 'all', query = '') {
     const rcvd = rcvdMap[s.register_number] || 0, given = givenMap[s.register_number] || 0, avg = avgMap[s.register_number];
     const pillClass = rcvd === 0 ? 'none' : rcvd >= 3 ? 'done' : 'partial';
     const initials = (s.name||'?').split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
-    return `<tr onclick="openStudentDetail('${escHtml(s.register_number)}')"><td><div style="display:flex;align-items:center;gap:.75rem"><div style="width:32px;height:32px;border-radius:8px;background:var(--accent-dim);border:1px solid rgba(47,98,212,.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0">${initials}</div><div><div class="stu-name">${escHtml(s.name||'—')}</div><div class="stu-reg">${escHtml(s.register_number||'')}</div></div></div></td><td style="font-size:12.5px;color:var(--muted2)">${escHtml(s.course||'—')}</td><td style="max-width:200px">${s.project_title?`<div style="font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(s.project_title.slice(0,48))}${s.project_title.length>48?'…':''}</div>`:`<span style="font-size:12px;color:var(--rose)">No project</span>`}</td><td><span class="status-pill ${pillClass}">${rcvd === 0 ? 'None' : rcvd + ' received'}</span></td><td><span class="given-text">${given} / ${totalPeers}</span></td><td>${avg?`<span class="score-pill">${avg}</span>`:'<span style="color:var(--muted);font-size:12px">—</span>'}</td></tr>`;
+    const mentorTag = s.mentor_assigned ? `<div style="font-size:11px;color:var(--accent2);margin-top:.2rem;font-weight:500">${escHtml(s.mentor_assigned)}</div>` : '';
+    return `<tr onclick="openStudentDetail('${escHtml(s.register_number)}')"><td><div style="display:flex;align-items:center;gap:.75rem"><div style="width:32px;height:32px;border-radius:8px;background:var(--accent-dim);border:1px solid rgba(47,98,212,.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0">${initials}</div><div><div class="stu-name">${escHtml(s.name||'—')}</div><div class="stu-reg">${escHtml(s.register_number||'')}</div>${mentorTag}</div></div></td><td style="font-size:12.5px;color:var(--muted2)">${escHtml(s.course||'—')}</td><td style="max-width:200px">${s.project_title?`<div style="font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(s.project_title.slice(0,48))}${s.project_title.length>48?'…':''}</div>`:`<span style="font-size:12px;color:var(--rose)">No project</span>`}</td><td><span class="status-pill ${pillClass}">${rcvd === 0 ? 'None' : rcvd + ' received'}</span></td><td><span class="given-text">${given} / ${totalPeers}</span></td><td>${avg?`<span class="score-pill">${avg}</span>`:'<span style="color:var(--muted);font-size:12px">—</span>'}</td></tr>`;
   }).join('');
   wrap.innerHTML = `<table class="student-table"><thead><tr><th>Student</th><th>Course</th><th>Project</th><th>Reviews received</th><th>Reviewed</th><th>Avg score</th></tr></thead><tbody>${rows}</tbody></table><div style="padding:.6rem 1rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--surface2)">${filtered.length} student${filtered.length!==1?'s':''}</div>`;
 }
 
 function adminFilter(f) { adminCurrentFilter = f; renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery); }
 function adminSearchFilter() { adminCurrentQuery = document.getElementById('adminSearch')?.value || ''; renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery); }
+
+function setStudentView(mode) {
+  studentViewMode = mode;
+  document.getElementById('vbtn-mentor').classList.toggle('active', mode === 'mentor');
+  document.getElementById('vbtn-flat').classList.toggle('active', mode === 'flat');
+  const mentorDiv = document.getElementById('mentorView');
+  const flatDiv = document.getElementById('studentsTableWrap');
+  const searchBar = document.getElementById('flatSearchBar');
+  if (mode === 'mentor') {
+    flatDiv.style.display = 'none'; searchBar.style.display = 'none';
+    mentorDiv.style.display = 'block';
+    renderMentorView(adminStudentsCache, adminReviewsCache);
+  } else {
+    mentorDiv.style.display = 'none';
+    flatDiv.style.display = 'block'; searchBar.style.display = 'flex';
+    renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
+  }
+}
 
 function switchAdminTab(name) {
   ['students','reviews','leaderboard'].forEach(n => {
@@ -658,14 +810,13 @@ function switchAdminTab(name) {
   });
   document.getElementById('anav-' + name)?.classList.add('active');
   document.getElementById('admin' + cap(name) + 'Tab')?.classList.add('active');
-  const titles = { students: ['Students','All registered students and their review activity'], reviews: ['Reviews','All peer reviews submitted for this institution'], leaderboard: ['Leaderboard','Projects ranked by average peer review score'] };
+  const titles = { students: ['Students','All registered students grouped by mentor'], reviews: ['Reviews','All peer reviews submitted for this institution'], leaderboard: ['Leaderboard','Projects ranked by average peer review score'] };
   document.getElementById('adminPageTitle').textContent = titles[name][0];
   document.getElementById('adminPageSub').textContent = titles[name][1];
   if (name === 'reviews') renderAdminReviews();
   if (name === 'leaderboard') renderAdminLeaderboard();
-  /* ── Respect current view mode when returning to Students tab ── */
   if (name === 'students') {
-    if (studentViewMode === 'dept') setStudentView('dept');
+    if (studentViewMode === 'mentor') setStudentView('mentor');
     else renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
   }
 }
@@ -853,86 +1004,6 @@ function showAlert(id, msg, type) { const el = document.getElementById(id); if (
 function showToast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3500); }
 function setLoading(id, on, label) { const b = document.getElementById(id); if (!b) return; b.disabled = on; b.textContent = label; }
 function escHtml(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-/* ── VIEW TOGGLE ── */
-let studentViewMode = 'dept';  /* default: department view */
-
-function setStudentView(mode) {
-  studentViewMode = mode;
-  document.getElementById('vbtn-dept').classList.toggle('active', mode === 'dept');
-  document.getElementById('vbtn-flat').classList.toggle('active', mode === 'flat');
-  const deptDiv = document.getElementById('deptView');
-  const flatDiv = document.getElementById('studentsTableWrap');
-  const searchBar = document.querySelector('.search-filter-bar');
-  if (mode === 'dept') {
-    flatDiv.style.display = 'none';
-    if (searchBar) searchBar.style.display = 'none';
-    deptDiv.style.display = 'block';
-    renderDeptView(adminStudentsCache, adminReviewsCache);
-  } else {
-    flatDiv.style.display = 'block';
-    if (searchBar) searchBar.style.display = 'flex';
-    deptDiv.style.display = 'none';
-    renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
-  }
-}
-
-function renderDeptView(students, reviews) {
-  const deptDiv = document.getElementById('deptView');
-  const rcvdMap = {}, givenMap = {}, scoresMap = {};
-  reviews.forEach(r => {
-    rcvdMap[r.project_reg] = (rcvdMap[r.project_reg] || 0) + 1;
-    givenMap[r.reviewer_reg] = (givenMap[r.reviewer_reg] || 0) + 1;
-    if (!scoresMap[r.project_reg]) scoresMap[r.project_reg] = [];
-    scoresMap[r.project_reg].push((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5);
-  });
-  const avgMap = {};
-  Object.keys(scoresMap).forEach(reg => { const a = scoresMap[reg]; avgMap[reg] = (a.reduce((s,v)=>s+v,0)/a.length).toFixed(1); });
-
-  const groups = {};
-  students.forEach(s => { const key = s.course || 'Unassigned'; if (!groups[key]) groups[key] = []; groups[key].push(s); });
-
-  const DEPT_COLORS = ['#534ab7','#185fa5','#3b6d11','#854f0b','#993556','#0f6e56','#a32d2d','#3c3489'];
-  const courses = Object.keys(groups).sort();
-  const totalPeers = students.length - 1;
-
-  let html = `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)">`;
-  courses.forEach((course, ci) => {
-    const color = DEPT_COLORS[ci % DEPT_COLORS.length];
-    const stuList = groups[course];
-    const reviewedCount = stuList.filter(s => (rcvdMap[s.register_number]||0) > 0).length;
-    const pendingCount = stuList.length - reviewedCount;
-    const pct = stuList.length ? Math.round(reviewedCount / stuList.length * 100) : 0;
-    const isLast = ci === courses.length - 1;
-
-    const rows = stuList.map(s => {
-      const rcvd = rcvdMap[s.register_number] || 0, given = givenMap[s.register_number] || 0, avg = avgMap[s.register_number];
-      const pillClass = rcvd === 0 ? 'none' : rcvd >= 3 ? 'done' : 'partial';
-      const initials = (s.name||'?').split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
-      return `<tr onclick="openStudentDetail('${escHtml(s.register_number)}')" style="cursor:pointer"><td><div style="display:flex;align-items:center;gap:.75rem"><div style="width:30px;height:30px;border-radius:7px;background:${color}18;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:${color};flex-shrink:0">${initials}</div><div><div class="stu-name">${escHtml(s.name||'—')}</div><div class="stu-reg">${escHtml(s.register_number||'')}</div></div></div></td><td style="max-width:180px">${s.project_title?`<div style="font-size:12.5px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(s.project_title.slice(0,50))}${s.project_title.length>50?'…':''}</div>`:`<span style="font-size:12px;color:var(--rose)">No project</span>`}</td><td><span class="status-pill ${pillClass}">${rcvd === 0 ? 'None' : rcvd + ' received'}</span></td><td><span class="given-text">${given} / ${Math.max(0, totalPeers)}</span></td><td>${avg?`<span class="score-pill">${avg}</span>`:'<span style="color:var(--muted);font-size:12px">—</span>'}</td></tr>`;
-    }).join('');
-
-    html += `<div style="border-bottom:${isLast?'none':'1px solid var(--border)'}"><div id="dhdr_${ci}" onclick="deptToggle(${ci})" style="display:flex;align-items:center;gap:.75rem;padding:.9rem 1rem;cursor:pointer;user-select:none;background:var(--surface2);transition:background .15s"><div style="width:9px;height:9px;border-radius:50%;background:${color};flex-shrink:0"></div><div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;color:var(--text)">${escHtml(course)}</div><div style="font-size:12px;color:var(--muted);margin-top:.1rem">${stuList.length} student${stuList.length!==1?'s':''} · ${pct}% reviewed</div></div><div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0">${reviewedCount>0?`<span class="status-pill done" style="font-size:11px">${reviewedCount} reviewed</span>`:''} ${pendingCount>0?`<span class="status-pill none" style="font-size:11px">${pendingCount} pending</span>`:''}<span id="dchv_${ci}" style="color:var(--muted);font-size:13px;transition:transform .2s;display:inline-block">▾</span></div></div><div style="height:3px;background:var(--border)"><div style="height:100%;width:${pct}%;background:${color};border-radius:0 2px 2px 0;transition:width .6s"></div></div><div id="dept_${ci}" style="display:none"><table class="student-table"><thead><tr><th>Student</th><th>Project</th><th>Reviews received</th><th>Reviewed</th><th>Avg score</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
-  });
-  html += `</div>`;
-  deptDiv.innerHTML = html;
-
-  window._openDept = -1;
-  window.deptToggle = function(i) {
-    const prev = window._openDept;
-    if (prev >= 0 && prev !== i) {
-      document.getElementById('dept_' + prev).style.display = 'none';
-      document.getElementById('dchv_' + prev).style.transform = '';
-      document.getElementById('dhdr_' + prev).style.background = 'var(--surface2)';
-    }
-    const body = document.getElementById('dept_' + i), chev = document.getElementById('dchv_' + i), hdr = document.getElementById('dhdr_' + i);
-    const isOpen = body.style.display === 'block';
-    body.style.display = isOpen ? 'none' : 'block';
-    chev.style.transform = isOpen ? '' : 'rotate(180deg)';
-    hdr.style.background = isOpen ? 'var(--surface2)' : 'var(--surface)';
-    window._openDept = isOpen ? -1 : i;
-  };
-}
 </script>
 </body>
 </html>
