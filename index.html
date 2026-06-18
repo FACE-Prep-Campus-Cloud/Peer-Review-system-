@@ -31,8 +31,6 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; font-size: 14px; }
-
-    /* ── AUTH SCREEN ── */
     .auth-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
     .auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 420px; }
     .auth-logo { display: flex; align-items: center; gap: .6rem; margin-bottom: 2rem; }
@@ -47,16 +45,8 @@
     .step-dot.done { background: var(--green); }
     .form-group { margin-bottom: 1.2rem; }
     label { display: block; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin-bottom: .45rem; }
-    input, textarea, select {
-      width: 100%; padding: .65rem .85rem;
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text); font-size: 13.5px;
-      font-family: 'Inter', sans-serif; transition: all .15s;
-    }
-    input:focus, textarea:focus, select:focus {
-      outline: none; border-color: var(--accent);
-      background: var(--surface); box-shadow: 0 0 0 3px rgba(47,98,212,.1);
-    }
+    input, textarea, select { width: 100%; padding: .65rem .85rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 13.5px; font-family: 'Inter', sans-serif; transition: all .15s; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(47,98,212,.1); }
     input::placeholder { color: var(--muted); opacity: .7; }
     textarea { resize: vertical; min-height: 88px; }
     select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23706d63' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: calc(100% - .85rem) center; padding-right: 2.2rem; }
@@ -83,7 +73,6 @@
     .role-btn:hover { border-color: var(--border2); background: var(--surface); }
     .role-btn.student-role.selected, .role-btn.student-role:hover { border-color: var(--accent); background: var(--accent-dim); }
     .role-btn.admin-role.selected, .role-btn.admin-role:hover { border-color: var(--accent2); background: rgba(109,65,199,.07); }
-    .role-btn.selected { transform: none; }
     .role-icon-wrap { width: 32px; height: 32px; border-radius: 7px; display: flex; align-items: center; justify-content: center; margin-bottom: .2rem; }
     .role-icon-wrap.blue { background: var(--accent-dim); }
     .role-icon-wrap.purple { background: rgba(109,65,199,.1); }
@@ -92,8 +81,6 @@
     .role-desc { font-size: 11.5px; color: var(--muted); }
     .pin-row { display: flex; gap: .5rem; justify-content: center; margin-bottom: 1.2rem; }
     .pin-digit { width: 54px; height: 60px; text-align: center; font-size: 1.5rem; font-weight: 700; font-family: 'DM Mono', monospace; letter-spacing: .05em; border-radius: 9px; }
-
-    /* ── STUDENT DASHBOARD ── */
     .student-shell { display: none; min-height: 100vh; background: var(--bg); }
     .student-topbar { height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; position: sticky; top: 0; z-index: 100; gap: 1rem; }
     .topbar-left { display: flex; align-items: center; gap: .8rem; flex-shrink: 0; }
@@ -139,15 +126,9 @@
     .stat-lbl { font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-top: .25rem; }
     .stat-bar-wrap { height: 3px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: .75rem; }
     .stat-bar { height: 100%; border-radius: 3px; }
-
-    /* ── ADMIN SHELL ── */
     .admin-shell { display: none; min-height: 100vh; background: var(--bg); }
     .admin-layout { display: flex; min-height: 100vh; }
-    .admin-sidebar {
-      width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 200;
-      overflow-y: auto;
-    }
+    .admin-sidebar { width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 200; overflow-y: auto; }
     .sidebar-header { padding: 1.25rem 1.1rem 1rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .65rem; }
     .sidebar-logo { width: 28px; height: 28px; border-radius: 7px; background: var(--accent2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .sidebar-logo svg { width: 14px; height: 14px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
@@ -156,12 +137,7 @@
     .sidebar-section { padding: 1rem .75rem .5rem; }
     .sidebar-section-label { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 .4rem; margin-bottom: .4rem; }
     .sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
-    .sidebar-nav-item {
-      display: flex; align-items: center; gap: .65rem; padding: .55rem .75rem; border-radius: 7px;
-      cursor: pointer; font-size: 13px; font-weight: 500; color: var(--muted2);
-      transition: all .15s; border: none; background: transparent; width: 100%; text-align: left;
-      font-family: 'Inter', sans-serif;
-    }
+    .sidebar-nav-item { display: flex; align-items: center; gap: .65rem; padding: .55rem .75rem; border-radius: 7px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--muted2); transition: all .15s; border: none; background: transparent; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
     .sidebar-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .sidebar-nav-item:hover { background: var(--surface2); color: var(--text); }
     .sidebar-nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 600; }
@@ -183,8 +159,6 @@
     .kpi-card.blue .kpi-val { color: var(--accent); }
     .kpi-card.green .kpi-val { color: var(--green); }
     .kpi-card.purple .kpi-val { color: var(--accent2); }
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-    .section-title { font-size: 14px; font-weight: 700; color: var(--text); }
     .search-filter-bar { display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; flex-wrap: wrap; }
     .search-wrap { position: relative; flex: 1; min-width: 180px; }
     .search-wrap svg { position: absolute; left: .7rem; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; stroke: var(--muted); fill: none; stroke-width: 1.8; stroke-linecap: round; }
@@ -216,7 +190,7 @@
     .reviews-table thead th { background: var(--surface2); padding: .75rem 1rem; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
     .reviews-table tbody td { padding: .8rem 1rem; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
     .reviews-table tbody tr:last-child td { border-bottom: none; }
-    .lb-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; margin-bottom: .7rem; transition: border-color .15s; }
+    .lb-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; margin-bottom: .7rem; }
     .lb-card.top3 { border-color: rgba(196,124,10,.3); background: rgba(196,124,10,.03); }
     .lb-rank { width: 32px; text-align: center; font-size: 13px; font-weight: 700; color: var(--muted); font-family: 'DM Mono', monospace; flex-shrink: 0; }
     .lb-info { flex: 1; min-width: 0; }
@@ -226,8 +200,6 @@
     .lb-score { text-align: right; flex-shrink: 0; }
     .lb-score-val { font-size: 22px; font-weight: 700; color: var(--green); letter-spacing: -.4px; font-variant-numeric: tabular-nums; }
     .lb-score-label { font-size: 11px; color: var(--muted); }
-
-    /* ── DETAIL MODAL ── */
     .detail-overlay { display: none; position: fixed; inset: 0; background: rgba(15,15,14,.45); backdrop-filter: blur(4px); z-index: 1000; overflow-y: auto; padding: 2rem 1rem; }
     .detail-box { max-width: 580px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; }
     .detail-student-header { display: flex; align-items: flex-start; gap: 1rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
@@ -247,8 +219,6 @@
     .detail-table thead th { background: var(--surface2); padding: .6rem .75rem; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border-bottom: 1px solid var(--border); }
     .detail-table tbody td { padding: .7rem .75rem; border-bottom: 1px solid var(--border); font-size: 12.5px; font-variant-numeric: tabular-nums; }
     .detail-table tbody tr:last-child td { border-bottom: none; }
-
-    /* ── REVIEW MODAL ── */
     .review-overlay { display: none; position: fixed; inset: 0; background: rgba(15,15,14,.45); backdrop-filter: blur(4px); z-index: 900; overflow-y: auto; padding: 2rem 1rem; }
     .review-box { max-width: 520px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; }
     .review-project-info { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 1rem 1.1rem; margin-bottom: 1.5rem; }
@@ -274,39 +244,26 @@
     .modal-btns .btn-primary { flex: 1; }
     .modal-title { font-size: 16px; font-weight: 700; margin-bottom: .2rem; }
     .modal-sub { font-size: 12.5px; color: var(--muted); margin-bottom: 1.25rem; }
-
-    /* ── UTILS ── */
     .loading { text-align: center; padding: 3rem; color: var(--muted); font-size: 13px; }
     .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; background: var(--text); color: #fff; padding: .75rem 1.1rem; border-radius: 9px; font-size: 13px; font-weight: 500; animation: toastIn .25s ease; pointer-events: none; }
     @keyframes toastIn { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
-
-    /* ── RESPONSIVE TOPBAR ── */
-    @media (max-width: 560px) {
-      .mentor-pill { display: none !important; }
-    }
+    @media (max-width: 560px) { .mentor-pill { display: none !important; } }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════ AUTH ══════════════════════════════════ -->
 <div id="authScreen" class="auth-shell">
   <div class="auth-card">
     <div class="auth-logo">
-      <div class="auth-logo-mark">
-        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      </div>
+      <div class="auth-logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
       <div class="auth-logo-text">Peer Review</div>
     </div>
-
     <div class="step-dots">
       <div class="step-dot active" id="dot1"></div>
       <div class="step-dot" id="dot2"></div>
       <div class="step-dot" id="dot3"></div>
     </div>
-
     <div id="loginAlert"></div>
-
-    <!-- Step 1 -->
     <div id="step1">
       <div class="auth-title">Select your institution</div>
       <div class="auth-sub">Choose the college you're registered with to get started.</div>
@@ -314,91 +271,50 @@
         <label>Your college</label>
         <select id="collegeSelect">
           <option value="">— Select institution —</option>
-          <option>Kamaraj College</option>
-          <option>Kamaraj Women's College</option>
-          <option>SDNB Vaishnav College for Women</option>
-          <option>Patrician College of Arts &amp; Science</option>
-          <option>TERF's College of Arts and Science</option>
-          <option>Sree Saraswathi Thyagaraja College</option>
-          <option>TJS College of Arts and Science</option>
-          <option>Bharathidasan College of Arts &amp; Science</option>
+          <option>Kamaraj College</option><option>Kamaraj Women's College</option>
+          <option>SDNB Vaishnav College for Women</option><option>Patrician College of Arts &amp; Science</option>
+          <option>TERF's College of Arts and Science</option><option>Sree Saraswathi Thyagaraja College</option>
+          <option>TJS College of Arts and Science</option><option>Bharathidasan College of Arts &amp; Science</option>
           <option>Nagarathinam Angalammal Arts &amp; Science College</option>
           <option>Vinayaga Mission's Research Foundation School of Arts &amp; Science</option>
-          <option>Sri Amaraavathi College of Arts &amp; Science</option>
-          <option>Takshashila University</option>
-          <option>Study World Group of Institution</option>
-          <option>Rathinam College of Arts &amp; Science</option>
-          <option>Noorul Islam Centre for Higher Education (NICHE)</option>
-          <option>AMET University</option>
-          <option>Joy University</option>
-          <option>Sasurie College of Arts and Science</option>
-          <option>Alliance University</option>
-          <option>Kristu Jayanti (Deemed to be University)</option>
-          <option>S-VYASA University</option>
-          <option>Asian School of Business</option>
+          <option>Sri Amaraavathi College of Arts &amp; Science</option><option>Takshashila University</option>
+          <option>Study World Group of Institution</option><option>Rathinam College of Arts &amp; Science</option>
+          <option>Noorul Islam Centre for Higher Education (NICHE)</option><option>AMET University</option>
+          <option>Joy University</option><option>Sasurie College of Arts and Science</option>
+          <option>Alliance University</option><option>Kristu Jayanti (Deemed to be University)</option>
+          <option>S-VYASA University</option><option>Asian School of Business</option>
         </select>
       </div>
       <button class="btn-primary" onclick="goStep2()">Continue</button>
     </div>
-
-    <!-- Step 2 -->
     <div id="step2" style="display:none">
       <div class="auth-title">How are you joining?</div>
       <div class="auth-sub">Select your role to continue.</div>
-      <div class="college-pill" id="collegePill">
-        <div>
-          <span class="cp-label">Institution</span>
-          <span class="cp-val" id="collegePillVal"></span>
-        </div>
-      </div>
+      <div class="college-pill"><div><span class="cp-label">Institution</span><span class="cp-val" id="collegePillVal"></span></div></div>
       <div class="role-grid">
         <button class="role-btn student-role" onclick="selectRole('student')">
-          <div class="role-icon-wrap blue">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#2f62d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          </div>
-          <span class="role-label">Student</span>
-          <span class="role-desc">Review peers and track your project scores</span>
+          <div class="role-icon-wrap blue"><svg viewBox="0 0 24 24" fill="none" stroke="#2f62d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <span class="role-label">Student</span><span class="role-desc">Review peers and track your project scores</span>
         </button>
         <button class="role-btn admin-role" onclick="selectRole('admin')">
-          <div class="role-icon-wrap purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#6d41c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <span class="role-label">Admin</span>
-          <span class="role-desc">View and manage all student progress</span>
+          <div class="role-icon-wrap purple"><svg viewBox="0 0 24 24" fill="none" stroke="#6d41c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <span class="role-label">Admin</span><span class="role-desc">View and manage all student progress</span>
         </button>
       </div>
       <button class="btn-ghost btn-sm" onclick="backStep1()">Back</button>
     </div>
-
-    <!-- Step 3a: Student -->
     <div id="step3student" style="display:none">
       <div class="auth-title">Sign in</div>
       <div class="auth-sub">Enter your registered email address.</div>
-      <div class="college-pill" id="collegePill2">
-        <div>
-          <span class="cp-label">Institution</span>
-          <span class="cp-val" id="collegePillVal2"></span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Registered email</label>
-        <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" />
-      </div>
-      <div class="btn-row">
-        <button class="btn-ghost" onclick="backStep2()">Back</button>
-        <button id="loginBtn" class="btn-primary" onclick="emailLogin()">Sign in</button>
-      </div>
+      <div class="college-pill"><div><span class="cp-label">Institution</span><span class="cp-val" id="collegePillVal2"></span></div></div>
+      <div class="form-group"><label>Registered email</label><input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" /></div>
+      <div class="btn-row"><button class="btn-ghost" onclick="backStep2()">Back</button><button id="loginBtn" class="btn-primary" onclick="emailLogin()">Sign in</button></div>
     </div>
-
-    <!-- Step 3b: Admin -->
     <div id="step3admin" style="display:none">
       <div class="auth-title">Admin access</div>
       <div class="auth-sub">Enter the 4-digit PIN to access the admin panel.</div>
       <div class="college-pill" style="background:rgba(109,65,199,.07);border-color:rgba(109,65,199,.2);">
-        <div>
-          <span class="cp-label" style="color:var(--accent2)">Institution</span>
-          <span class="cp-val" id="adminCollegeDisplay"></span>
-        </div>
+        <div><span class="cp-label" style="color:var(--accent2)">Institution</span><span class="cp-val" id="adminCollegeDisplay"></span></div>
       </div>
       <div class="form-group">
         <label style="text-align:center;display:block">Admin PIN</label>
@@ -410,34 +326,21 @@
         </div>
       </div>
       <div id="pinAlert"></div>
-      <div class="btn-row">
-        <button class="btn-ghost" onclick="backStep2()">Back</button>
-        <button id="adminLoginBtn" class="btn-admin" onclick="adminLogin()">Enter admin panel</button>
-      </div>
+      <div class="btn-row"><button class="btn-ghost" onclick="backStep2()">Back</button><button id="adminLoginBtn" class="btn-admin" onclick="adminLogin()">Enter admin panel</button></div>
     </div>
-
   </div>
 </div>
 
-<!-- ══════════════════════════════ STUDENT DASHBOARD ══════════════════════════ -->
 <div id="studentShell" class="student-shell">
   <header class="student-topbar">
     <div class="topbar-left">
-      <div class="topbar-logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      </div>
+      <div class="topbar-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
       <span class="topbar-title">Peer Review</span>
     </div>
     <div class="topbar-user">
-      <div class="user-info-small">
-        <div class="user-name-small" id="stuName"></div>
-        <div class="user-meta-small" id="stuMeta"></div>
-      </div>
+      <div class="user-info-small"><div class="user-name-small" id="stuName"></div><div class="user-meta-small" id="stuMeta"></div></div>
       <div class="user-avatar" id="stuAvatar"></div>
-      <div class="mentor-pill" id="mentorPill" style="display:none">
-        <span class="mentor-pill-label">Mentor</span>
-        <span class="mentor-pill-name" id="mentorPillName"></span>
-      </div>
+      <div class="mentor-pill" id="mentorPill" style="display:none"><span class="mentor-pill-label">Mentor</span><span class="mentor-pill-name" id="mentorPillName"></span></div>
       <button class="btn-ghost btn-sm" onclick="logout()">Sign out</button>
     </div>
   </header>
@@ -453,35 +356,24 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════ ADMIN DASHBOARD ═══════════════════════════ -->
 <div id="adminShell" class="admin-shell">
   <div class="admin-layout">
-
-    <!-- Sidebar -->
     <aside class="admin-sidebar">
       <div class="sidebar-header">
-        <div class="sidebar-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <div>
-          <div class="sidebar-app-name">Peer Review</div>
-          <div class="sidebar-app-sub">Admin panel</div>
-        </div>
+        <div class="sidebar-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div><div class="sidebar-app-name">Peer Review</div><div class="sidebar-app-sub">Admin panel</div></div>
       </div>
       <div class="sidebar-section">
         <div class="sidebar-section-label">Overview</div>
         <nav class="sidebar-nav">
           <button class="sidebar-nav-item active" id="anav-students" onclick="switchAdminTab('students')">
-            <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.85"/></svg>
-            Students
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.85"/></svg>Students
           </button>
           <button class="sidebar-nav-item" id="anav-reviews" onclick="switchAdminTab('reviews')">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-            Reviews
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Reviews
           </button>
           <button class="sidebar-nav-item" id="anav-leaderboard" onclick="switchAdminTab('leaderboard')">
-            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            Leaderboard
+            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Leaderboard
           </button>
         </nav>
       </div>
@@ -491,27 +383,19 @@
         <button class="btn-ghost btn-sm" style="width:100%;margin-top:.1rem" onclick="adminLogout()">Sign out</button>
       </div>
     </aside>
-
-    <!-- Main -->
     <main class="admin-main">
       <div class="admin-topbar">
-        <div>
-          <div class="admin-page-title" id="adminPageTitle">Students</div>
-          <div class="admin-page-sub" id="adminPageSub">All registered students and their review activity</div>
-        </div>
+        <div><div class="admin-page-title" id="adminPageTitle">Students</div><div class="admin-page-sub" id="adminPageSub">All registered students and their review activity</div></div>
         <div id="adminTopbarKpi" style="display:flex;gap:1.5rem;align-items:center"></div>
       </div>
       <div class="admin-content">
-        <!-- KPI row -->
-        <div class="kpi-row" id="kpiRow">
+        <div class="kpi-row">
           <div class="kpi-card blue"><div class="kpi-val" id="kpiStudents">—</div><div class="kpi-label">Students</div></div>
           <div class="kpi-card green"><div class="kpi-val" id="kpiReviews">—</div><div class="kpi-label">Reviews submitted</div></div>
           <div class="kpi-card purple"><div class="kpi-val" id="kpiReviewers">—</div><div class="kpi-label">Active reviewers</div></div>
         </div>
-
-        <!-- Students tab -->
         <div id="adminStudentsTab" class="admin-tab-pane active">
-          <!-- View toggle bar -->
+          <!-- View toggle -->
           <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.75rem;gap:.5rem">
             <span style="font-size:12px;color:var(--muted)">View:</span>
             <div style="display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden">
@@ -519,9 +403,10 @@
               <button id="vbtn-flat" class="filter-pill" style="border:none;border-radius:0;padding:.35rem .9rem" onclick="setStudentView('flat')">All students</button>
             </div>
           </div>
-          <div id="deptView" style="display:none"></div>
-
-          <div class="search-filter-bar">
+          <!-- Dept view: visible by default -->
+          <div id="deptView"></div>
+          <!-- Flat view: hidden by default -->
+          <div class="search-filter-bar" style="display:none">
             <div class="search-wrap">
               <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               <input type="text" id="adminSearch" placeholder="Search by name or reg number" oninput="adminSearchFilter()" />
@@ -530,30 +415,19 @@
             <button class="filter-pill" id="fpill-reviewed" onclick="adminFilter('reviewed')">Has reviews</button>
             <button class="filter-pill" id="fpill-pending" onclick="adminFilter('pending')">No reviews</button>
           </div>
-          <div class="student-table-wrap" id="studentsTableWrap">
-            <div class="loading">Loading students…</div>
-          </div>
+          <div class="student-table-wrap" id="studentsTableWrap" style="display:none"></div>
         </div>
-
-        <!-- Reviews tab -->
         <div id="adminReviewsTab" class="admin-tab-pane">
-          <div class="reviews-table-wrap" id="reviewsTableWrap">
-            <div class="loading">Loading reviews…</div>
-          </div>
+          <div class="reviews-table-wrap" id="reviewsTableWrap"><div class="loading">Loading reviews…</div></div>
         </div>
-
-        <!-- Leaderboard tab -->
         <div id="adminLeaderboardTab" class="admin-tab-pane">
-          <div id="leaderboardContent">
-            <div class="loading">Loading leaderboard…</div>
-          </div>
+          <div id="leaderboardContent"><div class="loading">Loading leaderboard…</div></div>
         </div>
       </div>
     </main>
   </div>
 </div>
 
-<!-- ══════════════════════════════ REVIEW MODAL ═══════════════════════════════ -->
 <div id="reviewOverlay" class="review-overlay">
   <div class="review-box">
     <div class="review-project-info">
@@ -577,7 +451,6 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════ DETAIL MODAL ═══════════════════════════════ -->
 <div id="detailOverlay" class="detail-overlay">
   <div class="detail-box">
     <div id="detailContent"></div>
@@ -607,25 +480,14 @@ let selectedCollege = '', selectedRole = '';
 let adminCollege = '', adminStudentsCache = [], adminReviewsCache = [];
 let adminCurrentFilter = 'all', adminCurrentQuery = '';
 
-/* ── CRITERIA BUILDER ── */
+/* ── CRITERIA ── */
 function buildCriteriaBlocks() {
   const wrap = document.getElementById('criteriaBlocks');
   wrap.innerHTML = '';
   CRITERIA.forEach(c => {
     const div = document.createElement('div');
     div.className = 'criteria-block';
-    div.innerHTML = `
-      <div class="criteria-top">
-        <span class="criteria-name">${c.label}</span>
-        <span class="score-badge" id="badge-${c.id}">—</span>
-      </div>
-      <div class="rating-slider-row">
-        <input type="range" class="rating-slider" id="slider-${c.id}" min="1" max="10" step="1" value="5" oninput="setRating('${c.id}', this.value)">
-        <span class="rating-slider-out" id="out-${c.id}">—</span>
-      </div>
-      <div class="scale-legend"><span>Poor</span><span>Excellent</span></div>
-      <input type="hidden" id="${c.id}" value="">
-    `;
+    div.innerHTML = `<div class="criteria-top"><span class="criteria-name">${c.label}</span><span class="score-badge" id="badge-${c.id}">—</span></div><div class="rating-slider-row"><input type="range" class="rating-slider" id="slider-${c.id}" min="1" max="10" step="1" value="5" oninput="setRating('${c.id}', this.value)"><span class="rating-slider-out" id="out-${c.id}">—</span></div><div class="scale-legend"><span>Poor</span><span>Excellent</span></div><input type="hidden" id="${c.id}" value="">`;
     wrap.appendChild(div);
   });
 }
@@ -636,8 +498,7 @@ function setRating(id, val) {
   badge.textContent = val + '/10'; badge.className = 'score-badge set';
   badge.style.setProperty('--rc', CMAP[val] || 'var(--accent)');
   const out = document.getElementById('out-' + id);
-  out.textContent = val;
-  out.style.setProperty('--rc', CMAP[val] || 'var(--accent)');
+  out.textContent = val; out.style.setProperty('--rc', CMAP[val] || 'var(--accent)');
   document.getElementById('slider-' + id).style.setProperty('--rc', CMAP[val] || 'var(--accent)');
 }
 function resetRatings() {
@@ -653,7 +514,7 @@ function resetRatings() {
 }
 buildCriteriaBlocks();
 
-/* ── AUTH STEPS ── */
+/* ── AUTH ── */
 function goStep2() {
   const c = document.getElementById('collegeSelect').value;
   if (!c) return showAlert('loginAlert', 'Please select your institution first.', 'error');
@@ -701,8 +562,6 @@ function setDots(active, done) {
     else if (i === active) d.classList.add('active');
   });
 }
-
-/* ── PIN ── */
 function pinInput(i) {
   const v = document.getElementById('pin'+i).value;
   if (v && i < 3) document.getElementById('pin'+(i+1)).focus();
@@ -718,10 +577,7 @@ function getPin() { return [0,1,2,3].map(i => document.getElementById('pin'+i).v
 function adminLogin() {
   const pin = getPin();
   if (pin.length < 4) return showAlert('pinAlert', 'Enter all 4 digits.', 'error');
-  if (pin !== ADMIN_PIN) {
-    showAlert('pinAlert', 'Incorrect PIN. Try again.', 'error');
-    clearPins(); document.getElementById('pin0').focus(); return;
-  }
+  if (pin !== ADMIN_PIN) { showAlert('pinAlert', 'Incorrect PIN. Try again.', 'error'); clearPins(); document.getElementById('pin0').focus(); return; }
   adminCollege = selectedCollege;
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('adminShell').style.display = 'block';
@@ -737,7 +593,9 @@ function adminLogout() {
 
 /* ── ADMIN DATA ── */
 async function loadAdminData() {
-  document.getElementById('studentsTableWrap').innerHTML = '<div class="loading">Loading students…</div>';
+  /* Show loading inside dept view (which is visible by default) */
+  document.getElementById('deptView').innerHTML = '<div class="loading">Loading students…</div>';
+
   const { data: students } = await sb.from('students').select('*').eq('college', adminCollege).order('name');
   adminStudentsCache = students || [];
   const regs = adminStudentsCache.map(s => s.register_number);
@@ -748,20 +606,16 @@ async function loadAdminData() {
   }
   adminReviewsCache = reviewsData;
 
-  const totalStudents = adminStudentsCache.length;
-  const totalReviews = reviewsData.length;
-  const reviewersSet = new Set(reviewsData.map(r => r.reviewer_reg));
+  document.getElementById('kpiStudents').textContent = adminStudentsCache.length;
+  document.getElementById('kpiReviews').textContent = reviewsData.length;
+  document.getElementById('kpiReviewers').textContent = new Set(reviewsData.map(r => r.reviewer_reg)).size;
 
-  document.getElementById('kpiStudents').textContent = totalStudents;
-  document.getElementById('kpiReviews').textContent = totalReviews;
-  document.getElementById('kpiReviewers').textContent = reviewersSet.size;
-
-  renderStudentsTable(adminStudentsCache, reviewsData, adminCurrentFilter, adminCurrentQuery);
+  /* ── Always open with department view ── */
+  setStudentView('dept');
 }
 
 function renderStudentsTable(students, reviews, filter = 'all', query = '') {
   const wrap = document.getElementById('studentsTableWrap');
-
   const rcvdMap = {}, givenMap = {}, scoresMap = {};
   reviews.forEach(r => {
     rcvdMap[r.project_reg] = (rcvdMap[r.project_reg] || 0) + 1;
@@ -770,78 +624,32 @@ function renderStudentsTable(students, reviews, filter = 'all', query = '') {
     scoresMap[r.project_reg].push((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5);
   });
   const avgMap = {};
-  Object.keys(scoresMap).forEach(reg => {
-    const a = scoresMap[reg];
-    avgMap[reg] = (a.reduce((s,v)=>s+v,0)/a.length).toFixed(1);
-  });
+  Object.keys(scoresMap).forEach(reg => { const a = scoresMap[reg]; avgMap[reg] = (a.reduce((s,v)=>s+v,0)/a.length).toFixed(1); });
 
   let filtered = students.filter(s => {
-    if (query && !s.name.toLowerCase().includes(query.toLowerCase()) &&
-        !(s.register_number||'').toLowerCase().includes(query.toLowerCase())) return false;
+    if (query && !s.name.toLowerCase().includes(query.toLowerCase()) && !(s.register_number||'').toLowerCase().includes(query.toLowerCase())) return false;
     if (filter === 'reviewed') return (rcvdMap[s.register_number]||0) > 0;
     if (filter === 'pending') return (rcvdMap[s.register_number]||0) === 0;
     return true;
   });
-
-  ['all','reviewed','pending'].forEach(f => {
-    const el = document.getElementById('fpill-' + f);
-    if (el) el.classList.toggle('active', f === filter);
-  });
+  ['all','reviewed','pending'].forEach(f => { const el = document.getElementById('fpill-' + f); if (el) el.classList.toggle('active', f === filter); });
 
   if (!filtered.length) {
-    wrap.innerHTML = `<div class="empty-table"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.85M16 3.13a4 4 0 0 1 0 7.75"/></svg><h3>No students found</h3><p>${query ? 'Try a different search term.' : 'No students match this filter.'}</p></div>`;
+    wrap.innerHTML = `<div class="empty-table"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><h3>No students found</h3><p>${query ? 'Try a different search term.' : 'No students match this filter.'}</p></div>`;
     return;
   }
-
   const totalPeers = students.length - 1;
   let rows = filtered.map(s => {
-    const rcvd = rcvdMap[s.register_number] || 0;
-    const given = givenMap[s.register_number] || 0;
-    const avg = avgMap[s.register_number];
+    const rcvd = rcvdMap[s.register_number] || 0, given = givenMap[s.register_number] || 0, avg = avgMap[s.register_number];
     const pillClass = rcvd === 0 ? 'none' : rcvd >= 3 ? 'done' : 'partial';
-    const pillLabel = rcvd === 0 ? 'None' : `${rcvd} received`;
     const initials = (s.name||'?').split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
-    return `<tr onclick="openStudentDetail('${escHtml(s.register_number)}')">
-      <td>
-        <div style="display:flex;align-items:center;gap:.75rem">
-          <div style="width:32px;height:32px;border-radius:8px;background:var(--accent-dim);border:1px solid rgba(47,98,212,.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0">${initials}</div>
-          <div>
-            <div class="stu-name">${escHtml(s.name||'—')}</div>
-            <div class="stu-reg">${escHtml(s.register_number||'')}</div>
-          </div>
-        </div>
-      </td>
-      <td style="font-size:12.5px;color:var(--muted2)">${escHtml(s.course||'—')}</td>
-      <td style="max-width:200px">
-        ${s.project_title
-          ? `<div style="font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(s.project_title.slice(0,48))}${s.project_title.length>48?'…':''}</div>`
-          : `<span style="font-size:12px;color:var(--rose)">No project</span>`}
-      </td>
-      <td><span class="status-pill ${pillClass}">${pillLabel}</span></td>
-      <td><span class="given-text">${given} / ${totalPeers}</span></td>
-      <td>${avg ? `<span class="score-pill">${avg}</span>` : '<span style="color:var(--muted);font-size:12px">—</span>'}</td>
-    </tr>`;
+    return `<tr onclick="openStudentDetail('${escHtml(s.register_number)}')"><td><div style="display:flex;align-items:center;gap:.75rem"><div style="width:32px;height:32px;border-radius:8px;background:var(--accent-dim);border:1px solid rgba(47,98,212,.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0">${initials}</div><div><div class="stu-name">${escHtml(s.name||'—')}</div><div class="stu-reg">${escHtml(s.register_number||'')}</div></div></div></td><td style="font-size:12.5px;color:var(--muted2)">${escHtml(s.course||'—')}</td><td style="max-width:200px">${s.project_title?`<div style="font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(s.project_title.slice(0,48))}${s.project_title.length>48?'…':''}</div>`:`<span style="font-size:12px;color:var(--rose)">No project</span>`}</td><td><span class="status-pill ${pillClass}">${rcvd === 0 ? 'None' : rcvd + ' received'}</span></td><td><span class="given-text">${given} / ${totalPeers}</span></td><td>${avg?`<span class="score-pill">${avg}</span>`:'<span style="color:var(--muted);font-size:12px">—</span>'}</td></tr>`;
   }).join('');
-
-  wrap.innerHTML = `
-    <table class="student-table">
-      <thead><tr>
-        <th>Student</th><th>Course</th><th>Project</th><th>Reviews received</th><th>Reviewed</th><th>Avg score</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <div style="padding:.6rem 1rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--surface2)">${filtered.length} student${filtered.length!==1?'s':''}</div>
-  `;
+  wrap.innerHTML = `<table class="student-table"><thead><tr><th>Student</th><th>Course</th><th>Project</th><th>Reviews received</th><th>Reviewed</th><th>Avg score</th></tr></thead><tbody>${rows}</tbody></table><div style="padding:.6rem 1rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--surface2)">${filtered.length} student${filtered.length!==1?'s':''}</div>`;
 }
 
-function adminFilter(f) {
-  adminCurrentFilter = f;
-  renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
-}
-function adminSearchFilter() {
-  adminCurrentQuery = document.getElementById('adminSearch')?.value || '';
-  renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
-}
+function adminFilter(f) { adminCurrentFilter = f; renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery); }
+function adminSearchFilter() { adminCurrentQuery = document.getElementById('adminSearch')?.value || ''; renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery); }
 
 function switchAdminTab(name) {
   ['students','reviews','leaderboard'].forEach(n => {
@@ -850,126 +658,62 @@ function switchAdminTab(name) {
   });
   document.getElementById('anav-' + name)?.classList.add('active');
   document.getElementById('admin' + cap(name) + 'Tab')?.classList.add('active');
-
-  const titles = { students: ['Students', 'All registered students and their review activity'], reviews: ['Reviews', 'All peer reviews submitted for this institution'], leaderboard: ['Leaderboard', 'Projects ranked by average peer review score'] };
+  const titles = { students: ['Students','All registered students and their review activity'], reviews: ['Reviews','All peer reviews submitted for this institution'], leaderboard: ['Leaderboard','Projects ranked by average peer review score'] };
   document.getElementById('adminPageTitle').textContent = titles[name][0];
   document.getElementById('adminPageSub').textContent = titles[name][1];
-
   if (name === 'reviews') renderAdminReviews();
   if (name === 'leaderboard') renderAdminLeaderboard();
-  if (name === 'students') renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
+  /* ── Respect current view mode when returning to Students tab ── */
+  if (name === 'students') {
+    if (studentViewMode === 'dept') setStudentView('dept');
+    else renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
+  }
 }
 
 function renderAdminReviews() {
   const wrap = document.getElementById('reviewsTableWrap');
   const reviews = adminReviewsCache;
-  if (!reviews.length) {
-    wrap.innerHTML = `<div class="empty-table"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><h3>No reviews yet</h3><p>No peer reviews submitted for this institution.</p></div>`;
-    return;
-  }
-  const stuMap = {};
-  adminStudentsCache.forEach(s => stuMap[s.register_number] = s);
+  if (!reviews.length) { wrap.innerHTML = `<div class="empty-table"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><h3>No reviews yet</h3><p>No peer reviews submitted for this institution.</p></div>`; return; }
+  const stuMap = {}; adminStudentsCache.forEach(s => stuMap[s.register_number] = s);
   const rows = reviews.map(r => {
-    const proj = stuMap[r.project_reg];
-    const reviewer = stuMap[r.reviewer_reg];
+    const proj = stuMap[r.project_reg], reviewer = stuMap[r.reviewer_reg];
     const avg = ((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);
-    return `<tr>
-      <td><div style="font-size:13px;font-weight:600;color:var(--text)">${escHtml(proj?.name||r.project_reg)}</div><div style="font-size:12px;color:var(--muted);margin-top:.15rem">${escHtml(proj?.project_title?.slice(0,40)||'')}</div></td>
-      <td style="font-size:13px">${escHtml(reviewer?.name||r.reviewer_reg)}</td>
-      <td>${r.clarity}</td><td>${r.innovation}</td><td>${r.execution}</td><td>${r.usability}</td><td>${r.overall}</td>
-      <td><span class="score-pill" style="background:var(--green-dim);color:var(--green)">${avg}</span></td>
-      <td style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">${new Date(r.created_at).toLocaleDateString('en-IN')}</td>
-    </tr>`;
+    return `<tr><td><div style="font-size:13px;font-weight:600;color:var(--text)">${escHtml(proj?.name||r.project_reg)}</div><div style="font-size:12px;color:var(--muted);margin-top:.15rem">${escHtml(proj?.project_title?.slice(0,40)||'')}</div></td><td>${escHtml(reviewer?.name||r.reviewer_reg)}</td><td>${r.clarity}</td><td>${r.innovation}</td><td>${r.execution}</td><td>${r.usability}</td><td>${r.overall}</td><td><span class="score-pill" style="background:var(--green-dim);color:var(--green)">${avg}</span></td><td style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`;
   }).join('');
   wrap.innerHTML = `<table class="reviews-table"><thead><tr><th>Project</th><th>Reviewer</th><th>Clarity</th><th>Innovation</th><th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Date</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function renderAdminLeaderboard() {
-  const c = document.getElementById('leaderboardContent');
-  const reviews = adminReviewsCache;
-  if (!reviews.length) {
-    c.innerHTML = `<div class="empty-table" style="background:var(--surface);border:1px solid var(--border);border-radius:10px"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><h3>No data yet</h3><p>Leaderboard appears once reviews are submitted.</p></div>`;
-    return;
-  }
-  const stuMap = {};
-  adminStudentsCache.forEach(s => stuMap[s.register_number] = s);
+  const c = document.getElementById('leaderboardContent'), reviews = adminReviewsCache;
+  if (!reviews.length) { c.innerHTML = `<div class="empty-table" style="background:var(--surface);border:1px solid var(--border);border-radius:10px"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><h3>No data yet</h3><p>Leaderboard appears once reviews are submitted.</p></div>`; return; }
+  const stuMap = {}; adminStudentsCache.forEach(s => stuMap[s.register_number] = s);
   const scoresByProject = {};
-  reviews.forEach(r => {
-    if (!scoresByProject[r.project_reg]) scoresByProject[r.project_reg] = [];
-    scoresByProject[r.project_reg].push((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5);
-  });
-  const lb = Object.entries(scoresByProject).map(([reg, scores]) => ({
-    reg, avg: (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(2),
-    count: scores.length, student: stuMap[reg]
-  })).filter(x => x.student).sort((a,b) => b.avg - a.avg);
-
-  const rankLabels = ['1st', '2nd', '3rd'];
-  c.innerHTML = `<div style="display:flex;flex-direction:column;gap:0">` + lb.map((item, i) => `
-    <div class="lb-card ${i<3?'top3':''}">
-      <div class="lb-rank">${rankLabels[i]||'#'+(i+1)}</div>
-      <div class="lb-info">
-        <div class="lb-name">${escHtml(item.student.name)}</div>
-        <div class="lb-project">${escHtml(item.student.project_title?.slice(0,55)||'No title')}${(item.student.project_title?.length||0)>55?'…':''}</div>
-        <div class="lb-reviews">${item.count} review${item.count>1?'s':''}</div>
-      </div>
-      <div class="lb-score">
-        <div class="lb-score-val">${item.avg}</div>
-        <div class="lb-score-label">avg / 10</div>
-      </div>
-    </div>`).join('') + `</div>`;
+  reviews.forEach(r => { if (!scoresByProject[r.project_reg]) scoresByProject[r.project_reg] = []; scoresByProject[r.project_reg].push((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5); });
+  const lb = Object.entries(scoresByProject).map(([reg, scores]) => ({ reg, avg: (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(2), count: scores.length, student: stuMap[reg] })).filter(x => x.student).sort((a,b) => b.avg - a.avg);
+  const rl = ['1st','2nd','3rd'];
+  c.innerHTML = `<div style="display:flex;flex-direction:column;gap:0">` + lb.map((item, i) => `<div class="lb-card ${i<3?'top3':''}"><div class="lb-rank">${rl[i]||'#'+(i+1)}</div><div class="lb-info"><div class="lb-name">${escHtml(item.student.name)}</div><div class="lb-project">${escHtml(item.student.project_title?.slice(0,55)||'No title')}${(item.student.project_title?.length||0)>55?'…':''}</div><div class="lb-reviews">${item.count} review${item.count>1?'s':''}</div></div><div class="lb-score"><div class="lb-score-val">${item.avg}</div><div class="lb-score-label">avg / 10</div></div></div>`).join('') + `</div>`;
 }
 
 async function openStudentDetail(reg) {
-  const s = adminStudentsCache.find(x => x.register_number === reg);
-  if (!s) return;
+  const s = adminStudentsCache.find(x => x.register_number === reg); if (!s) return;
   const { data: reviews } = await sb.from('reviews').select('*').eq('project_reg', reg).order('created_at');
-  const revs = reviews || [];
-  const n = revs.length;
+  const revs = reviews || [], n = revs.length;
   const initials = (s.name||'?').split(' ').slice(0,2).map(x=>x[0]).join('').toUpperCase();
-
-  let html = `
-    <div class="detail-student-header">
-      <div class="detail-avatar">${initials}</div>
-      <div>
-        <div class="detail-name">${escHtml(s.name||'—')}</div>
-        <div class="detail-meta">${escHtml(s.register_number)} · ${escHtml(s.course)}</div>
-        ${s.mentor_assigned ? `<span class="detail-badge">${escHtml(s.mentor_assigned)}'s group</span>` : ''}
-      </div>
-    </div>
-  `;
-
+  let html = `<div class="detail-student-header"><div class="detail-avatar">${initials}</div><div><div class="detail-name">${escHtml(s.name||'—')}</div><div class="detail-meta">${escHtml(s.register_number)} · ${escHtml(s.course)}</div>${s.mentor_assigned?`<span class="detail-badge">${escHtml(s.mentor_assigned)}'s group</span>`:''}</div></div>`;
   if (s.project_title) {
-    html += `<div class="detail-project-box">
-      <div class="project-type-chip" style="margin-bottom:.5rem">${escHtml(s.project_type||'Project')}</div>
-      <div class="detail-project-title">${escHtml(s.project_title)}</div>
-      ${s.problem_statement ? `<div class="detail-problem">${escHtml(s.problem_statement)}</div>` : ''}
-    </div>`;
+    html += `<div class="detail-project-box"><div class="project-type-chip" style="margin-bottom:.5rem">${escHtml(s.project_type||'Project')}</div><div class="detail-project-title">${escHtml(s.project_title)}</div>${s.problem_statement?`<div class="detail-problem">${escHtml(s.problem_statement)}</div>`:''}</div>`;
   } else {
     html += `<div style="background:var(--rose-dim);border:1px solid rgba(204,53,53,.18);border-radius:8px;padding:.75rem 1rem;font-size:13px;color:var(--rose);margin-bottom:1.25rem">No project submitted yet.</div>`;
   }
-
   if (n === 0) {
     html += `<div class="empty-table" style="padding:2rem"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>No reviews yet</h3></div>`;
   } else {
     const avg = f => (revs.reduce((s,r)=>s+r[f],0)/n).toFixed(1);
     const avgs = {clarity:avg('clarity'),innovation:avg('innovation'),execution:avg('execution'),usability:avg('usability'),overall:avg('overall')};
     const grand = (Object.values(avgs).reduce((s,v)=>s+(+v),0)/5).toFixed(1);
-    const scoreItems = [
-      ['Clarity',avgs.clarity,'var(--accent)'],['Innovation',avgs.innovation,'var(--accent2)'],
-      ['Execution',avgs.execution,'var(--amber)'],['Usability',avgs.usability,'#1591ae'],
-      ['Overall',avgs.overall,'var(--green)'],['Grand avg',grand,'var(--text)']
-    ];
-    html += `<div style="font-size:12.5px;font-weight:600;color:var(--muted2);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.04em;font-size:11px">${n} review${n>1?'s':''}</div>
-    <div class="score-summary">${scoreItems.map(([l,v,c])=>`<div class="score-cell"><div class="score-cell-val" style="color:${c}">${v}</div><div class="score-cell-lbl">${l}</div></div>`).join('')}</div>
-    <div class="detail-table-wrap"><table class="detail-table">
-      <thead><tr><th>#</th><th>Clarity</th><th>Innovation</th><th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Date</th></tr></thead>
-      <tbody>${revs.map((r,i)=>{
-        const ra = ((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);
-        return `<tr><td style="color:var(--muted);font-size:12px">Peer ${i+1}</td><td>${r.clarity}</td><td>${r.innovation}</td><td>${r.execution}</td><td>${r.usability}</td><td>${r.overall}</td><td><strong style="color:var(--green)">${ra}</strong></td><td style="font-size:11.5px;color:var(--muted);font-family:'DM Mono',monospace">${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`;
-      }).join('')}</tbody>
-    </table></div>`;
+    const si = [['Clarity',avgs.clarity,'var(--accent)'],['Innovation',avgs.innovation,'var(--accent2)'],['Execution',avgs.execution,'var(--amber)'],['Usability',avgs.usability,'#1591ae'],['Overall',avgs.overall,'var(--green)'],['Grand avg',grand,'var(--text)']];
+    html += `<div style="font-size:11px;font-weight:600;color:var(--muted2);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.04em">${n} review${n>1?'s':''}</div><div class="score-summary">${si.map(([l,v,c])=>`<div class="score-cell"><div class="score-cell-val" style="color:${c}">${v}</div><div class="score-cell-lbl">${l}</div></div>`).join('')}</div><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>#</th><th>Clarity</th><th>Innovation</th><th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Date</th></tr></thead><tbody>${revs.map((r,i)=>{const ra=((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);return`<tr><td style="color:var(--muted);font-size:12px">Peer ${i+1}</td><td>${r.clarity}</td><td>${r.innovation}</td><td>${r.execution}</td><td>${r.usability}</td><td>${r.overall}</td><td><strong style="color:var(--green)">${ra}</strong></td><td style="font-size:11.5px;color:var(--muted);font-family:'DM Mono',monospace">${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`;}).join('')}</tbody></table></div>`;
   }
-
   document.getElementById('detailContent').innerHTML = html;
   document.getElementById('detailOverlay').style.display = 'block';
 }
@@ -979,8 +723,7 @@ document.getElementById('detailOverlay').addEventListener('click', e => { if (e.
 /* ── STUDENT AUTH ── */
 async function emailLogin() {
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@.]+/.test(email))
-    return showAlert('loginAlert', 'Please enter a valid email address.', 'error');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@.]+/.test(email)) return showAlert('loginAlert', 'Please enter a valid email address.', 'error');
   setLoading('loginBtn', true, 'Signing in…');
   const { data: student, error } = await sb.from('students').select('*').ilike('email', email).single();
   setLoading('loginBtn', false, 'Sign in');
@@ -990,38 +733,26 @@ async function emailLogin() {
 document.getElementById('emailInput').addEventListener('keydown', e => { if (e.key === 'Enter') emailLogin(); });
 
 function loginSuccess(student) {
-  currentUser = student;
-  currentUser._college = student.college || selectedCollege;
-  currentUser._mentor = student.mentor_assigned || null;
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('studentShell').style.display = 'block';
+  currentUser = student; currentUser._college = student.college || selectedCollege; currentUser._mentor = student.mentor_assigned || null;
+  document.getElementById('authScreen').style.display = 'none'; document.getElementById('studentShell').style.display = 'block';
   document.getElementById('stuName').textContent = student.name;
   document.getElementById('stuMeta').textContent = student.register_number + ' · ' + student.course;
-  const initials = (student.name||'?').split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
-  document.getElementById('stuAvatar').textContent = initials;
-  if (currentUser._mentor) {
-    document.getElementById('mentorPillName').textContent = currentUser._mentor;
-    document.getElementById('mentorPill').style.display = 'flex';
-  } else {
-    document.getElementById('mentorPill').style.display = 'none';
-  }
+  document.getElementById('stuAvatar').textContent = (student.name||'?').split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
+  if (currentUser._mentor) { document.getElementById('mentorPillName').textContent = currentUser._mentor; document.getElementById('mentorPill').style.display = 'flex'; }
+  else document.getElementById('mentorPill').style.display = 'none';
   loadReviewedSet().then(() => loadProjects());
 }
 function logout() {
   currentUser = null; selectedCollege = ''; selectedRole = ''; reviewedSet.clear();
-  document.getElementById('studentShell').style.display = 'none';
-  document.getElementById('authScreen').style.display = 'flex';
-  document.getElementById('emailInput').value = '';
-  document.getElementById('loginAlert').innerHTML = '';
-  document.getElementById('collegeSelect').value = '';
-  document.getElementById('mentorPill').style.display = 'none';
+  document.getElementById('studentShell').style.display = 'none'; document.getElementById('authScreen').style.display = 'flex';
+  document.getElementById('emailInput').value = ''; document.getElementById('loginAlert').innerHTML = '';
+  document.getElementById('collegeSelect').value = ''; document.getElementById('mentorPill').style.display = 'none';
   backStep1();
 }
 
 async function loadReviewedSet() {
   const { data } = await sb.from('reviews').select('project_reg').eq('reviewer_reg', currentUser.register_number);
-  reviewedSet.clear();
-  (data||[]).forEach(r => reviewedSet.add(r.project_reg));
+  reviewedSet.clear(); (data||[]).forEach(r => reviewedSet.add(r.project_reg));
 }
 
 function switchStuTab(name) {
@@ -1039,8 +770,7 @@ async function loadProjects() {
   c.innerHTML = '<div class="loading">Loading projects…</div>';
   const ALLIANCE = 'Alliance University';
   const ALLIANCE_GROUPS = [['I MCA - A','I MCA - B'],['II BCA AI & ML (A+B)']];
-  let query = sb.from('students').select('register_number,name,course,project_title,project_type,problem_statement')
-    .neq('register_number', currentUser.register_number).order('name');
+  let query = sb.from('students').select('register_number,name,course,project_title,project_type,problem_statement').neq('register_number', currentUser.register_number).order('name');
   if (currentUser._college === ALLIANCE) {
     const group = ALLIANCE_GROUPS.find(g => g.includes(currentUser.course));
     if (!group) { c.innerHTML = `<div class="loading">No group found for your course.</div>`; return; }
@@ -1054,23 +784,13 @@ async function loadProjects() {
   if (!projects?.length) { c.innerHTML = `<div class="loading">No projects found in your group.</div>`; return; }
   await loadReviewedSet();
   const done = reviewedSet.size, total = projects.length, pct = total ? Math.round(done/total*100) : 0;
-  const groupLabel = currentUser._mentor
-    ? `<strong>${escHtml(currentUser._mentor)}</strong>'s group · `
-    : '';
+  const groupLabel = currentUser._mentor ? `<strong>${escHtml(currentUser._mentor)}</strong>'s group · ` : '';
   let html = `<div class="prog-banner"><div class="prog-text">${groupLabel}Reviewed <strong>${done}</strong> of <strong>${total}</strong> projects</div><div class="prog-right"><span class="prog-pct">${pct}%</span><div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div></div></div><div class="projects-list">`;
   projects.forEach(p => {
     const rev = reviewedSet.has(p.register_number);
-    html += `<div class="project-card">
-      <div class="project-type-chip">${escHtml(p.project_type||'Project')}</div>
-      <div class="project-title">${escHtml(p.project_title||'Untitled')}</div>
-      <div class="project-meta"><strong>Student:</strong> ${escHtml(p.name||'—')}</div>
-      <div class="project-meta"><strong>Course:</strong> ${escHtml(p.course||'—')}</div>
-      ${p.problem_statement ? `<div class="project-meta" style="color:var(--muted);font-size:12.5px;line-height:1.55">${escHtml(p.problem_statement.slice(0,90))}${p.problem_statement.length>90?'…':''}</div>` : ''}
-      <button class="review-btn ${rev?'done':''}" ${rev?'disabled':`onclick="openReviewModal('${escHtml(p.register_number)}')"`}>${rev?'Reviewed':'Review project'}</button>
-    </div>`;
+    html += `<div class="project-card"><div class="project-type-chip">${escHtml(p.project_type||'Project')}</div><div class="project-title">${escHtml(p.project_title||'Untitled')}</div><div class="project-meta"><strong>Student:</strong> ${escHtml(p.name||'—')}</div><div class="project-meta"><strong>Course:</strong> ${escHtml(p.course||'—')}</div>${p.problem_statement?`<div class="project-meta" style="color:var(--muted);font-size:12.5px;line-height:1.55">${escHtml(p.problem_statement.slice(0,90))}${p.problem_statement.length>90?'…':''}</div>`:''}<button class="review-btn ${rev?'done':''}" ${rev?'disabled':`onclick="openReviewModal('${escHtml(p.register_number)}')"`}>${rev?'Reviewed':'Review project'}</button></div>`;
   });
-  html += '</div>';
-  c.innerHTML = html;
+  html += '</div>'; c.innerHTML = html;
 }
 
 async function openReviewModal(reg) {
@@ -1095,83 +815,47 @@ async function submitReview() {
   const missing = CRITERIA.filter(c => !document.getElementById(c.id).value);
   if (missing.length) { alert('Please rate all 5 criteria before submitting.'); return; }
   setLoading('submitReviewBtn', true, 'Submitting…');
-  const { error } = await sb.from('reviews').insert({
-    reviewer_reg: currentUser.register_number,
-    project_reg: currentProject.register_number,
-    reviewer_college: currentUser._college || null,
-    clarity: +document.getElementById('clarity').value,
-    innovation: +document.getElementById('innovation').value,
-    execution: +document.getElementById('execution').value,
-    usability: +document.getElementById('usability').value,
-    overall: +document.getElementById('overall').value,
-    comments: document.getElementById('comments').value.trim() || null,
-  });
+  const { error } = await sb.from('reviews').insert({ reviewer_reg: currentUser.register_number, project_reg: currentProject.register_number, reviewer_college: currentUser._college || null, clarity: +document.getElementById('clarity').value, innovation: +document.getElementById('innovation').value, execution: +document.getElementById('execution').value, usability: +document.getElementById('usability').value, overall: +document.getElementById('overall').value, comments: document.getElementById('comments').value.trim() || null });
   setLoading('submitReviewBtn', false, 'Submit review');
   if (error) { alert(error.code==='23505'?'Already reviewed.':'Error: '+error.message); closeReviewModal(); return; }
-  reviewedSet.add(currentProject.register_number);
-  closeReviewModal();
-  await loadProjects();
-  showToast('Review submitted successfully.');
+  reviewedSet.add(currentProject.register_number); closeReviewModal(); await loadProjects(); showToast('Review submitted successfully.');
 }
 
 async function loadMyReviews() {
-  const c = document.getElementById('myReviewsContent');
-  c.innerHTML = '<div class="loading">Loading…</div>';
+  const c = document.getElementById('myReviewsContent'); c.innerHTML = '<div class="loading">Loading…</div>';
   const { data: reviews } = await sb.from('reviews').select('*').eq('reviewer_reg', currentUser.register_number).order('created_at',{ascending:false});
   if (!reviews?.length) { c.innerHTML = `<div class="loading">You haven't submitted any reviews yet.</div>`; return; }
   const regs = [...new Set(reviews.map(r => r.project_reg))];
   const { data: stuData } = await sb.from('students').select('register_number,project_title,project_type').in('register_number', regs);
   const stuMap = {}; (stuData||[]).forEach(s => stuMap[s.register_number]=s);
-  const rows = reviews.map(r => {
-    const s = stuMap[r.project_reg];
-    const avg = ((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);
-    return `<tr><td><strong style="font-size:13px">${escHtml(s?.project_title||r.project_reg)}</strong></td><td><div class="project-type-chip" style="font-size:10px">${escHtml(s?.project_type||'—')}</div></td><td>${r.clarity}</td><td>${r.innovation}</td><td>${r.execution}</td><td>${r.usability}</td><td>${r.overall}</td><td><span class="score-pill" style="background:var(--green-dim);color:var(--green)">${avg}</span></td><td style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`;
-  }).join('');
+  const rows = reviews.map(r => { const s = stuMap[r.project_reg], avg = ((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1); return `<tr><td><strong style="font-size:13px">${escHtml(s?.project_title||r.project_reg)}</strong></td><td><div class="project-type-chip" style="font-size:10px">${escHtml(s?.project_type||'—')}</div></td><td>${r.clarity}</td><td>${r.innovation}</td><td>${r.execution}</td><td>${r.usability}</td><td>${r.overall}</td><td><span class="score-pill" style="background:var(--green-dim);color:var(--green)">${avg}</span></td><td style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`; }).join('');
   c.innerHTML = `<p style="font-size:13px;color:var(--muted2);margin-bottom:1.25rem"><strong style="color:var(--text)">${reviews.length}</strong> review${reviews.length!==1?'s':''} submitted</p><div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;overflow-x:auto"><table class="reviews-table"><thead><tr><th>Project</th><th>Type</th><th>Clarity</th><th>Innovation</th><th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Date</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 async function loadMyProjectStats() {
-  const c = document.getElementById('myProjectContent');
-  c.innerHTML = '<div class="loading">Loading…</div>';
+  const c = document.getElementById('myProjectContent'); c.innerHTML = '<div class="loading">Loading…</div>';
   const { data: me } = await sb.from('students').select('register_number,project_title,project_type,problem_statement').eq('register_number', currentUser.register_number).single();
   if (!me?.project_title) { c.innerHTML = '<div class="loading">No project found for your account.</div>'; return; }
   const { data: reviews } = await sb.from('reviews').select('*').eq('project_reg', currentUser.register_number).order('created_at');
-  let html = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem">
-    <div class="project-type-chip" style="margin-bottom:.5rem">${escHtml(me.project_type||'Project')}</div>
-    <div style="font-size:16px;font-weight:700;margin:.4rem 0 .5rem;color:var(--text)">${escHtml(me.project_title)}</div>
-    ${me.problem_statement?`<div style="font-size:13px;color:var(--muted2);line-height:1.65">${escHtml(me.problem_statement)}</div>`:''}
-  </div>`;
+  let html = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem"><div class="project-type-chip" style="margin-bottom:.5rem">${escHtml(me.project_type||'Project')}</div><div style="font-size:16px;font-weight:700;margin:.4rem 0 .5rem;color:var(--text)">${escHtml(me.project_title)}</div>${me.problem_statement?`<div style="font-size:13px;color:var(--muted2);line-height:1.65">${escHtml(me.problem_statement)}</div>`:''}</div>`;
   if (!reviews?.length) { html += `<div class="loading">No reviews received yet.</div>`; c.innerHTML = html; return; }
-  const n = reviews.length;
-  const avg = f => (reviews.reduce((s,r)=>s+r[f],0)/n).toFixed(1);
+  const n = reviews.length, avg = f => (reviews.reduce((s,r)=>s+r[f],0)/n).toFixed(1);
   const avgs = {clarity:avg('clarity'),innovation:avg('innovation'),execution:avg('execution'),usability:avg('usability'),overall:avg('overall')};
   const grand = (Object.values(avgs).reduce((s,v)=>s+(+v),0)/5).toFixed(1);
-  const scoreItems = [['Clarity',avgs.clarity,'var(--accent)'],['Innovation',avgs.innovation,'var(--accent2)'],['Execution',avgs.execution,'var(--amber)'],['Usability',avgs.usability,'#1591ae'],['Overall',avgs.overall,'var(--green)'],['Grand avg',grand,'var(--text)']];
-  html += `<div class="stats-grid">${scoreItems.map(([l,v,col])=>`<div class="stat-card"><div class="stat-val" style="color:${col}">${v}</div><div class="stat-lbl">${l}</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:${+v*10}%;background:${col}"></div></div></div>`).join('')}</div>
-  <p style="font-size:13px;color:var(--muted2);margin-bottom:1.25rem">Based on <strong style="color:var(--text)">${n}</strong> review${n>1?'s':''}</p>
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;overflow-x:auto"><table class="reviews-table"><thead><tr><th>#</th><th>College</th><th>Clarity</th><th>Innovation</th><th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Comments</th><th>Date</th></tr></thead><tbody>
-  ${reviews.map((r,i)=>{const ra=((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);return`<tr><td style="color:var(--muted);font-size:12px">Peer ${i+1}</td><td style="font-size:12px;color:var(--muted2)">${escHtml(r.reviewer_college||'—')}</td><td>${r.clarity}</td><td>${r.innovation}</td><td>${r.execution}</td><td>${r.usability}</td><td>${r.overall}</td><td><strong style="color:var(--green)">${ra}</strong></td><td style="font-size:12px;color:var(--muted2);max-width:160px">${escHtml(r.comments||'—')}</td><td style="font-size:11.5px;color:var(--muted);font-family:'DM Mono',monospace">${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`;}).join('')}
-  </tbody></table></div>`;
+  const si = [['Clarity',avgs.clarity,'var(--accent)'],['Innovation',avgs.innovation,'var(--accent2)'],['Execution',avgs.execution,'var(--amber)'],['Usability',avgs.usability,'#1591ae'],['Overall',avgs.overall,'var(--green)'],['Grand avg',grand,'var(--text)']];
+  html += `<div class="stats-grid">${si.map(([l,v,col])=>`<div class="stat-card"><div class="stat-val" style="color:${col}">${v}</div><div class="stat-lbl">${l}</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:${+v*10}%;background:${col}"></div></div></div>`).join('')}</div><p style="font-size:13px;color:var(--muted2);margin-bottom:1.25rem">Based on <strong style="color:var(--text)">${n}</strong> review${n>1?'s':''}</p><div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;overflow-x:auto"><table class="reviews-table"><thead><tr><th>#</th><th>College</th><th>Clarity</th><th>Innovation</th><th>Execution</th><th>Usability</th><th>Overall</th><th>Avg</th><th>Comments</th><th>Date</th></tr></thead><tbody>${reviews.map((r,i)=>{const ra=((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5).toFixed(1);return`<tr><td style="color:var(--muted);font-size:12px">Peer ${i+1}</td><td style="font-size:12px;color:var(--muted2)">${escHtml(r.reviewer_college||'—')}</td><td>${r.clarity}</td><td>${r.innovation}</td><td>${r.execution}</td><td>${r.usability}</td><td>${r.overall}</td><td><strong style="color:var(--green)">${ra}</strong></td><td style="font-size:12px;color:var(--muted2);max-width:160px">${escHtml(r.comments||'—')}</td><td style="font-size:11.5px;color:var(--muted);font-family:'DM Mono',monospace">${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`;}).join('')}</tbody></table></div>`;
   c.innerHTML = html;
 }
 
 /* ── HELPERS ── */
 function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-function showAlert(id, msg, type) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
-  setTimeout(() => { if (el) el.innerHTML = ''; }, 6000);
-}
-function showToast(msg) {
-  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
-  document.body.appendChild(t); setTimeout(() => t.remove(), 3500);
-}
+function showAlert(id, msg, type) { const el = document.getElementById(id); if (!el) return; el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`; setTimeout(() => { if (el) el.innerHTML = ''; }, 6000); }
+function showToast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3500); }
 function setLoading(id, on, label) { const b = document.getElementById(id); if (!b) return; b.disabled = on; b.textContent = label; }
 function escHtml(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-/* ── STUDENT VIEW TOGGLE ── */
-let studentViewMode = 'dept';
+/* ── VIEW TOGGLE ── */
+let studentViewMode = 'dept';  /* default: department view */
 
 function setStudentView(mode) {
   studentViewMode = mode;
@@ -1179,15 +863,17 @@ function setStudentView(mode) {
   document.getElementById('vbtn-flat').classList.toggle('active', mode === 'flat');
   const deptDiv = document.getElementById('deptView');
   const flatDiv = document.getElementById('studentsTableWrap');
+  const searchBar = document.querySelector('.search-filter-bar');
   if (mode === 'dept') {
     flatDiv.style.display = 'none';
-    document.querySelector('.search-filter-bar').style.display = 'none';
+    if (searchBar) searchBar.style.display = 'none';
     deptDiv.style.display = 'block';
     renderDeptView(adminStudentsCache, adminReviewsCache);
   } else {
     flatDiv.style.display = 'block';
-    document.querySelector('.search-filter-bar').style.display = 'flex';
+    if (searchBar) searchBar.style.display = 'flex';
     deptDiv.style.display = 'none';
+    renderStudentsTable(adminStudentsCache, adminReviewsCache, adminCurrentFilter, adminCurrentQuery);
   }
 }
 
@@ -1201,83 +887,33 @@ function renderDeptView(students, reviews) {
     scoresMap[r.project_reg].push((r.clarity+r.innovation+r.execution+r.usability+r.overall)/5);
   });
   const avgMap = {};
-  Object.keys(scoresMap).forEach(reg => {
-    const a = scoresMap[reg];
-    avgMap[reg] = (a.reduce((s,v)=>s+v,0)/a.length).toFixed(1);
-  });
+  Object.keys(scoresMap).forEach(reg => { const a = scoresMap[reg]; avgMap[reg] = (a.reduce((s,v)=>s+v,0)/a.length).toFixed(1); });
 
   const groups = {};
-  students.forEach(s => {
-    const key = s.course || 'Unassigned';
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(s);
-  });
+  students.forEach(s => { const key = s.course || 'Unassigned'; if (!groups[key]) groups[key] = []; groups[key].push(s); });
 
   const DEPT_COLORS = ['#534ab7','#185fa5','#3b6d11','#854f0b','#993556','#0f6e56','#a32d2d','#3c3489'];
   const courses = Object.keys(groups).sort();
   const totalPeers = students.length - 1;
-  let openDept = -1;
 
   let html = `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)">`;
-
   courses.forEach((course, ci) => {
     const color = DEPT_COLORS[ci % DEPT_COLORS.length];
     const stuList = groups[course];
     const reviewedCount = stuList.filter(s => (rcvdMap[s.register_number]||0) > 0).length;
     const pendingCount = stuList.length - reviewedCount;
     const pct = stuList.length ? Math.round(reviewedCount / stuList.length * 100) : 0;
-    const dId = 'dept_' + ci;
     const isLast = ci === courses.length - 1;
 
     const rows = stuList.map(s => {
-      const rcvd = rcvdMap[s.register_number] || 0;
-      const given = givenMap[s.register_number] || 0;
-      const avg = avgMap[s.register_number];
+      const rcvd = rcvdMap[s.register_number] || 0, given = givenMap[s.register_number] || 0, avg = avgMap[s.register_number];
       const pillClass = rcvd === 0 ? 'none' : rcvd >= 3 ? 'done' : 'partial';
-      const pillLabel = rcvd === 0 ? 'None' : rcvd + ' received';
       const initials = (s.name||'?').split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
-      return `<tr onclick="openStudentDetail('${escHtml(s.register_number)}')" style="cursor:pointer">
-        <td>
-          <div style="display:flex;align-items:center;gap:.75rem">
-            <div style="width:30px;height:30px;border-radius:7px;background:${color}18;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:${color};flex-shrink:0">${initials}</div>
-            <div><div class="stu-name">${escHtml(s.name||'—')}</div><div class="stu-reg">${escHtml(s.register_number||'')}</div></div>
-          </div>
-        </td>
-        <td style="max-width:180px">
-          ${s.project_title
-            ? `<div style="font-size:12.5px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(s.project_title.slice(0,50))}${s.project_title.length>50?'…':''}</div>`
-            : `<span style="font-size:12px;color:var(--rose)">No project</span>`}
-        </td>
-        <td><span class="status-pill ${pillClass}">${pillLabel}</span></td>
-        <td><span class="given-text">${given} / ${Math.max(0, totalPeers)}</span></td>
-        <td>${avg ? `<span class="score-pill">${avg}</span>` : '<span style="color:var(--muted);font-size:12px">—</span>'}</td>
-      </tr>`;
+      return `<tr onclick="openStudentDetail('${escHtml(s.register_number)}')" style="cursor:pointer"><td><div style="display:flex;align-items:center;gap:.75rem"><div style="width:30px;height:30px;border-radius:7px;background:${color}18;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:${color};flex-shrink:0">${initials}</div><div><div class="stu-name">${escHtml(s.name||'—')}</div><div class="stu-reg">${escHtml(s.register_number||'')}</div></div></div></td><td style="max-width:180px">${s.project_title?`<div style="font-size:12.5px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(s.project_title.slice(0,50))}${s.project_title.length>50?'…':''}</div>`:`<span style="font-size:12px;color:var(--rose)">No project</span>`}</td><td><span class="status-pill ${pillClass}">${rcvd === 0 ? 'None' : rcvd + ' received'}</span></td><td><span class="given-text">${given} / ${Math.max(0, totalPeers)}</span></td><td>${avg?`<span class="score-pill">${avg}</span>`:'<span style="color:var(--muted);font-size:12px">—</span>'}</td></tr>`;
     }).join('');
 
-    html += `
-      <div style="border-bottom:${isLast?'none':'1px solid var(--border)'}">
-        <div id="dhdr_${ci}" onclick="deptToggle(${ci})" style="display:flex;align-items:center;gap:.75rem;padding:.9rem 1rem;cursor:pointer;user-select:none;background:var(--surface2);transition:background .15s">
-          <div style="width:9px;height:9px;border-radius:50%;background:${color};flex-shrink:0"></div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:13.5px;font-weight:600;color:var(--text)">${escHtml(course)}</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:.1rem">${stuList.length} student${stuList.length!==1?'s':''} · ${pct}% reviewed</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0">
-            ${reviewedCount > 0 ? `<span class="status-pill done" style="font-size:11px">${reviewedCount} reviewed</span>` : ''}
-            ${pendingCount > 0 ? `<span class="status-pill none" style="font-size:11px">${pendingCount} pending</span>` : ''}
-            <span id="dchv_${ci}" style="color:var(--muted);font-size:13px;transition:transform .2s;display:inline-block">▾</span>
-          </div>
-        </div>
-        <div style="height:3px;background:var(--border)"><div style="height:100%;width:${pct}%;background:${color};border-radius:0 2px 2px 0;transition:width .6s"></div></div>
-        <div id="${dId}" style="display:none">
-          <table class="student-table">
-            <thead><tr><th>Student</th><th>Project</th><th>Reviews received</th><th>Reviewed</th><th>Avg score</th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>
-      </div>`;
+    html += `<div style="border-bottom:${isLast?'none':'1px solid var(--border)'}"><div id="dhdr_${ci}" onclick="deptToggle(${ci})" style="display:flex;align-items:center;gap:.75rem;padding:.9rem 1rem;cursor:pointer;user-select:none;background:var(--surface2);transition:background .15s"><div style="width:9px;height:9px;border-radius:50%;background:${color};flex-shrink:0"></div><div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;color:var(--text)">${escHtml(course)}</div><div style="font-size:12px;color:var(--muted);margin-top:.1rem">${stuList.length} student${stuList.length!==1?'s':''} · ${pct}% reviewed</div></div><div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0">${reviewedCount>0?`<span class="status-pill done" style="font-size:11px">${reviewedCount} reviewed</span>`:''} ${pendingCount>0?`<span class="status-pill none" style="font-size:11px">${pendingCount} pending</span>`:''}<span id="dchv_${ci}" style="color:var(--muted);font-size:13px;transition:transform .2s;display:inline-block">▾</span></div></div><div style="height:3px;background:var(--border)"><div style="height:100%;width:${pct}%;background:${color};border-radius:0 2px 2px 0;transition:width .6s"></div></div><div id="dept_${ci}" style="display:none"><table class="student-table"><thead><tr><th>Student</th><th>Project</th><th>Reviews received</th><th>Reviewed</th><th>Avg score</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
   });
-
   html += `</div>`;
   deptDiv.innerHTML = html;
 
@@ -1289,22 +925,13 @@ function renderDeptView(students, reviews) {
       document.getElementById('dchv_' + prev).style.transform = '';
       document.getElementById('dhdr_' + prev).style.background = 'var(--surface2)';
     }
-    const body = document.getElementById('dept_' + i);
-    const chev = document.getElementById('dchv_' + i);
-    const hdr  = document.getElementById('dhdr_' + i);
+    const body = document.getElementById('dept_' + i), chev = document.getElementById('dchv_' + i), hdr = document.getElementById('dhdr_' + i);
     const isOpen = body.style.display === 'block';
     body.style.display = isOpen ? 'none' : 'block';
     chev.style.transform = isOpen ? '' : 'rotate(180deg)';
     hdr.style.background = isOpen ? 'var(--surface2)' : 'var(--surface)';
     window._openDept = isOpen ? -1 : i;
   };
-}
-function toggleDept(id) {
-  const el = document.getElementById(id);
-  const ch = document.getElementById('chv_' + id);
-  const isHidden = el.style.display === 'none';
-  el.style.display = isHidden ? 'block' : 'none';
-  if (ch) ch.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(-90deg)';
 }
 </script>
 </body>
