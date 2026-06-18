@@ -62,6 +62,11 @@
     .btn-sm { padding: .4rem .85rem; font-size: 12.5px; }
     .btn-row { display: flex; gap: .6rem; align-items: center; }
     .btn-row .btn-primary { flex: 1; }
+    .btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; padding: 0; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border2); color: var(--muted2); flex-shrink: 0; }
+    .btn-icon:hover { background: var(--surface); color: var(--text); border-color: var(--accent); }
+    .btn-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .5s ease; }
+    .btn-icon.spinning svg { animation: spin360 .6s linear; }
+    @keyframes spin360 { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     .alert { padding: .7rem .9rem; border-radius: 7px; margin-bottom: .9rem; font-size: 13px; font-weight: 500; }
     .alert-error { background: var(--rose-dim); border: 1px solid rgba(204,53,53,.2); color: var(--rose); }
     .alert-success { background: var(--green-dim); border: 1px solid rgba(26,138,94,.2); color: var(--green); }
@@ -149,6 +154,7 @@
     .admin-topbar { height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; position: sticky; top: 0; z-index: 100; }
     .admin-page-title { font-size: 15px; font-weight: 700; color: var(--text); }
     .admin-page-sub { font-size: 12.5px; color: var(--muted); margin-top: .1rem; }
+    .admin-topbar-right { display: flex; align-items: center; gap: .9rem; }
     .admin-content { padding: 2rem; flex: 1; max-width: 1100px; }
     .admin-tab-pane { display: none; }
     .admin-tab-pane.active { display: block; }
@@ -361,6 +367,7 @@
       <div class="user-info-small"><div class="user-name-small" id="stuName"></div><div class="user-meta-small" id="stuMeta"></div></div>
       <div class="user-avatar" id="stuAvatar"></div>
       <div class="mentor-pill" id="mentorPill" style="display:none"><span class="mentor-pill-label">Mentor</span><span class="mentor-pill-name" id="mentorPillName"></span></div>
+      <button class="btn-icon" id="stuRefreshBtn" onclick="refreshStudentData()" title="Refresh"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
       <button class="btn-ghost btn-sm" onclick="logout()">Sign out</button>
     </div>
   </header>
@@ -406,7 +413,10 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <div><div class="admin-page-title" id="adminPageTitle">Students</div><div class="admin-page-sub" id="adminPageSub">All registered students grouped by mentor</div></div>
-        <div id="adminTopbarKpi" style="display:flex;gap:1.5rem;align-items:center"></div>
+        <div class="admin-topbar-right">
+          <div id="adminTopbarKpi" style="display:flex;gap:1.5rem;align-items:center"></div>
+          <button class="btn-icon" id="adminRefreshBtn" onclick="refreshAdminData()" title="Refresh"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+        </div>
       </div>
       <div class="admin-content">
         <div class="kpi-row">
@@ -499,6 +509,8 @@ let adminCollege = '', adminStudentsCache = [], adminReviewsCache = [];
 let adminCurrentFilter = 'all', adminCurrentQuery = '';
 let studentViewMode = 'mentor';
 let openMentorIdx = -1;
+let currentAdminTab = 'students';
+let currentStuTab = 'projects';
 
 /* ── CRITERIA ── */
 function buildCriteriaBlocks() {
@@ -611,6 +623,29 @@ function adminLogout() {
   backStep1();
 }
 
+/* ── REFRESH ── */
+function spinIcon(id) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.classList.add('spinning');
+  btn.disabled = true;
+  setTimeout(() => { btn.classList.remove('spinning'); btn.disabled = false; }, 650);
+}
+async function refreshAdminData() {
+  spinIcon('adminRefreshBtn');
+  await loadAdminData();
+  if (currentAdminTab === 'reviews') renderAdminReviews();
+  if (currentAdminTab === 'leaderboard') renderAdminLeaderboard();
+  showToast('Data refreshed.');
+}
+async function refreshStudentData() {
+  spinIcon('stuRefreshBtn');
+  if (currentStuTab === 'projects') await loadProjects();
+  else if (currentStuTab === 'myReviews') await loadMyReviews();
+  else if (currentStuTab === 'myProject') await loadMyProjectStats();
+  showToast('Data refreshed.');
+}
+
 /* ── ADMIN DATA ── */
 async function loadAdminData() {
   document.getElementById('mentorView').innerHTML = '<div class="loading">Loading students…</div>';
@@ -626,7 +661,7 @@ async function loadAdminData() {
   document.getElementById('kpiStudents').textContent = adminStudentsCache.length;
   document.getElementById('kpiReviews').textContent = reviewsData.length;
   document.getElementById('kpiReviewers').textContent = new Set(reviewsData.map(r => r.reviewer_reg)).size;
-  setStudentView('mentor');
+  setStudentView(studentViewMode);
 }
 
 /* ── MENTOR VIEW ── */
@@ -728,7 +763,11 @@ function renderMentorView(students, reviews) {
   html += `</div>`;
   mentorDiv.innerHTML = html;
 
-  openMentorIdx = -1;
+  if (openMentorIdx >= 0) {
+    const body = document.getElementById('mgbody_' + openMentorIdx);
+    const chev = document.getElementById('mgchv_' + openMentorIdx);
+    if (body && chev) { body.classList.add('open'); chev.classList.add('open'); }
+  }
   window.mentorToggle = function(i) {
     const prev = openMentorIdx;
     if (prev >= 0 && prev !== i) {
@@ -804,6 +843,7 @@ function setStudentView(mode) {
 }
 
 function switchAdminTab(name) {
+  currentAdminTab = name;
   ['students','reviews','leaderboard'].forEach(n => {
     document.getElementById('anav-' + n)?.classList.remove('active');
     document.getElementById('admin' + cap(n) + 'Tab')?.classList.remove('active');
@@ -907,6 +947,7 @@ async function loadReviewedSet() {
 }
 
 function switchStuTab(name) {
+  currentStuTab = name;
   document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
